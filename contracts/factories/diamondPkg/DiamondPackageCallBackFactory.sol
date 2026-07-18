@@ -59,6 +59,7 @@ interface IDiamondPackageCallBackFactoryInit {
     }
     // end::InitArgs[]
 }
+
 // end::IDiamondPackageCallBackFactoryInit[]
 
 // tag::DiamondPackageCallBackFactory[]
@@ -154,6 +155,7 @@ contract DiamondPackageCallBackFactory is
     /// @custom:selector 0x3f58dd6d
     /// @inheritdoc IDiamondPackageCallBackFactory
     mapping(address account => bytes pkgArgs) public pkgArgsOfAccount;
+
     // end::pkgArgsOfAccount(address)[]
 
     // tag::constructor(IDiamondPackageCallBackFactoryInit-InitArgs)[]
@@ -173,6 +175,7 @@ contract DiamondPackageCallBackFactory is
         POST_DEPLOY_HOOK_FACET = init.postDeployHookFacet;
         SELF = this;
     }
+
     // end::constructor(IDiamondPackageCallBackFactoryInit-InitArgs)[]
 
     // tag::deploy(IDiamondFactoryPackage-bytes)[]
@@ -227,6 +230,7 @@ contract DiamondPackageCallBackFactory is
         pkg.postDeploy(expectedProxy);
         IPostDeployAccountHook(expectedProxy).postDeploy();
     }
+
     // end::deploy(IDiamondFactoryPackage-bytes)[]
 
     // tag::facetInterfaces()[]
@@ -243,6 +247,7 @@ contract DiamondPackageCallBackFactory is
         interfaces[1] = type(IDiamondLoupe).interfaceId;
         interfaces[2] = type(IERC8109Introspection).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetCuts()[]
@@ -288,6 +293,7 @@ contract DiamondPackageCallBackFactory is
             functionSelectors: POST_DEPLOY_HOOK_FACET.facetFuncs()
         });
     }
+
     // end::facetCuts()[]
 
     // tag::erc8109Funcs()[]
@@ -302,6 +308,7 @@ contract DiamondPackageCallBackFactory is
         funcs = new bytes4[](1);
         funcs[0] = IERC8109Introspection.functionFacetPairs.selector;
     }
+
     // end::erc8109Funcs()[]
 
     // tag::calcAddress(IDiamondFactoryPackage-bytes)[]
@@ -319,6 +326,7 @@ contract DiamondPackageCallBackFactory is
     function calcAddress(IDiamondFactoryPackage pkg, bytes memory pkgArgs) public view returns (address) {
         return address(this)._create2AddressFromOf(PROXY_INIT_HASH, keccak256(abi.encode(pkg, pkg.calcSalt(pkgArgs))));
     }
+
     // end::calcAddress(IDiamondFactoryPackage-bytes)[]
 
     // tag::initAccount()[]
@@ -349,6 +357,7 @@ contract DiamondPackageCallBackFactory is
         (IDiamondFactoryPackage pkg, bytes memory pkgArgs) = SELF.pkgConfig();
         return initAccount(pkg, pkgArgs);
     }
+
     // end::initAccount()[]
 
     // tag::initAccount(IDiamondFactoryPackage-bytes)[]
@@ -381,6 +390,7 @@ contract DiamondPackageCallBackFactory is
         );
         return true;
     }
+
     // end::initAccount(IDiamondFactoryPackage-bytes)[]
 
     // tag::pkgConfig()[]
@@ -398,6 +408,7 @@ contract DiamondPackageCallBackFactory is
         pkg = pkgOfAccount[msg.sender];
         args = pkgArgsOfAccount[msg.sender];
     }
+
     // end::pkgConfig()[]
 
     // account
@@ -417,6 +428,7 @@ contract DiamondPackageCallBackFactory is
         ERC2535Repo._processFacetCuts(postDeployFacetCuts());
         return true;
     }
+
     // end::postDeploy(address)[]
 
     // tag::postDeployFacetCuts()[]

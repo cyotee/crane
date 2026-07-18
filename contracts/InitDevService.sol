@@ -211,6 +211,7 @@ library InitDevService {
         );
         vm.label(address(bountyBoardDFPkg_), type(BountyBoardDFPkg).name);
     }
+
     // end::initEnv(address)[]
 
     // tag::initFactory(address-bytes32)[]
@@ -301,6 +302,7 @@ library InitDevService {
             .deployCanonicalFacet(type(ContinuousBountyFacet).creationCode, CONTINUOUS_BOUNTY_FACET_SALT);
         vm.label(address(tempFacet), type(ContinuousBountyFacet).name);
     }
+
     // end::initFactory(address-bytes32)[]
 
     // tag::initDiamondFactory(ICreate3FactoryProxy)[]

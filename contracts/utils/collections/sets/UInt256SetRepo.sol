@@ -10,6 +10,7 @@ struct UInt256Set {
     uint256[] values;
     uint256 maxValue;
 }
+
 // end::UInt256Set[]
 
 // tag::UInt256SetRepo[]
@@ -38,6 +39,7 @@ library UInt256SetRepo {
         set.values.length._isValidIndex(index);
         return set.values[index];
     }
+
     // end::_index(UInt256Set-uint256)[]
 
     // tag::_indexOf(UInt256Set-uint256)[]
@@ -54,6 +56,7 @@ library UInt256SetRepo {
             return set.indexes[value] - 1;
         }
     }
+
     // end::_indexOf(UInt256Set-uint256)[]
 
     // tag::_contains(UInt256Set-uint256)[]
@@ -66,6 +69,7 @@ library UInt256SetRepo {
     function _contains(UInt256Set storage set, uint256 value) internal view returns (bool) {
         return set.indexes[value] != 0;
     }
+
     // end::_contains(UInt256Set-uint256)[]
 
     // tag::_length(UInt256Set)[]
@@ -77,6 +81,7 @@ library UInt256SetRepo {
     function _length(UInt256Set storage set) internal view returns (uint256) {
         return set.values.length;
     }
+
     // end::_length(UInt256Set)[]
 
     // tag::_add(UInt256Set-uint256)[]
@@ -101,6 +106,7 @@ library UInt256SetRepo {
         }
         return true;
     }
+
     // end::_add(UInt256Set-uint256)[]
 
     // tag::_add(UInt256Set-uint256[])[]
@@ -116,6 +122,7 @@ library UInt256SetRepo {
         }
         success = true;
     }
+
     // end::_add(UInt256Set-uint256[])[]
 
     // tag::_remove(UInt256Set-uint256)[]
@@ -148,6 +155,7 @@ library UInt256SetRepo {
         }
         return true;
     }
+
     // end::_remove(UInt256Set-uint256)[]
 
     // tag::_remove(UInt256Set-uint256[])[]
@@ -162,6 +170,7 @@ library UInt256SetRepo {
         }
         success = true;
     }
+
     // end::_remove(UInt256Set-uint256[])[]
 
     // tag::_asArray(UInt256Set)[]
@@ -173,6 +182,7 @@ library UInt256SetRepo {
     function _asArray(UInt256Set storage set) internal view returns (uint256[] storage array) {
         array = set.values;
     }
+
     // end::_asArray(UInt256Set)[]
 
     // tag::_values(UInt256Set)[]
@@ -187,6 +197,7 @@ library UInt256SetRepo {
     function _values(UInt256Set storage set) internal view returns (uint256[] storage values) {
         values = set.values;
     }
+
     // end::_values(UInt256Set)[]
 
     // tag::_max(UInt256Set)[]

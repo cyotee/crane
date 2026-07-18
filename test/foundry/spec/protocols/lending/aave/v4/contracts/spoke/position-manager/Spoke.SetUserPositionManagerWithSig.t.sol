@@ -70,7 +70,9 @@ contract SpokeSetUserPositionManagersWithSigTest is Base {
     }
 
     function test_setUserPositionManager_typeHash() public view {
-        assertEq(EIP712Hash.SET_USER_POSITION_MANAGERS_TYPEHASH, vm.eip712HashType(EIP712Types.TYPE_SetUserPositionManagers));
+        assertEq(
+            EIP712Hash.SET_USER_POSITION_MANAGERS_TYPEHASH, vm.eip712HashType(EIP712Types.TYPE_SetUserPositionManagers)
+        );
         assertEq(
             EIP712Hash.SET_USER_POSITION_MANAGERS_TYPEHASH,
             keccak256(

@@ -28,6 +28,7 @@ contract Create3FactoryFacet is Create3FactoryTarget, IFacet {
     function facetName() public pure returns (string memory name) {
         return type(Create3FactoryFacet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -41,6 +42,7 @@ contract Create3FactoryFacet is Create3FactoryTarget, IFacet {
         interfaces = new bytes4[](1);
         interfaces[0] = type(ICreate3Factory).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -56,6 +58,7 @@ contract Create3FactoryFacet is Create3FactoryTarget, IFacet {
         funcs[2] = ICreate3Factory.create3.selector;
         funcs[3] = ICreate3Factory.create3WithArgs.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]

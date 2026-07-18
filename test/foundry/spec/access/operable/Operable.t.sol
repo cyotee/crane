@@ -362,9 +362,9 @@ contract OperableTest is Test {
         expectedIfaces[0] = type(IOperable).interfaceId; // == 0xa7f11160 per central
 
         bytes4[] memory expectedFuncs = new bytes4[](4);
-        expectedFuncs[0] = IOperable.isOperator.selector;     // 0x6d70f7ae
-        expectedFuncs[1] = IOperable.isOperatorFor.selector;  // 0xea562a25
-        expectedFuncs[2] = IOperable.setOperator.selector;    // 0x558a7297
+        expectedFuncs[0] = IOperable.isOperator.selector; // 0x6d70f7ae
+        expectedFuncs[1] = IOperable.isOperatorFor.selector; // 0xea562a25
+        expectedFuncs[2] = IOperable.setOperator.selector; // 0x558a7297
         expectedFuncs[3] = IOperable.setOperatorFor.selector; // 0x755dbe7c
 
         // Use Behavior libs per LR-7 + AGENTS crane-testing (expect then hasValid)
@@ -376,8 +376,7 @@ contract OperableTest is Test {
         assertTrue(Behavior_IFacet.hasValid_IFacet_facetInterfaces(operableF), "facetInterfaces exact via Behavior");
         assertTrue(Behavior_IFacet.hasValid_IFacet_facetFuncs(operableF), "facetFuncs exact via Behavior");
         assertTrue(
-            Behavior_IFacet.isValid_IFacet_facetMetadata_consistency(operableF),
-            "facetMetadata consistency exact"
+            Behavior_IFacet.isValid_IFacet_facetMetadata_consistency(operableF), "facetMetadata consistency exact"
         );
     }
     // end::test_LR7_OperableFacet_declaration_viaBehavior()[]

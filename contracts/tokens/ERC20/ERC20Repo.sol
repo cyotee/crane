@@ -28,6 +28,7 @@ library ERC20Repo {
      *      MultiStepOwnableRepo, DeployedAddressesRepo, and other gold-standard Repos for collision-resistant deterministic storage binding.
      */
     bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("eip.erc.20"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -49,6 +50,7 @@ library ERC20Repo {
         mapping(address account => uint256 balance) balanceOf;
         mapping(address account => mapping(address spender => uint256 approval)) allowances;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -62,6 +64,7 @@ library ERC20Repo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -72,6 +75,7 @@ library ERC20Repo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-string-memory-string-memory-uint8)[]
@@ -90,6 +94,7 @@ library ERC20Repo {
         layoutStruct.symbol = symbol_;
         layoutStruct.decimals = decimals_;
     }
+
     // end::_initialize(Storage-string-memory-string-memory-uint8)[]
 
     // tag::_initialize(string-memory-string-memory-uint8)[]
@@ -102,6 +107,7 @@ library ERC20Repo {
     function _initialize(string memory name_, string memory symbol_, uint8 decimals_) internal {
         _initialize(_layoutStruct(), name_, symbol_, decimals_);
     }
+
     // end::_initialize(string-memory-string-memory-uint8)[]
 
     // tag::_approve(Storage-address-address-uint256)[]
@@ -122,6 +128,7 @@ library ERC20Repo {
         layoutStruct.allowances[owner][spender] = amount;
         emit IERC20Events.Approval(owner, spender, amount);
     }
+
     // end::_approve(Storage-address-address-uint256)[]
 
     // tag::_approve(address-address-uint256)[]
@@ -135,6 +142,7 @@ library ERC20Repo {
     function _approve(address owner, address spender, uint256 amount) internal {
         _approve(_layoutStruct(), owner, spender, amount);
     }
+
     // end::_approve(address-address-uint256)[]
 
     // tag::_spendAllowance(Storage-address-address-uint256)[]
@@ -157,6 +165,7 @@ library ERC20Repo {
         }
         _approve(layoutStruct, owner, spender, currentAllowance - amount);
     }
+
     // end::_spendAllowance(Storage-address-address-uint256)[]
 
     // tag::_spendAllowance(address-address-uint256)[]
@@ -169,6 +178,7 @@ library ERC20Repo {
     function _spendAllowance(address owner, address spender, uint256 amount) internal {
         _spendAllowance(_layoutStruct(), owner, spender, amount);
     }
+
     // end::_spendAllowance(address-address-uint256)[]
 
     // tag::_increaseBalanceOf(Storage-address-uint256)[]
@@ -186,6 +196,7 @@ library ERC20Repo {
         }
         layoutStruct.balanceOf[account] += amount;
     }
+
     // end::_increaseBalanceOf(Storage-address-uint256)[]
 
     // tag::_increaseBalanceOf(address-uint256)[]
@@ -197,6 +208,7 @@ library ERC20Repo {
     function _increaseBalanceOf(address account, uint256 amount) internal {
         _increaseBalanceOf(_layoutStruct(), account, amount);
     }
+
     // end::_increaseBalanceOf(address-uint256)[]
 
     // tag::_decreaseBalanceOf(Storage-address-uint256)[]
@@ -218,6 +230,7 @@ library ERC20Repo {
         }
         layoutStruct.balanceOf[account] = currentBalance - amount;
     }
+
     // end::_decreaseBalanceOf(Storage-address-uint256)[]
 
     // tag::_decreaseBalanceOf(address-uint256)[]
@@ -229,6 +242,7 @@ library ERC20Repo {
     function _decreaseBalanceOf(address account, uint256 amount) internal {
         _decreaseBalanceOf(_layoutStruct(), account, amount);
     }
+
     // end::_decreaseBalanceOf(address-uint256)[]
 
     // tag::_transfer(Storage-address-address-uint256)[]
@@ -253,6 +267,7 @@ library ERC20Repo {
         _increaseBalanceOf(layoutStruct, recipient, amount);
         emit IERC20Events.Transfer(owner, recipient, amount);
     }
+
     // end::_transfer(Storage-address-address-uint256)[]
 
     // tag::_transfer(address-address-uint256)[]
@@ -266,6 +281,7 @@ library ERC20Repo {
     function _transfer(address owner, address recipient, uint256 amount) internal {
         _transfer(_layoutStruct(), owner, recipient, amount);
     }
+
     // end::_transfer(address-address-uint256)[]
 
     // tag::_transferFrom(Storage-address-address-uint256)[]
@@ -284,6 +300,7 @@ library ERC20Repo {
         // Transfer the tokens.
         _transfer(layoutStruct, owner, recipient, amount);
     }
+
     // end::_transferFrom(Storage-address-address-uint256)[]
 
     // tag::_transferFrom(address-address-uint256)[]
@@ -297,6 +314,7 @@ library ERC20Repo {
     function _transferFrom(address owner, address recipient, uint256 amount) internal {
         _transferFrom(_layoutStruct(), owner, recipient, amount);
     }
+
     // end::_transferFrom(address-address-uint256)[]
 
     // tag::_mint(Storage-address-uint256)[]
@@ -314,6 +332,7 @@ library ERC20Repo {
         layoutStruct.totalSupply += amount;
         emit IERC20Events.Transfer(address(0), recipient, amount);
     }
+
     // end::_mint(Storage-address-uint256)[]
 
     // tag::_mint(address-uint256)[]
@@ -326,6 +345,7 @@ library ERC20Repo {
     function _mint(address recipient, uint256 amount) internal {
         _mint(_layoutStruct(), recipient, amount);
     }
+
     // end::_mint(address-uint256)[]
 
     // tag::_burn(Storage-address-uint256)[]
@@ -343,6 +363,7 @@ library ERC20Repo {
         layoutStruct.totalSupply -= amount;
         emit IERC20Events.Transfer(account, address(0), amount);
     }
+
     // end::_burn(Storage-address-uint256)[]
 
     // tag::_burn(address-uint256)[]
@@ -355,6 +376,7 @@ library ERC20Repo {
     function _burn(address account, uint256 amount) internal {
         _burn(_layoutStruct(), account, amount);
     }
+
     // end::_burn(address-uint256)[]
 
     // tag::_name(Storage)[]
@@ -367,6 +389,7 @@ library ERC20Repo {
     function _name(Storage storage layoutStruct) internal view returns (string memory) {
         return layoutStruct.name;
     }
+
     // end::_name(Storage)[]
 
     // tag::_name()[]
@@ -377,6 +400,7 @@ library ERC20Repo {
     function _name() internal view returns (string memory) {
         return _name(_layoutStruct());
     }
+
     // end::_name()[]
 
     // tag::_symbol(Storage)[]
@@ -389,6 +413,7 @@ library ERC20Repo {
     function _symbol(Storage storage layoutStruct) internal view returns (string memory) {
         return layoutStruct.symbol;
     }
+
     // end::_symbol(Storage)[]
 
     // tag::_symbol()[]
@@ -399,6 +424,7 @@ library ERC20Repo {
     function _symbol() internal view returns (string memory) {
         return _symbol(_layoutStruct());
     }
+
     // end::_symbol()[]
 
     // tag::_decimals(Storage)[]
@@ -411,6 +437,7 @@ library ERC20Repo {
     function _decimals(Storage storage layoutStruct) internal view returns (uint8) {
         return layoutStruct.decimals;
     }
+
     // end::_decimals(Storage)[]
 
     // tag::_decimals()[]
@@ -421,6 +448,7 @@ library ERC20Repo {
     function _decimals() internal view returns (uint8) {
         return _decimals(_layoutStruct());
     }
+
     // end::_decimals()[]
 
     // tag::_totalSupply(Storage)[]
@@ -433,6 +461,7 @@ library ERC20Repo {
     function _totalSupply(Storage storage layoutStruct) internal view returns (uint256) {
         return layoutStruct.totalSupply;
     }
+
     // end::_totalSupply(Storage)[]
 
     // tag::_totalSupply()[]
@@ -443,6 +472,7 @@ library ERC20Repo {
     function _totalSupply() internal view returns (uint256) {
         return _totalSupply(_layoutStruct());
     }
+
     // end::_totalSupply()[]
 
     // tag::_balanceOf(Storage-address)[]
@@ -456,6 +486,7 @@ library ERC20Repo {
     function _balanceOf(Storage storage layoutStruct, address account) internal view returns (uint256) {
         return layoutStruct.balanceOf[account];
     }
+
     // end::_balanceOf(Storage-address)[]
 
     // tag::_balanceOf(address)[]
@@ -467,6 +498,7 @@ library ERC20Repo {
     function _balanceOf(address account) internal view returns (uint256) {
         return _balanceOf(_layoutStruct(), account);
     }
+
     // end::_balanceOf(address)[]
 
     // tag::_allowance(Storage-address-address)[]
@@ -481,6 +513,7 @@ library ERC20Repo {
     function _allowance(Storage storage layoutStruct, address owner, address spender) internal view returns (uint256) {
         return layoutStruct.allowances[owner][spender];
     }
+
     // end::_allowance(Storage-address-address)[]
 
     // tag::_allowance(address-address)[]

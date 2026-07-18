@@ -33,7 +33,8 @@ library BalancerV3BasePoolFactoryRepo {
      *      This follows the canonical pattern used by BalancerV3*PoolRepo, BalancerV3VaultAwareRepo, OperableRepo, FacetRegistryRepo,
      *      Camelot*AwareRepo and other gold-standard Repos for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("protocols.dexes.balancer.v3.base.pool.factory.common"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("protocols.dexes.balancer.v3.base.pool.factory.common"))) - 1);
     // end::STORAGE_SLOT[]
 
     // The pause window end time is stored in 32 bits.
@@ -63,6 +64,7 @@ library BalancerV3BasePoolFactoryRepo {
         mapping(address pool => mapping(address token => bool paysYieldFees)) paysYieldFeesOfPool;
         mapping(address pool => address hooksContract) hooksContractOfPool;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -76,6 +78,7 @@ library BalancerV3BasePoolFactoryRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -86,6 +89,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-uint32-address)[]
@@ -105,6 +109,7 @@ library BalancerV3BasePoolFactoryRepo {
         layoutStruct.pauseWindowDuration = pauseWindowDuration;
         layoutStruct.poolManager = poolManager;
     }
+
     // end::_initialize(Storage-uint32-address)[]
 
     // tag::_initialize(uint32-address)[]
@@ -116,6 +121,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _initialize(uint32 pauseWindowDuration, address poolFeeManager) internal {
         _initialize(_layoutStruct(), pauseWindowDuration, poolFeeManager);
     }
+
     // end::_initialize(uint32-address)[]
 
     // tag::_isDisabled(Storage)[]
@@ -128,6 +134,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _isDisabled(Storage storage layoutStruct) internal view returns (bool) {
         return layoutStruct.isDisabled;
     }
+
     // end::_isDisabled(Storage)[]
 
     // tag::_isDisabled()[]
@@ -138,6 +145,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _isDisabled() internal view returns (bool) {
         return _isDisabled(_layoutStruct());
     }
+
     // end::_isDisabled()[]
 
     // tag::_disable(Storage)[]
@@ -149,6 +157,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _disable(Storage storage layoutStruct) internal {
         layoutStruct.isDisabled = true;
     }
+
     // end::_disable(Storage)[]
 
     // tag::_disable()[]
@@ -158,6 +167,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _disable() internal {
         _disable(_layoutStruct());
     }
+
     // end::_disable()[]
 
     // tag::_ensureEnabled()[]
@@ -170,6 +180,7 @@ library BalancerV3BasePoolFactoryRepo {
             revert IBasePoolFactory.Disabled();
         }
     }
+
     // end::_ensureEnabled()[]
 
     // tag::_pauseWindowDuration(Storage)[]
@@ -182,6 +193,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _pauseWindowDuration(Storage storage layoutStruct) internal view returns (uint32) {
         return layoutStruct.pauseWindowDuration;
     }
+
     // end::_pauseWindowDuration(Storage)[]
 
     // tag::_pauseWindowDuration()[]
@@ -192,6 +204,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _pauseWindowDuration() internal view returns (uint32) {
         return _pauseWindowDuration(_layoutStruct());
     }
+
     // end::_pauseWindowDuration()[]
 
     // tag::_pauseWindowEndTime(Storage)[]
@@ -204,6 +217,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _pauseWindowEndTime(Storage storage layoutStruct) internal view returns (uint32) {
         return layoutStruct.pauseWindowEndTime;
     }
+
     // end::_pauseWindowEndTime(Storage)[]
 
     // tag::_pauseWindowEndTime()[]
@@ -214,6 +228,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _pauseWindowEndTime() internal view returns (uint32) {
         return _pauseWindowEndTime(_layoutStruct());
     }
+
     // end::_pauseWindowEndTime()[]
 
     // tag::_getPoolManager(Storage)[]
@@ -226,6 +241,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _getPoolManager(Storage storage layoutStruct) internal view returns (address) {
         return layoutStruct.poolManager;
     }
+
     // end::_getPoolManager(Storage)[]
 
     // tag::_getPoolManager()[]
@@ -236,6 +252,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _getPoolManager() internal view returns (address) {
         return _getPoolManager(_layoutStruct());
     }
+
     // end::_getPoolManager()[]
 
     // tag::_addPool(Storage-address)[]
@@ -248,6 +265,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _addPool(Storage storage layoutStruct, address pool) internal {
         layoutStruct.pools._add(pool);
     }
+
     // end::_addPool(Storage-address)[]
 
     // tag::_addPool(address)[]
@@ -258,6 +276,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _addPool(address pool) internal {
         _addPool(_layoutStruct(), pool);
     }
+
     // end::_addPool(address)[]
 
     // tag::_isPoolFromFactory(Storage-address)[]
@@ -271,6 +290,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _isPoolFromFactory(Storage storage layoutStruct, address pool) internal view returns (bool) {
         return layoutStruct.pools._contains(pool);
     }
+
     // end::_isPoolFromFactory(Storage-address)[]
 
     // tag::_isPoolFromFactory(address)[]
@@ -282,6 +302,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _isPoolFromFactory(address pool) internal view returns (bool) {
         return _isPoolFromFactory(_layoutStruct(), pool);
     }
+
     // end::_isPoolFromFactory(address)[]
 
     // tag::_getPoolCount(Storage)[]
@@ -294,6 +315,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _getPoolCount(Storage storage layoutStruct) internal view returns (uint256) {
         return layoutStruct.pools._length();
     }
+
     // end::_getPoolCount(Storage)[]
 
     // tag::_getPoolCount()[]
@@ -304,6 +326,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _getPoolCount() internal view returns (uint256) {
         return _getPoolCount(_layoutStruct());
     }
+
     // end::_getPoolCount()[]
 
     // tag::_getPoolsInRange(Storage-uint256-uint256)[]
@@ -322,6 +345,7 @@ library BalancerV3BasePoolFactoryRepo {
     {
         return layoutStruct.pools._range(start, count);
     }
+
     // end::_getPoolsInRange(Storage-uint256-uint256)[]
 
     // tag::_getPoolsInRange(uint256-uint256)[]
@@ -334,6 +358,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _getPoolsInRange(uint256 start, uint256 count) internal view returns (address[] memory) {
         return _getPoolsInRange(_layoutStruct(), start, count);
     }
+
     // end::_getPoolsInRange(uint256-uint256)[]
 
     // tag::_getPools(Storage)[]
@@ -346,6 +371,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _getPools(Storage storage layoutStruct) internal view returns (address[] memory) {
         return layoutStruct.pools._values();
     }
+
     // end::_getPools(Storage)[]
 
     // tag::_getPools()[]
@@ -356,6 +382,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _getPools() internal view returns (address[] memory) {
         return _getPools(_layoutStruct());
     }
+
     // end::_getPools()[]
 
     // tag::_setTokenConfigs(address-TokenConfig[]-memory)[]
@@ -368,6 +395,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _setTokenConfigs(address pool_, TokenConfig[] memory tokenConfig_) internal {
         _setTokenConfigs(_layoutStruct(), pool_, tokenConfig_);
     }
+
     // end::_setTokenConfigs(address-TokenConfig[]-memory)[]
 
     // tag::_getTokenConfigs(Storage-address)[]
@@ -396,6 +424,7 @@ library BalancerV3BasePoolFactoryRepo {
             });
         }
     }
+
     // end::_getTokenConfigs(Storage-address)[]
 
     // tag::_getTokenConfigs(address)[]
@@ -407,6 +436,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _getTokenConfigs(address pool_) internal view returns (TokenConfig[] memory tokenConfigs) {
         return _getTokenConfigs(_layoutStruct(), pool_);
     }
+
     // end::_getTokenConfigs(address)[]
 
     // tag::_setTokenConfigs(Storage-address-TokenConfig[]-memory)[]
@@ -428,6 +458,7 @@ library BalancerV3BasePoolFactoryRepo {
             tokenConfig_[cursor].paysYieldFees;
         }
     }
+
     // end::_setTokenConfigs(Storage-address-TokenConfig[]-memory)[]
 
     // tag::_getNewPoolPauseWindowEndTime(Storage)[]
@@ -443,6 +474,7 @@ library BalancerV3BasePoolFactoryRepo {
         uint32 pauseWindowEndTime = _pauseWindowEndTime(layoutStruct);
         return (block.timestamp < pauseWindowEndTime) ? pauseWindowEndTime : 0;
     }
+
     // end::_getNewPoolPauseWindowEndTime(Storage)[]
 
     // tag::_setHooksContract(Storage-address-address)[]
@@ -456,6 +488,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _setHooksContract(Storage storage layoutStruct, address pool_, address hooksContract_) internal {
         layoutStruct.hooksContractOfPool[pool_] = hooksContract_;
     }
+
     // end::_setHooksContract(Storage-address-address)[]
 
     // tag::_setHooksContract(address-address)[]
@@ -467,6 +500,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _setHooksContract(address pool_, address hooksContract_) internal {
         _setHooksContract(_layoutStruct(), pool_, hooksContract_);
     }
+
     // end::_setHooksContract(address-address)[]
 
     // tag::_getNewPoolPauseWindowEndTime()[]
@@ -477,6 +511,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _getNewPoolPauseWindowEndTime() internal view returns (uint32) {
         return _getNewPoolPauseWindowEndTime(_layoutStruct());
     }
+
     // end::_getNewPoolPauseWindowEndTime()[]
 
     // tag::_getHooksContract(Storage-address)[]
@@ -490,6 +525,7 @@ library BalancerV3BasePoolFactoryRepo {
     function _getHooksContract(Storage storage layoutStruct, address pool_) internal view returns (address) {
         return layoutStruct.hooksContractOfPool[pool_];
     }
+
     // end::_getHooksContract(Storage-address)[]
 
     // tag::_getHooksContract(address)[]
@@ -503,5 +539,5 @@ library BalancerV3BasePoolFactoryRepo {
     }
     // end::_getHooksContract(address)[]
 
-// end::BalancerV3BasePoolFactoryRepo[]
+    // end::BalancerV3BasePoolFactoryRepo[]
 }

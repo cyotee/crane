@@ -45,6 +45,7 @@ library Behavior_IERC721 {
     function _Behavior_IERC721Name() internal pure returns (string memory) {
         return type(Behavior_IERC721).name;
     }
+
     // end::_Behavior_IERC721Name()[]
 
     // tag::_ierc721_errPrefixFunc(string)[]
@@ -57,6 +58,7 @@ library Behavior_IERC721 {
     function _ierc721_errPrefixFunc(string memory testedFuncSig) internal pure returns (string memory) {
         return BehaviorUtils._errPrefixFunc(_Behavior_IERC721Name(), testedFuncSig);
     }
+
     // end::_ierc721_errPrefixFunc(string)[]
 
     // tag::_ierc721_errPrefix(string-string)[]
@@ -74,6 +76,7 @@ library Behavior_IERC721 {
     {
         return string.concat(_ierc721_errPrefixFunc(testedFuncSig), subjectLabel);
     }
+
     // end::_ierc721_errPrefix(string-string)[]
 
     // tag::_ierc721_errPrefix(string-address)[]
@@ -87,6 +90,7 @@ library Behavior_IERC721 {
     function _ierc721_errPrefix(string memory testedFuncSig, address subject) internal view returns (string memory) {
         return _ierc721_errPrefix(testedFuncSig, vm.getLabel(subject));
     }
+
     // end::_ierc721_errPrefix(string-address)[]
 
     /* ---------------------- balanceOf(address) ---------------------- */
@@ -100,6 +104,7 @@ library Behavior_IERC721 {
     function funcSig_IERC721_balanceOf() public pure returns (string memory) {
         return "balanceOf(address)";
     }
+
     // end::funcSig_IERC721_balanceOf()[]
 
     // tag::isValid_balanceOf(IERC721-address-uint256)[]
@@ -125,21 +130,16 @@ library Behavior_IERC721 {
                 "balance mismatch"
             );
             console.logBehaviorCompare(
-                _Behavior_IERC721Name(),
-                "isValid_balanceOf",
-                "balance",
-                expectedBalance._toString(),
-                actual._toString()
+                _Behavior_IERC721Name(), "isValid_balanceOf", "balance", expectedBalance._toString(), actual._toString()
             );
         }
 
-        console.logBehaviorValidation(
-            _Behavior_IERC721Name(), "isValid_balanceOf", "balanceOf", valid
-        );
+        console.logBehaviorValidation(_Behavior_IERC721Name(), "isValid_balanceOf", "balanceOf", valid);
 
         console.logBehaviorExit(_Behavior_IERC721Name(), "isValid_balanceOf");
         return valid;
     }
+
     // end::isValid_balanceOf(IERC721-address-uint256)[]
 
     // tag::expect_balanceOf(IERC721-address-uint256)[]
@@ -162,6 +162,7 @@ library Behavior_IERC721 {
 
         console.logBehaviorExit(_Behavior_IERC721Name(), "expect_balanceOf");
     }
+
     // end::expect_balanceOf(IERC721-address-uint256)[]
 
     // tag::hasValid_balanceOf(IERC721-address-uint256)[]
@@ -173,13 +174,18 @@ library Behavior_IERC721 {
      * @return isValid_ True if current matches.
      */
     /// forge-lint: disable-next-line(mixed-case-function)
-    function hasValid_balanceOf(IERC721 subject, address owner, uint256 expectedBalance) public view returns (bool isValid_) {
+    function hasValid_balanceOf(IERC721 subject, address owner, uint256 expectedBalance)
+        public
+        view
+        returns (bool isValid_)
+    {
         console.logBehaviorEntry(_Behavior_IERC721Name(), "hasValid_balanceOf");
         isValid_ = isValid_balanceOf(subject, owner, expectedBalance);
         console.logBehaviorValidation(_Behavior_IERC721Name(), "hasValid_balanceOf", "balanceOf", isValid_);
         console.logBehaviorExit(_Behavior_IERC721Name(), "hasValid_balanceOf");
         return isValid_;
     }
+
     // end::hasValid_balanceOf(IERC721-address-uint256)[]
 
     /* ---------------------- ownerOf(uint256) ---------------------- */
@@ -193,6 +199,7 @@ library Behavior_IERC721 {
     function funcSig_IERC721_ownerOf() public pure returns (string memory) {
         return "ownerOf(uint256)";
     }
+
     // end::funcSig_IERC721_ownerOf()[]
 
     // tag::isValid_ownerOf(IERC721-uint256-address)[]
@@ -218,21 +225,16 @@ library Behavior_IERC721 {
                 "owner mismatch"
             );
             console.logBehaviorCompare(
-                _Behavior_IERC721Name(),
-                "isValid_ownerOf",
-                "owner",
-                vm.toString(expectedOwner),
-                vm.toString(actual)
+                _Behavior_IERC721Name(), "isValid_ownerOf", "owner", vm.toString(expectedOwner), vm.toString(actual)
             );
         }
 
-        console.logBehaviorValidation(
-            _Behavior_IERC721Name(), "isValid_ownerOf", "ownerOf", valid
-        );
+        console.logBehaviorValidation(_Behavior_IERC721Name(), "isValid_ownerOf", "ownerOf", valid);
 
         console.logBehaviorExit(_Behavior_IERC721Name(), "isValid_ownerOf");
         return valid;
     }
+
     // end::isValid_ownerOf(IERC721-uint256-address)[]
 
     // tag::expect_ownerOf(IERC721-uint256-address)[]
@@ -253,6 +255,7 @@ library Behavior_IERC721 {
         );
         console.logBehaviorExit(_Behavior_IERC721Name(), "expect_ownerOf");
     }
+
     // end::expect_ownerOf(IERC721-uint256-address)[]
 
     // tag::hasValid_ownerOf(IERC721-uint256-address)[]
@@ -264,12 +267,17 @@ library Behavior_IERC721 {
      * @return isValid_ True if matches.
      */
     /// forge-lint: disable-next-line(mixed-case-function)
-    function hasValid_ownerOf(IERC721 subject, uint256 tokenId, address expectedOwner) public view returns (bool isValid_) {
+    function hasValid_ownerOf(IERC721 subject, uint256 tokenId, address expectedOwner)
+        public
+        view
+        returns (bool isValid_)
+    {
         console.logBehaviorEntry(_Behavior_IERC721Name(), "hasValid_ownerOf");
         isValid_ = isValid_ownerOf(subject, tokenId, expectedOwner);
         console.logBehaviorExit(_Behavior_IERC721Name(), "hasValid_ownerOf");
         return isValid_;
     }
+
     // end::hasValid_ownerOf(IERC721-uint256-address)[]
 
     /* ---------------------- getApproved(uint256) ---------------------- */
@@ -283,6 +291,7 @@ library Behavior_IERC721 {
     function funcSig_IERC721_getApproved() public pure returns (string memory) {
         return "getApproved(uint256)";
     }
+
     // end::funcSig_IERC721_getApproved()[]
 
     // tag::isValid_getApproved(IERC721-uint256-address)[]
@@ -319,13 +328,12 @@ library Behavior_IERC721 {
             );
         }
 
-        console.logBehaviorValidation(
-            _Behavior_IERC721Name(), "isValid_getApproved", "getApproved", valid
-        );
+        console.logBehaviorValidation(_Behavior_IERC721Name(), "isValid_getApproved", "getApproved", valid);
 
         console.logBehaviorExit(_Behavior_IERC721Name(), "isValid_getApproved");
         return valid;
     }
+
     // end::isValid_getApproved(IERC721-uint256-address)[]
 
     // tag::expect_getApproved(IERC721-uint256-address)[]
@@ -346,6 +354,7 @@ library Behavior_IERC721 {
         );
         console.logBehaviorExit(_Behavior_IERC721Name(), "expect_getApproved");
     }
+
     // end::expect_getApproved(IERC721-uint256-address)[]
 
     // tag::hasValid_getApproved(IERC721-uint256-address)[]
@@ -357,12 +366,17 @@ library Behavior_IERC721 {
      * @return isValid_ True if matches.
      */
     /// forge-lint: disable-next-line(mixed-case-function)
-    function hasValid_getApproved(IERC721 subject, uint256 tokenId, address expectedApproved) public view returns (bool isValid_) {
+    function hasValid_getApproved(IERC721 subject, uint256 tokenId, address expectedApproved)
+        public
+        view
+        returns (bool isValid_)
+    {
         console.logBehaviorEntry(_Behavior_IERC721Name(), "hasValid_getApproved");
         isValid_ = isValid_getApproved(subject, tokenId, expectedApproved);
         console.logBehaviorExit(_Behavior_IERC721Name(), "hasValid_getApproved");
         return isValid_;
     }
+
     // end::hasValid_getApproved(IERC721-uint256-address)[]
 
     /* ---------------------- isApprovedForAll(address,address) ---------------------- */
@@ -376,6 +390,7 @@ library Behavior_IERC721 {
     function funcSig_IERC721_isApprovedForAll() public pure returns (string memory) {
         return "isApprovedForAll(address,address)";
     }
+
     // end::funcSig_IERC721_isApprovedForAll()[]
 
     // tag::isValid_isApprovedForAll(IERC721-address-address-bool)[]
@@ -413,13 +428,12 @@ library Behavior_IERC721 {
             );
         }
 
-        console.logBehaviorValidation(
-            _Behavior_IERC721Name(), "isValid_isApprovedForAll", "isApprovedForAll", valid
-        );
+        console.logBehaviorValidation(_Behavior_IERC721Name(), "isValid_isApprovedForAll", "isApprovedForAll", valid);
 
         console.logBehaviorExit(_Behavior_IERC721Name(), "isValid_isApprovedForAll");
         return valid;
     }
+
     // end::isValid_isApprovedForAll(IERC721-address-address-bool)[]
 
     // tag::expect_isApprovedForAll(IERC721-address-address-bool)[]
@@ -441,6 +455,7 @@ library Behavior_IERC721 {
         );
         console.logBehaviorExit(_Behavior_IERC721Name(), "expect_isApprovedForAll");
     }
+
     // end::expect_isApprovedForAll(IERC721-address-address-bool)[]
 
     // tag::hasValid_isApprovedForAll(IERC721-address-address-bool)[]
@@ -463,6 +478,7 @@ library Behavior_IERC721 {
         console.logBehaviorExit(_Behavior_IERC721Name(), "hasValid_isApprovedForAll");
         return isValid_;
     }
+
     // end::hasValid_isApprovedForAll(IERC721-address-address-bool)[]
 
     /* ---------------------- approve(uint256,address) ---------------------- */
@@ -476,6 +492,7 @@ library Behavior_IERC721 {
     function funcSig_IERC721_approve() public pure returns (string memory) {
         return "approve(address,uint256)";
     }
+
     // end::funcSig_IERC721_approve()[]
 
     // tag::isValid_approve(IERC721-uint256-address)[]
@@ -487,12 +504,17 @@ library Behavior_IERC721 {
      * @return valid True if matches.
      */
     /// forge-lint: disable-next-line(mixed-case-function)
-    function isValid_approve(IERC721 token, uint256 tokenId, address expectedApproved) public view returns (bool valid) {
+    function isValid_approve(IERC721 token, uint256 tokenId, address expectedApproved)
+        public
+        view
+        returns (bool valid)
+    {
         console.logBehaviorEntry(_Behavior_IERC721Name(), "isValid_approve");
         valid = isValid_getApproved(token, tokenId, expectedApproved);
         console.logBehaviorExit(_Behavior_IERC721Name(), "isValid_approve");
         return valid;
     }
+
     // end::isValid_approve(IERC721-uint256-address)[]
 
     // tag::expect_approve(IERC721-uint256-address)[]
@@ -508,6 +530,7 @@ library Behavior_IERC721 {
         expect_getApproved(subject, tokenId, expectedApproved);
         console.logBehaviorExit(_Behavior_IERC721Name(), "expect_approve");
     }
+
     // end::expect_approve(IERC721-uint256-address)[]
 
     // tag::hasValid_approve(IERC721-uint256-address)[]
@@ -519,12 +542,17 @@ library Behavior_IERC721 {
      * @return isValid_ True if matches.
      */
     /// forge-lint: disable-next-line(mixed-case-function)
-    function hasValid_approve(IERC721 subject, uint256 tokenId, address expectedApproved) public view returns (bool isValid_) {
+    function hasValid_approve(IERC721 subject, uint256 tokenId, address expectedApproved)
+        public
+        view
+        returns (bool isValid_)
+    {
         console.logBehaviorEntry(_Behavior_IERC721Name(), "hasValid_approve");
         isValid_ = isValid_approve(subject, tokenId, expectedApproved);
         console.logBehaviorExit(_Behavior_IERC721Name(), "hasValid_approve");
         return isValid_;
     }
+
     // end::hasValid_approve(IERC721-uint256-address)[]
 
     /* ---------------------- setApprovalForAll(address,bool) ---------------------- */
@@ -538,6 +566,7 @@ library Behavior_IERC721 {
     function funcSig_IERC721_setApprovalForAll() public pure returns (string memory) {
         return "setApprovalForAll(address,bool)";
     }
+
     // end::funcSig_IERC721_setApprovalForAll()[]
 
     // tag::isValid_setApprovalForAll(IERC721-address-address-bool)[]
@@ -560,6 +589,7 @@ library Behavior_IERC721 {
         console.logBehaviorExit(_Behavior_IERC721Name(), "isValid_setApprovalForAll");
         return valid;
     }
+
     // end::isValid_setApprovalForAll(IERC721-address-address-bool)[]
 
     // tag::expect_setApprovalForAll(IERC721-address-address-bool)[]
@@ -576,6 +606,7 @@ library Behavior_IERC721 {
         expect_isApprovedForAll(subject, owner, operator, expectedApproval);
         console.logBehaviorExit(_Behavior_IERC721Name(), "expect_setApprovalForAll");
     }
+
     // end::expect_setApprovalForAll(IERC721-address-address-bool)[]
 
     // tag::hasValid_setApprovalForAll(IERC721-address-address-bool)[]
@@ -598,6 +629,7 @@ library Behavior_IERC721 {
         console.logBehaviorExit(_Behavior_IERC721Name(), "hasValid_setApprovalForAll");
         return isValid_;
     }
+
     // end::hasValid_setApprovalForAll(IERC721-address-address-bool)[]
 
     /* ---------------------- transfer state (composite) ---------------------- */
@@ -611,6 +643,7 @@ library Behavior_IERC721 {
     function funcSig_IERC721_transferFrom() public pure returns (string memory) {
         return "transferFrom(address,address,uint256)";
     }
+
     // end::funcSig_IERC721_transferFrom()[]
 
     // tag::isValid_transfer(IERC721-address-address-uint256-uint256-uint256)[]
@@ -663,6 +696,7 @@ library Behavior_IERC721 {
         console.logBehaviorExit(_Behavior_IERC721Name(), "isValid_transfer");
         return valid;
     }
+
     // end::isValid_transfer(IERC721-address-address-uint256-uint256-uint256)[]
 
     // tag::expect_transfer(IERC721-address-address-uint256-uint256-uint256)[]
@@ -686,13 +720,11 @@ library Behavior_IERC721 {
     ) public {
         console.logBehaviorEntry(_Behavior_IERC721Name(), "expect_transfer");
         console.logBehaviorExpectation(
-            _Behavior_IERC721Name(),
-            "expect_transfer",
-            "transfer pre-state",
-            string.concat("id:", vm.toString(tokenId))
+            _Behavior_IERC721Name(), "expect_transfer", "transfer pre-state", string.concat("id:", vm.toString(tokenId))
         );
         console.logBehaviorExit(_Behavior_IERC721Name(), "expect_transfer");
     }
+
     // end::expect_transfer(IERC721-address-address-uint256-uint256-uint256)[]
 
     // tag::hasValid_transfer(IERC721-address-address-uint256-uint256-uint256)[]
@@ -716,5 +748,5 @@ library Behavior_IERC721 {
     }
     // end::hasValid_transfer(IERC721-address-address-uint256-uint256-uint256)[]
 
-// end::Behavior_IERC721[]
+    // end::Behavior_IERC721[]
 }

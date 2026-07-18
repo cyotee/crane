@@ -29,6 +29,7 @@ interface IDiamondCutFacetDFPkg is IDiamondFactoryPackage {
         IFacet diamondCutFacet;
         IFacet multiStepOwnableFacet;
     }
+
     // end::PkgInit[]
 
     // tag::PkgArgs[]
@@ -43,6 +44,7 @@ interface IDiamondCutFacetDFPkg is IDiamondFactoryPackage {
     }
     // end::PkgArgs[]
 }
+
 // end::IDiamondCutFacetDFPkg[]
 
 // TODO Rename to DiamondCutDFPkg
@@ -75,6 +77,7 @@ contract DiamondCutFacetDFPkg is IDiamondCutFacetDFPkg {
         DIAMOND_CUT_FACET = pkgInitArgs.diamondCutFacet;
         MULTI_STEP_OWNABLE_FACET = pkgInitArgs.multiStepOwnableFacet;
     }
+
     // end::constructor(IDiamondCutFacetDFPkg.PkgInit)[]
 
     // tag::packageName-diamondcutfacetdfpkg[]
@@ -86,6 +89,7 @@ contract DiamondCutFacetDFPkg is IDiamondCutFacetDFPkg {
     function packageName() public pure returns (string memory name_) {
         return type(DiamondCutFacetDFPkg).name;
     }
+
     // end::packageName-diamondcutfacetdfpkg[]
 
     // tag::packageMetadata-diamondcutfacetdfpkg[]
@@ -105,6 +109,7 @@ contract DiamondCutFacetDFPkg is IDiamondCutFacetDFPkg {
         interfaces = facetInterfaces();
         facets = facetAddresses();
     }
+
     // end::packageMetadata-diamondcutfacetdfpkg[]
 
     // tag::facetAddresses-diamondcutfacetdfpkg[]
@@ -118,6 +123,7 @@ contract DiamondCutFacetDFPkg is IDiamondCutFacetDFPkg {
         facetAddresses_[0] = address(DIAMOND_CUT_FACET);
         facetAddresses_[1] = address(MULTI_STEP_OWNABLE_FACET);
     }
+
     // end::facetAddresses-diamondcutfacetdfpkg[]
 
     // tag::facetInterfaces-diamondcutfacetdfpkg[]
@@ -131,6 +137,7 @@ contract DiamondCutFacetDFPkg is IDiamondCutFacetDFPkg {
         interfaces[0] = type(IMultiStepOwnable).interfaceId;
         interfaces[1] = type(IDiamondCut).interfaceId;
     }
+
     // end::facetInterfaces-diamondcutfacetdfpkg[]
 
     // tag::facetCuts-diamondcutfacetdfpkg[]
@@ -158,6 +165,7 @@ contract DiamondCutFacetDFPkg is IDiamondCutFacetDFPkg {
             functionSelectors: DIAMOND_CUT_FACET.facetFuncs()
         });
     }
+
     // end::facetCuts-diamondcutfacetdfpkg[]
 
     // tag::diamondConfig-diamondcutfacetdfpkg[]
@@ -169,6 +177,7 @@ contract DiamondCutFacetDFPkg is IDiamondCutFacetDFPkg {
     function diamondConfig() public view virtual returns (IDiamondFactoryPackage.DiamondConfig memory config) {
         config = IDiamondFactoryPackage.DiamondConfig({facetCuts: facetCuts(), interfaces: facetInterfaces()});
     }
+
     // end::diamondConfig-diamondcutfacetdfpkg[]
 
     // tag::calcSalt-diamondcutfacetdfpkg[]
@@ -181,6 +190,7 @@ contract DiamondCutFacetDFPkg is IDiamondCutFacetDFPkg {
     function calcSalt(bytes memory pkgArgs) public pure returns (bytes32 salt) {
         salt = keccak256(abi.encode(pkgArgs));
     }
+
     // end::calcSalt-diamondcutfacetdfpkg[]
 
     // tag::processArgs-diamondcutfacetdfpkg[]
@@ -201,6 +211,7 @@ contract DiamondCutFacetDFPkg is IDiamondCutFacetDFPkg {
         // salt = keccak256(abi.encode(pkgArgs));
         processedPkgArgs = pkgArgs;
     }
+
     // end::processArgs-diamondcutfacetdfpkg[]
 
     // tag::updatePkg-diamondcutfacetdfpkg[]
@@ -219,6 +230,7 @@ contract DiamondCutFacetDFPkg is IDiamondCutFacetDFPkg {
     {
         return true;
     }
+
     // end::updatePkg-diamondcutfacetdfpkg[]
 
     // tag::initAccount-diamondcutfacetdfpkg[]
@@ -238,6 +250,7 @@ contract DiamondCutFacetDFPkg is IDiamondCutFacetDFPkg {
             ERC165Repo._registerInterfaces(accountInit.supportedInterfaces);
         }
     }
+
     // end::initAccount-diamondcutfacetdfpkg[]
 
     // tag::postDeploy-diamondcutfacetdfpkg[]

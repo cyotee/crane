@@ -14,13 +14,17 @@ import {MultiStepOwnableRepo} from "@crane/contracts/access/ERC8023/MultiStepOwn
 contract BountyCommonTarget is IBountyCommon, MultiStepOwnableModifiers {
     using SafeERC20 for IERC20;
 
-    event BountyCreated(uint256 indexed bountyId, BountyRepo.BountyType bType, address indexed issuer, address indexed funder);
+    event BountyCreated(
+        uint256 indexed bountyId, BountyRepo.BountyType bType, address indexed issuer, address indexed funder
+    );
     event BountyFunded(uint256 indexed bountyId, address indexed contributor, address token, uint256 amount);
     event BountyCanceled(uint256 indexed bountyId);
     event BountyClosed(uint256 indexed bountyId);
     event ContributionWithdrawn(uint256 indexed bountyId, address indexed contributor, address token, uint256 amount);
     event DeliverableSubmitted(uint256 indexed bountyId, address indexed submitter, string[] uris);
-    event DeliverableApproved(uint256 indexed bountyId, address indexed approver, address recipient, uint256 subIndex, uint256[] amounts);
+    event DeliverableApproved(
+        uint256 indexed bountyId, address indexed approver, address recipient, uint256 subIndex, uint256[] amounts
+    );
     event DisputeCreated(uint256 indexed bountyId, uint256 indexed disputeId, uint256 subIndex, address raisedBy);
 
     // --- Config / Arbitrator ---
@@ -96,7 +100,10 @@ contract BountyCommonTarget is IBountyCommon, MultiStepOwnableModifiers {
         BountyRepo.Bounty storage b = BountyRepo._bounty(rs, bountyId);
         require(b.id == bountyId, "no bounty");
         require(b.status == BountyRepo.BountyStatus.Open, "not open");
-        require(msg.sender == b.issuer || msg.sender == b.funder || msg.sender == MultiStepOwnableRepo._owner(), "not authorized");
+        require(
+            msg.sender == b.issuer || msg.sender == b.funder || msg.sender == MultiStepOwnableRepo._owner(),
+            "not authorized"
+        );
 
         BountyRepo._setStatus(rs, bountyId, BountyRepo.BountyStatus.Canceled);
         emit BountyCanceled(bountyId);
@@ -108,7 +115,8 @@ contract BountyCommonTarget is IBountyCommon, MultiStepOwnableModifiers {
         require(b.id == bountyId, "no bounty");
 
         bool isFunder = msg.sender == b.funder;
-        bool isClosedOrCanceled = b.status == BountyRepo.BountyStatus.Closed || b.status == BountyRepo.BountyStatus.Canceled;
+        bool isClosedOrCanceled =
+            b.status == BountyRepo.BountyStatus.Closed || b.status == BountyRepo.BountyStatus.Canceled;
         require(isFunder ? isClosedOrCanceled : true, "funder withdraw only post close/cancel");
 
         uint256 amt = BountyRepo._getContribution(rs, bountyId, msg.sender, token);
@@ -150,7 +158,11 @@ contract BountyCommonTarget is IBountyCommon, MultiStepOwnableModifiers {
         BountyRepo.Bounty storage b = BountyRepo._bounty(rs, bountyId);
         require(b.id == bountyId, "no bounty");
         // basic auth: issuer, funder, or a submitter/anyone for open? For now allow issuer or current submit context. Broad for v1.
-        require(msg.sender == b.issuer || msg.sender == b.funder || BountyRepo._isSubmitterAllowed(rs, bountyId, msg.sender), "not allowed to dispute");
+        require(
+            msg.sender == b.issuer || msg.sender == b.funder
+                || BountyRepo._isSubmitterAllowed(rs, bountyId, msg.sender),
+            "not allowed to dispute"
+        );
 
         address arb = getCurrentArbitrator();
         require(arb != address(0), "no arbitrator");
@@ -160,11 +172,8 @@ contract BountyCommonTarget is IBountyCommon, MultiStepOwnableModifiers {
 
         disputeId = IArbitrator(arb).createDispute{value: cost}(choices, extraData);
 
-        BountyRepo.DisputeInfo memory info = BountyRepo.DisputeInfo({
-            bountyId: bountyId,
-            subIndex: subIndex,
-            raisedBy: msg.sender
-        });
+        BountyRepo.DisputeInfo memory info =
+            BountyRepo.DisputeInfo({bountyId: bountyId, subIndex: subIndex, raisedBy: msg.sender});
         BountyRepo._setDisputeInfo(rs, disputeId, info);
 
         emit DisputeCreated(bountyId, disputeId, subIndex, msg.sender);

@@ -165,6 +165,7 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         assertTrue(quotedOut >= 1, "quotedOut exact min baseline");
         assertQuoteAccuracy(quotedOut, actualOut, "WETH/USDC 3000 exactIn quote mismatch");
     }
+
     // end::test_quoteExactInputSingle_WETH_USDC_3000_zeroForOne()[]
 
     // tag::test_quoteExactInputSingle_WETH_USDC_3000_oneForZero()[]
@@ -221,6 +222,7 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         assertTrue(quotedIn >= 1, "quotedIn exact min");
         assertQuoteAccuracy(quotedIn, actualIn, "WETH/USDC 3000 exactOut quote mismatch");
     }
+
     // end::test_quoteExactOutputSingle_WETH_USDC_3000_zeroForOne()[]
 
     // tag::test_quoteExactOutputSingle_WETH_USDC_3000_oneForZero()[]
@@ -280,6 +282,7 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         assertTrue(quotedOut >= 1, "quotedOut exact min baseline");
         assertQuoteAccuracy(quotedOut, actualOut, "WETH/USDC 10000 exactIn quote mismatch");
     }
+
     // end::test_quoteExactInputSingle_WETH_USDC_10000_zeroForOne()[]
 
     // tag::test_quoteExactOutputSingle_WETH_USDC_10000_zeroForOne()[]
@@ -339,6 +342,7 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         assertTrue(quotedOut >= 1, "quotedOut exact min");
         assertQuoteAccuracy(quotedOut, actualOut, "WBTC/WETH 3000 exactIn quote mismatch");
     }
+
     // end::test_quoteExactInputSingle_WBTC_WETH_3000()[]
 
     /* -------------------------------------------------------------------------- */
@@ -370,6 +374,7 @@ contract UniswapV3Utils_Fork_Test is TestBase_UniswapV3Fork {
         // Tick-based quote may have slightly more error due to tick rounding
         assertQuoteAccuracy(quotedOut, actualOut, 50, "tick overload exactIn quote mismatch"); // 0.5% tolerance
     }
+
     // end::test_quoteExactInputSingle_withTick()[]
 
     // tag::test_quoteExactOutputSingle_withTick()[]

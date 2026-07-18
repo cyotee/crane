@@ -174,8 +174,8 @@ contract TruefiAMO is Owned {
         if (_totalSupply_usdcpool == 0) {
             allocations[5] = truefiUSDC_Pool.balanceOf(address(this));
         } else {
-            allocations[5] = truefiUSDC_Pool.balanceOf(address(this)) * truefiUSDC_Pool.poolValue()
-                / _totalSupply_usdcpool; // Allocated USDC in core pool
+            allocations[5] =
+                truefiUSDC_Pool.balanceOf(address(this)) * truefiUSDC_Pool.poolValue() / _totalSupply_usdcpool; // Allocated USDC in core pool
         }
         // Allocated USDC in managed portfolios
         uint256 sum_usdc_in_managed_portfolio = 0;
@@ -193,9 +193,8 @@ contract TruefiAMO is Owned {
 
     function dollarBalances() public view returns (uint256 usd_val_e18, uint256 collat_val_e18) {
         usd_val_e18 = showAllocations()[3] + (showAllocations()[7] * (1e12));
-        collat_val_e18 =
-            ((showAllocations()[3]) * (FRAX.global_collateral_ratio()) / (PRICE_PRECISION))
-                + (showAllocations()[7] * (1e12));
+        collat_val_e18 = ((showAllocations()[3]) * (FRAX.global_collateral_ratio()) / (PRICE_PRECISION))
+            + (showAllocations()[7] * (1e12));
     }
 
     // For potential Truefi incentives in the future

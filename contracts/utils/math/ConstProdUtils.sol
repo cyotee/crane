@@ -47,6 +47,7 @@ library ConstProdUtils {
     {
         return knownToken == token0 ? (reserve0, reserve1) : (reserve1, reserve0);
     }
+
     // end::_sortReserves(address-address-uint256-uint256)[]
 
     // tag::_sortReserves(address-address-uint256-uint256-uint256-uint256)[]
@@ -80,6 +81,7 @@ library ConstProdUtils {
             ? (reserve0, reserve0Fee, reserve1, reserve1Fee)
             : (reserve1, reserve1Fee, reserve0, reserve0Fee);
     }
+
     // end::_sortReserves(address-address-uint256-uint256-uint256-uint256)[]
 
     /* -------------------------------------------------------------------------- */
@@ -123,6 +125,7 @@ library ConstProdUtils {
         }
         return lpAmount;
     }
+
     // end::_depositQuote(uint256-uint256-uint256-uint256-uint256)[]
 
     /* -------------------------------------------------------------------------- */
@@ -161,6 +164,7 @@ library ConstProdUtils {
             FEE_DENOMINATOR
         );
     }
+
     // end::_saleQuote(uint256-uint256-uint256-uint256)[]
 
     // tag::_saleQuote(uint256-uint256-uint256-uint256-uint256)[]
@@ -186,6 +190,7 @@ library ConstProdUtils {
         uint256 denominator = (reserveIn * feeDenominator) + amountInWithFee;
         return numerator / denominator;
     }
+
     // end::_saleQuote(uint256-uint256-uint256-uint256-uint256)[]
 
     // tag::_purchaseQuote(uint256-uint256-uint256-uint256)[]
@@ -211,6 +216,7 @@ library ConstProdUtils {
         // // amountIn = (numerator / denominator);
         return _purchaseQuote(amountOut, reserveIn, reserveOut, feePercent, FEE_DENOMINATOR);
     }
+
     // end::_purchaseQuote(uint256-uint256-uint256-uint256)[]
 
     // tag::_purchaseQuote(uint256-uint256-uint256-uint256-uint256)[]
@@ -249,6 +255,7 @@ library ConstProdUtils {
         uint256 denominator = (reserveOut - amountOut) * (feeDenominator - feePercent);
         amountIn = (numerator / denominator) + 1;
     }
+
     // end::_purchaseQuote(uint256-uint256-uint256-uint256-uint256)[]
 
     /* -------------------------------------------------------------------------- */
@@ -293,6 +300,7 @@ library ConstProdUtils {
         args.feeOn = feeOn;
         return _quoteSwapDepositWithFee(args);
     }
+
     // end::_quoteSwapDepositWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
 
     // tag::_quoteSwapDepositWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
@@ -333,6 +341,7 @@ library ConstProdUtils {
         args.feeOn = feeOn;
         return _quoteSwapDepositWithFee(args);
     }
+
     // end::_quoteSwapDepositWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
 
     // tag::SwapDepositArgs[]
@@ -351,6 +360,7 @@ library ConstProdUtils {
         uint256 ownerFeeShare;
         bool feeOn;
     }
+
     // end::SwapDepositArgs[]
 
     // tag::_quoteSwapDepositWithFee(SwapDepositArgs)[]
@@ -403,6 +413,7 @@ library ConstProdUtils {
         lpAmt = _depositQuote(amountA, amountB, args.lpTotalSupply, args.reserveIn, args.reserveOut);
         return (lpAmt);
     }
+
     // end::_quoteSwapDepositWithFee(SwapDepositArgs)[]
 
     // tag::_swapDepositSaleAmt(uint256-uint256-uint256)[]
@@ -430,6 +441,7 @@ library ConstProdUtils {
             FEE_DENOMINATOR
         );
     }
+
     // end::_swapDepositSaleAmt(uint256-uint256-uint256)[]
 
     // tag::_swapDepositSaleAmt(uint256-uint256-uint256-uint256)[]
@@ -460,6 +472,7 @@ library ConstProdUtils {
             saleAmt = amountIn; // Cap at amountIn
         }
     }
+
     // end::_swapDepositSaleAmt(uint256-uint256-uint256-uint256)[]
 
     /* -------------------------------------------------------------------------- */
@@ -509,6 +522,7 @@ library ConstProdUtils {
         // Calculate token amounts with adjusted supply
         return _withdrawQuote(ownedLPAmount, lpTotalSupply, totalReserveA, totalReserveB);
     }
+
     // end::_quoteWithdrawWithFee(uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
 
     // tag::_withdrawQuote(uint256-uint256-uint256-uint256)[]
@@ -539,6 +553,7 @@ library ConstProdUtils {
         ownedReserveA = ((ownedLPAmount * totalReserveA) / lpTotalSupply);
         ownedReserveB = ((ownedLPAmount * totalReserveB) / lpTotalSupply);
     }
+
     // end::_withdrawQuote(uint256-uint256-uint256-uint256)[]
 
     /* -------------------------------------------------------------------------- */
@@ -638,6 +653,7 @@ library ConstProdUtils {
 
         return amountIn;
     }
+
     // end::_quoteZapInToTargetLPWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
 
     /* -------------------------------------------------------------------------- */
@@ -660,6 +676,7 @@ library ConstProdUtils {
         bool feeOn;
         uint256 protocolFeeDenominator; // Denominator for protocol fee share
     }
+
     // end::ZapOutToTargetWithFeeArgs[]
 
     // tag::_quoteZapOutToTargetWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
@@ -703,6 +720,7 @@ library ConstProdUtils {
         });
         return _quoteZapOutToTargetWithFee(args);
     }
+
     // end::_quoteZapOutToTargetWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
 
     // tag::_quoteZapOutToTargetWithFee(ZapOutToTargetWithFeeArgs)[]
@@ -814,6 +832,7 @@ library ConstProdUtils {
         }
         return lpNeeded;
     }
+
     // end::_quoteZapOutToTargetWithFee(ZapOutToTargetWithFeeArgs)[]
 
     // tag::_computeZapOut(uint256-uint256-ZapOutToTargetWithFeeArgs)[]
@@ -843,6 +862,7 @@ library ConstProdUtils {
         uint256 amountDesiredSwap = numerator / denominator;
         return amountDesiredDirect + amountDesiredSwap;
     }
+
     // end::_computeZapOut(uint256-uint256-ZapOutToTargetWithFeeArgs)[]
 
     /* -------------------------------------------------------------------------- */
@@ -890,6 +910,7 @@ library ConstProdUtils {
         feeA = claimableA > noFeeA ? claimableA - noFeeA : 0;
         feeB = claimableB > noFeeB ? claimableB - noFeeB : 0;
     }
+
     // end::_calculateFeePortionForPosition(uint256-uint256-uint256-uint256-uint256-uint256)[]
 
     /* -------------------------------------------------------------------------- */
@@ -947,6 +968,7 @@ library ConstProdUtils {
         if (denominator == 0) return 0;
         return numerator / denominator;
     }
+
     // end::_calculateProtocolFee(uint256-uint256-uint256-uint256)[]
 
     // tag::_calculateProtocolFeeMint(uint256-uint256-uint256-uint256)[]
@@ -972,6 +994,7 @@ library ConstProdUtils {
         uint256 denominator = (rootK * 5) + (rootKLast);
         liquidity = numerator / denominator;
     }
+
     // end::_calculateProtocolFeeMint(uint256-uint256-uint256-uint256)[]
 
     /* -------------------------------------------------------------------------- */
@@ -997,6 +1020,7 @@ library ConstProdUtils {
         }
         amountB = (amountA * reserveB) / reserveA;
     }
+
     // end::_equivLiquidity(uint256-uint256-uint256)[]
 
     // tag::_quoteDepositWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
@@ -1036,6 +1060,7 @@ library ConstProdUtils {
         lpAmt = _depositQuote(amountADeposit, amountBDeposit, lpTotalSupply, lpReserveA, lpReserveB);
         return (lpAmt);
     }
+
     // end::_quoteDepositWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
 
     // tag::_quoteWithdrawSwapWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
@@ -1089,5 +1114,5 @@ library ConstProdUtils {
         return (totalAmountA);
     }
     // end::_quoteWithdrawSwapWithFee(uint256-uint256-uint256-uint256-uint256-uint256-uint256-uint256-bool)[]
-// end::ConstProdUtils[]
+    // end::ConstProdUtils[]
 }

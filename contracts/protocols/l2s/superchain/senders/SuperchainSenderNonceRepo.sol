@@ -25,7 +25,8 @@ library SuperchainSenderNonceRepo {
      *      This follows the canonical pattern used by OperableRepo, ERC20Repo, MultiStepOwnableRepo, ERC2535Repo,
      *      and other gold-standard Repos for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("crane.protocols.l2s.superchain.senders.nonce"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("crane.protocols.l2s.superchain.senders.nonce"))) - 1);
     // end::STORAGE_SLOT[]
 
     /**
@@ -41,6 +42,7 @@ library SuperchainSenderNonceRepo {
     struct Storage {
         mapping(address sender => mapping(uint256 targetChainId => uint256 nextNonce)) nextNonce;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -54,6 +56,7 @@ library SuperchainSenderNonceRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -64,6 +67,7 @@ library SuperchainSenderNonceRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_nextNonce(Storage-address-uint256)[]
@@ -82,6 +86,7 @@ library SuperchainSenderNonceRepo {
     {
         return layoutStruct.nextNonce[sender][targetChainId];
     }
+
     // end::_nextNonce(Storage-address-uint256)[]
 
     // tag::_nextNonce(address-uint256)[]
@@ -94,6 +99,7 @@ library SuperchainSenderNonceRepo {
     function _nextNonce(address sender, uint256 targetChainId) internal view returns (uint256 nonce) {
         return _nextNonce(_layoutStruct(), sender, targetChainId);
     }
+
     // end::_nextNonce(address-uint256)[]
 
     // tag::_useNonce(Storage-address-uint256)[]
@@ -113,6 +119,7 @@ library SuperchainSenderNonceRepo {
         nonce = layoutStruct.nextNonce[sender][targetChainId];
         layoutStruct.nextNonce[sender][targetChainId] = nonce + 1;
     }
+
     // end::_useNonce(Storage-address-uint256)[]
 
     // tag::_useNonce(address-uint256)[]
@@ -125,6 +132,7 @@ library SuperchainSenderNonceRepo {
     function _useNonce(address sender, uint256 targetChainId) internal returns (uint256 nonce) {
         return _useNonce(_layoutStruct(), sender, targetChainId);
     }
+
     // end::_useNonce(address-uint256)[]
 
     // tag::_useCheckedNonce(Storage-address-uint256-uint256)[]
@@ -150,6 +158,7 @@ library SuperchainSenderNonceRepo {
         }
         layoutStruct.nextNonce[sender][targetChainId] = currentNonce + 1;
     }
+
     // end::_useCheckedNonce(Storage-address-uint256-uint256)[]
 
     // tag::_useCheckedNonce(address-uint256-uint256)[]

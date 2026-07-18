@@ -11,6 +11,7 @@ struct Bytes32Set {
     // Values in set.
     bytes32[] values;
 }
+
 // end::Bytes32Set[]
 
 // tag::Bytes32SetRepo[]
@@ -38,6 +39,7 @@ library Bytes32SetRepo {
         set.values.length._isValidIndex(index);
         return set.values[index];
     }
+
     // end::_index(Bytes32Set-uint256)[]
 
     // tag::_indexOf(Bytes32Set-bytes32)[]
@@ -54,6 +56,7 @@ library Bytes32SetRepo {
             return set.indexes[value] - 1;
         }
     }
+
     // end::_indexOf(Bytes32Set-bytes32)[]
 
     // tag::_contains(Bytes32Set-bytes32)[]
@@ -66,6 +69,7 @@ library Bytes32SetRepo {
     function _contains(Bytes32Set storage set, bytes32 value) internal view returns (bool isPresent) {
         return set.indexes[value] != 0;
     }
+
     // end::_contains(Bytes32Set-bytes32)[]
 
     // tag::_length(Bytes32Set)[]
@@ -77,6 +81,7 @@ library Bytes32SetRepo {
     function _length(Bytes32Set storage set) internal view returns (uint256 length_) {
         return set.values.length;
     }
+
     // end::_length(Bytes32Set)[]
 
     // tag::_add(Bytes32Set-bytes32)[]
@@ -98,6 +103,7 @@ library Bytes32SetRepo {
         }
         return true;
     }
+
     // end::_add(Bytes32Set-bytes32)[]
 
     // tag::_add(Bytes32Set-bytes32[])[]
@@ -113,6 +119,7 @@ library Bytes32SetRepo {
         }
         return true;
     }
+
     // end::_add(Bytes32Set-bytes32[])[]
 
     // tag::_addAsc(Bytes32Set-bytes32)[]
@@ -155,6 +162,7 @@ library Bytes32SetRepo {
         set.values[insertIdx] = value;
         set.indexes[value] = left;
     }
+
     // end::_addAsc(Bytes32Set-bytes32)[]
 
     // tag::_remove(Bytes32Set-bytes32)[]
@@ -186,6 +194,7 @@ library Bytes32SetRepo {
             delete set.indexes[value];
         }
     }
+
     // end::_remove(Bytes32Set-bytes32)[]
 
     // tag::_remove(Bytes32Set-bytes32[])[]
@@ -199,6 +208,7 @@ library Bytes32SetRepo {
             _remove(set, values[iteration]);
         }
     }
+
     // end::_remove(Bytes32Set-bytes32[])[]
 
     // tag::_removeAsc(Bytes32Set-bytes32)[]
@@ -224,6 +234,7 @@ library Bytes32SetRepo {
         set.values.pop();
         delete set.indexes[value];
     }
+
     // end::_removeAsc(Bytes32Set-bytes32)[]
 
     // tag::_asArray(Bytes32Set)[]
@@ -235,6 +246,7 @@ library Bytes32SetRepo {
     function _asArray(Bytes32Set storage set) internal view returns (bytes32[] memory array) {
         array = set.values;
     }
+
     // end::_asArray(Bytes32Set)[]
 
     // tag::_values(Bytes32Set)[]
@@ -249,6 +261,7 @@ library Bytes32SetRepo {
     function _values(Bytes32Set storage set) internal view returns (bytes32[] storage values) {
         values = set.values;
     }
+
     // end::_values(Bytes32Set)[]
 
     // tag::_range(Bytes32Set-uint256-uint256)[]
@@ -276,6 +289,7 @@ library Bytes32SetRepo {
             }
         }
     }
+
     // end::_range(Bytes32Set-uint256-uint256)[]
 
     // tag::_sortAsc(Bytes32Set)[]
@@ -312,6 +326,7 @@ library Bytes32SetRepo {
             set.indexes[val] = i + 1; // 1-indexed
         }
     }
+
     // end::_sortAsc(Bytes32Set)[]
 
     // tag::_quickSort(Bytes32Set)[]
@@ -323,6 +338,7 @@ library Bytes32SetRepo {
     function _quickSort(Bytes32Set storage set) internal {
         _quickSort(set, 0, int256(set.values.length) - 1);
     }
+
     // end::_quickSort(Bytes32Set)[]
 
     // tag::_quickSort(Bytes32Set-int256-int256)[]
@@ -355,6 +371,7 @@ library Bytes32SetRepo {
         if (left < j) _quickSort(set, left, j);
         if (i < right) _quickSort(set, i, right);
     }
+
     // end::_quickSort(Bytes32Set-int256-int256)[]
 
     // tag::_sort(bytes32[])[]
@@ -383,6 +400,7 @@ library Bytes32SetRepo {
 
         return array;
     }
+
     // end::_sort(bytes32[])[]
 
     // tag::_sort(bytes32[]-uint256)[]

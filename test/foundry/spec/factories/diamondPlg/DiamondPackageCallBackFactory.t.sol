@@ -57,6 +57,7 @@ contract MinimalTestPackage is IDiamondFactoryPackage {
     function packageName() public pure returns (string memory) {
         return "MinimalTestPackage";
     }
+
     // end::packageName()[]
 
     // tag::packageMetadata()[]
@@ -75,6 +76,7 @@ contract MinimalTestPackage is IDiamondFactoryPackage {
         interfaces = facetInterfaces();
         facets = facetAddresses();
     }
+
     // end::packageMetadata()[]
 
     // tag::facetAddresses()[]
@@ -87,6 +89,7 @@ contract MinimalTestPackage is IDiamondFactoryPackage {
     function facetAddresses() public pure returns (address[] memory) {
         return new address[](0);
     }
+
     // end::facetAddresses()[]
 
     // tag::facetInterfaces()[]
@@ -99,6 +102,7 @@ contract MinimalTestPackage is IDiamondFactoryPackage {
     function facetInterfaces() public pure returns (bytes4[] memory) {
         return new bytes4[](0);
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetCuts()[]
@@ -111,6 +115,7 @@ contract MinimalTestPackage is IDiamondFactoryPackage {
     function facetCuts() public pure returns (IDiamond.FacetCut[] memory) {
         return new IDiamond.FacetCut[](0);
     }
+
     // end::facetCuts()[]
 
     // tag::diamondConfig()[]
@@ -124,6 +129,7 @@ contract MinimalTestPackage is IDiamondFactoryPackage {
         return
             IDiamondFactoryPackage.DiamondConfig({facetCuts: new IDiamond.FacetCut[](0), interfaces: new bytes4[](0)});
     }
+
     // end::diamondConfig()[]
 
     // tag::calcSalt(bytes)[]
@@ -136,6 +142,7 @@ contract MinimalTestPackage is IDiamondFactoryPackage {
     function calcSalt(bytes memory pkgArgs) external pure returns (bytes32) {
         return keccak256(pkgArgs);
     }
+
     // end::calcSalt(bytes)[]
 
     // tag::processArgs(bytes)[]
@@ -148,6 +155,7 @@ contract MinimalTestPackage is IDiamondFactoryPackage {
     function processArgs(bytes memory pkgArgs) external pure returns (bytes memory) {
         return pkgArgs;
     }
+
     // end::processArgs(bytes)[]
 
     // tag::updatePkg(address,bytes)[]
@@ -185,6 +193,7 @@ contract MinimalTestPackage is IDiamondFactoryPackage {
     }
     // end::postDeploy(address)[]
 }
+
 // end::MinimalTestPackage[]
 
 // tag::StorageCheckPackage[]
@@ -221,6 +230,7 @@ contract StorageCheckPackage is IDiamondFactoryPackage {
     function packageName() external pure returns (string memory) {
         return "StorageCheckPackage";
     }
+
     // end::packageName()[]
 
     // tag::packageMetadata()[]
@@ -239,6 +249,7 @@ contract StorageCheckPackage is IDiamondFactoryPackage {
         interfaces = facetInterfaces();
         facets = facetAddresses();
     }
+
     // end::packageMetadata()[]
 
     // tag::facetAddresses()[]
@@ -252,6 +263,7 @@ contract StorageCheckPackage is IDiamondFactoryPackage {
         addrs = new address[](1);
         addrs[0] = address(SELF);
     }
+
     // end::facetAddresses()[]
 
     // tag::facetInterfaces()[]
@@ -264,6 +276,7 @@ contract StorageCheckPackage is IDiamondFactoryPackage {
     function facetInterfaces() public pure returns (bytes4[] memory) {
         return new bytes4[](0);
     }
+
     // end::facetInterfaces()[]
 
     /**
@@ -287,6 +300,7 @@ contract StorageCheckPackage is IDiamondFactoryPackage {
             facetAddress: address(SELF), action: IDiamond.FacetCutAction.Add, functionSelectors: facetFuncs()
         });
     }
+
     // end::facetCuts()[]
 
     // tag::diamondConfig()[]
@@ -299,6 +313,7 @@ contract StorageCheckPackage is IDiamondFactoryPackage {
     function diamondConfig() public view returns (IDiamondFactoryPackage.DiamondConfig memory) {
         return IDiamondFactoryPackage.DiamondConfig({facetCuts: facetCuts(), interfaces: facetInterfaces()});
     }
+
     // end::diamondConfig()[]
 
     // tag::calcSalt(bytes)[]
@@ -311,6 +326,7 @@ contract StorageCheckPackage is IDiamondFactoryPackage {
     function calcSalt(bytes memory pkgArgs) external pure returns (bytes32) {
         return keccak256(pkgArgs);
     }
+
     // end::calcSalt(bytes)[]
 
     // tag::processArgs(bytes)[]
@@ -323,6 +339,7 @@ contract StorageCheckPackage is IDiamondFactoryPackage {
     function processArgs(bytes memory pkgArgs) external pure returns (bytes memory) {
         return pkgArgs;
     }
+
     // end::processArgs(bytes)[]
 
     // tag::updatePkg(address,bytes)[]
@@ -335,6 +352,7 @@ contract StorageCheckPackage is IDiamondFactoryPackage {
     function updatePkg(address, bytes memory) external pure returns (bool) {
         return true;
     }
+
     // end::updatePkg(address,bytes)[]
 
     // tag::initAccount(bytes)[]
@@ -351,6 +369,7 @@ contract StorageCheckPackage is IDiamondFactoryPackage {
         sd.initializer = address(this);
         sd.initialized = true;
     }
+
     // end::initAccount(bytes)[]
 
     // tag::postDeploy(address)[]
@@ -378,6 +397,7 @@ contract StorageCheckPackage is IDiamondFactoryPackage {
         return (sd.value, sd.initializer, sd.initialized);
     }
 }
+
 // end::StorageCheckPackage[]
 
 /* ========================================================================== */
@@ -603,7 +623,9 @@ contract DiamondPackageCallBackFactory_Test is Test {
         address[] memory facetAddresses = loupe.facetAddresses();
 
         // LR-7: exact value assertion (not >=). Exactly 3 base facets after PostDeployHook removal.
-        assertEq(facetAddresses.length, 3, "Exactly 3 base facets (ERC165, DiamondLoupe, ERC8109) after postDeploy removal");
+        assertEq(
+            facetAddresses.length, 3, "Exactly 3 base facets (ERC165, DiamondLoupe, ERC8109) after postDeploy removal"
+        );
 
         // Verify each base facet is present (exact match)
         bool hasERC165 = false;
@@ -620,6 +642,7 @@ contract DiamondPackageCallBackFactory_Test is Test {
         assertTrue(hasDiamondLoupe, "DiamondLoupe facet should be installed");
         assertTrue(hasERC8109, "ERC8109 facet should be installed");
     }
+
     // end::test_deploy_baseFacetsInstalled()[]
 
     /**
@@ -754,14 +777,8 @@ contract DiamondPackageCallBackFactory_Test is Test {
         );
 
         // interfaces/funcs use hasValid (stored from expect)
-        assertTrue(
-            Behavior_IFacet.hasValid_IFacet_facetInterfaces(erc165Facet),
-            "ERC165Facet interfaces via Behavior"
-        );
-        assertTrue(
-            Behavior_IFacet.hasValid_IFacet_facetFuncs(erc165Facet),
-            "ERC165Facet funcs via Behavior"
-        );
+        assertTrue(Behavior_IFacet.hasValid_IFacet_facetInterfaces(erc165Facet), "ERC165Facet interfaces via Behavior");
+        assertTrue(Behavior_IFacet.hasValid_IFacet_facetFuncs(erc165Facet), "ERC165Facet funcs via Behavior");
 
         // LR-7: facetMetadata consistency (Behavior)
         assertTrue(
@@ -775,10 +792,10 @@ contract DiamondPackageCallBackFactory_Test is Test {
             "DiamondLoupeFacet interfaces via Behavior"
         );
         assertTrue(
-            Behavior_IFacet.hasValid_IFacet_facetFuncs(diamondLoupeFacet),
-            "DiamondLoupeFacet funcs via Behavior"
+            Behavior_IFacet.hasValid_IFacet_facetFuncs(diamondLoupeFacet), "DiamondLoupeFacet funcs via Behavior"
         );
     }
+
     // end::test_LR7_baseFacets_declaration_viaBehavior()[]
 
     // tag::test_LR7_packageDeclarations_exact()[]
@@ -822,6 +839,7 @@ contract DiamondPackageCallBackFactory_Test is Test {
         assertEq(storageCheckPackage.calcSalt(pArgs), keccak256(pArgs));
         assertEq(storageCheckPackage.processArgs(pArgs), pArgs);
     }
+
     // end::test_LR7_packageDeclarations_exact()[]
 
     /* ====================================================================== */
@@ -921,6 +939,7 @@ contract DiamondPackageCallBackFactory_Test is Test {
         // This proves the initialization happened in proxy context (delegatecall)
         assertEq(initializer, proxy, "Initializer should be proxy address (proves delegatecall context)");
     }
+
     // end::test_deploy_initAccount_viaDelgatecall()[]
 
     /**

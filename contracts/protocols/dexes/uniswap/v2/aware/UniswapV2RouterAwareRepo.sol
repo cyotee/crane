@@ -21,7 +21,9 @@ library UniswapV2RouterAwareRepo {
      *      This follows the canonical pattern used by OperableRepo, ERC2535Repo, MultiStepOwnableRepo, DeployedAddressesRepo, Create3FactoryAwareRepo, DiamondPackageFactoryAwareRepo, BalancerV3VaultAwareRepo, CamelotV2FactoryAwareRepo and other
      *      gold-standard Repos for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("protocols.dexes.uniswap.v2.router.aware"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("protocols.dexes.uniswap.v2.router.aware"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -32,6 +34,7 @@ library UniswapV2RouterAwareRepo {
     struct Storage {
         IUniswapV2Router router;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -45,6 +48,7 @@ library UniswapV2RouterAwareRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -55,6 +59,7 @@ library UniswapV2RouterAwareRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-IUniswapV2Router)[]
@@ -67,6 +72,7 @@ library UniswapV2RouterAwareRepo {
     function _initialize(Storage storage layoutStruct, IUniswapV2Router router_) internal {
         layoutStruct.router = router_;
     }
+
     // end::_initialize(Storage-IUniswapV2Router)[]
 
     // tag::_initialize(IUniswapV2Router)[]
@@ -77,6 +83,7 @@ library UniswapV2RouterAwareRepo {
     function _initialize(IUniswapV2Router router_) internal {
         _initialize(_layoutStruct(), router_);
     }
+
     // end::_initialize(IUniswapV2Router)[]
 
     // tag::_uniswapV2Router(Storage)[]
@@ -86,13 +93,10 @@ library UniswapV2RouterAwareRepo {
      * @param layoutStruct The Storage struct to operate on.
      * @return router_ The stored IUniswapV2Router (or zero if not initialized).
      */
-    function _uniswapV2Router(Storage storage layoutStruct)
-        internal
-        view
-        returns (IUniswapV2Router router_)
-    {
+    function _uniswapV2Router(Storage storage layoutStruct) internal view returns (IUniswapV2Router router_) {
         return layoutStruct.router;
     }
+
     // end::_uniswapV2Router(Storage)[]
 
     // tag::_uniswapV2Router()[]

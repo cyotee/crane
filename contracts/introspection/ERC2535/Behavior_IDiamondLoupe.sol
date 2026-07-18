@@ -31,6 +31,7 @@ struct Behavior_IDiamondLoupeLayout {
     /// forge-lint: disable-next-line(mixed-case-variable)
     mapping(IDiamondLoupe subject => mapping(bytes4 func => address facet)) expected_facetAddr;
 }
+
 // end::Behavior_IDiamondLoupeLayout[]
 
 // tag::Behavior_IDiamondLoupeRepo[]
@@ -45,6 +46,7 @@ library Behavior_IDiamondLoupeRepo {
     // tag::_BEHAVIOR_IDIAMONDLOUPE_LAYOUT_STORAGE_SLOT[]
     bytes32 internal constant _BEHAVIOR_IDIAMONDLOUPE_LAYOUT_STORAGE_SLOT =
         keccak256(abi.encode(type(Behavior_IDiamondLoupeRepo).name));
+
     // end::_BEHAVIOR_IDIAMONDLOUPE_LAYOUT_STORAGE_SLOT[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -53,12 +55,14 @@ library Behavior_IDiamondLoupeRepo {
             layoutStruct_.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
     function _layoutStruct() internal pure returns (Behavior_IDiamondLoupeLayout storage) {
         return _layoutStruct(_BEHAVIOR_IDIAMONDLOUPE_LAYOUT_STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_expected_facetAddr(Behavior_IDiamondLoupeLayout-IDiamondLoupe-bytes4)[]
@@ -69,12 +73,14 @@ library Behavior_IDiamondLoupeRepo {
     {
         return layoutStruct.expected_facetAddr[subject][func];
     }
+
     // end::_expected_facetAddr(Behavior_IDiamondLoupeLayout-IDiamondLoupe-bytes4)[]
 
     // tag::_expected_facetAddr(IDiamondLoupe-bytes4)[]
     function _expected_facetAddr(IDiamondLoupe subject, bytes4 func) internal view returns (address) {
         return _layoutStruct().expected_facetAddr[subject][func];
     }
+
     // end::_expected_facetAddr(IDiamondLoupe-bytes4)[]
 
     // tag::_set_expected_facetAddr(Behavior_IDiamondLoupeLayout-IDiamondLoupe-bytes4-address)[]
@@ -86,6 +92,7 @@ library Behavior_IDiamondLoupeRepo {
     ) internal {
         layoutStruct.expected_facetAddr[subject][func] = facet;
     }
+
     // end::_set_expected_facetAddr(Behavior_IDiamondLoupeLayout-IDiamondLoupe-bytes4-address)[]
 
     // tag::_set_expected_facetAddr(IDiamondLoupe-bytes4-address)[]
@@ -94,6 +101,7 @@ library Behavior_IDiamondLoupeRepo {
     }
     // end::_set_expected_facetAddr(IDiamondLoupe-bytes4-address)[]
 }
+
 // end::Behavior_IDiamondLoupeRepo[]
 
 // tag::Behavior_IDiamondLoupe[]
@@ -122,6 +130,7 @@ library Behavior_IDiamondLoupe {
     function _Behavior_IDiamondLoupeName() internal pure returns (string memory) {
         return type(Behavior_IDiamondLoupe).name;
     }
+
     // end::_Behavior_IDiamondLoupeName()[]
 
     // tag::_idiamondLoupe_errPrefix(string-string)[]
@@ -133,6 +142,7 @@ library Behavior_IDiamondLoupe {
     {
         return BehaviorUtils._errPrefix(_Behavior_IDiamondLoupeName(), testedFuncSig, subjectLabel);
     }
+
     // end::_idiamondLoupe_errPrefix(string-string)[]
 
     // tag::_idiamondLoupe_errPrefix(string-address)[]
@@ -144,6 +154,7 @@ library Behavior_IDiamondLoupe {
     {
         return BehaviorUtils._errPrefix(_Behavior_IDiamondLoupeName(), testedFuncSig, subject);
     }
+
     // end::_idiamondLoupe_errPrefix(string-address)[]
 
     /* ---------------------------------------------------------------------- */
@@ -180,6 +191,7 @@ library Behavior_IDiamondLoupe {
 
         console.logBehaviorExit(_Behavior_IDiamondLoupeName(), "expect_IDiamondLoupe");
     }
+
     // end::expect_IDiamondLoupe(IDiamondLoupe-IDiamondLoupe.Facet[])[]
 
     // tag::expect_IDiamondLoupe(IDiamondLoupe-IDiamondLoupe.Facet)[]
@@ -201,6 +213,7 @@ library Behavior_IDiamondLoupe {
         expect_IDiamondLoupe_facetAddress(subject, expected.functionSelectors, expected.facetAddress);
         console.logBehaviorExit(_Behavior_IDiamondLoupeName(), "expect_IDiamondLoupe");
     }
+
     // end::expect_IDiamondLoupe(IDiamondLoupe-IDiamondLoupe.Facet)[]
 
     // tag::areValid_IDiamondLoupe(IDiamondLoupe-IDiamondLoupe.Facet[]-IDiamondLoupe.Facet[])[]
@@ -227,6 +240,7 @@ library Behavior_IDiamondLoupe {
 
         console.logBehaviorExit(_Behavior_IDiamondLoupeName(), "areValid_IDiamondLoupe");
     }
+
     // end::areValid_IDiamondLoupe(IDiamondLoupe-IDiamondLoupe.Facet[]-IDiamondLoupe.Facet[])[]
 
     // tag::hasValid_IDiamondLoupe(IDiamondLoupe)[]
@@ -320,6 +334,7 @@ library Behavior_IDiamondLoupe {
 
         console.logBehaviorExit(_Behavior_IDiamondLoupeName(), "hasValid_IDiamondLoupe");
     }
+
     // end::hasValid_IDiamondLoupe(IDiamondLoupe)[]
 
     /* ------------------------------ facets() ------------------------------ */
@@ -329,6 +344,7 @@ library Behavior_IDiamondLoupe {
     function funcSig_facets() internal pure returns (string memory) {
         return "facets()";
     }
+
     // end::funcSig_facets()[]
 
     // tag::errSuffix_facets()[]
@@ -336,6 +352,7 @@ library Behavior_IDiamondLoupe {
     function errSuffix_facets() internal pure returns (string memory) {
         return "facets";
     }
+
     // end::errSuffix_facets()[]
 
     // tag::errSuffix_facets_funcs(string)[]
@@ -343,6 +360,7 @@ library Behavior_IDiamondLoupe {
     function errSuffix_facets_funcs(string memory facetLabel) internal pure returns (string memory) {
         return string.concat("facet functions for facet ", facetLabel);
     }
+
     // end::errSuffix_facets_funcs(string)[]
 
     // tag::errSuffix_facets_funcs(IDiamondLoupe)[]
@@ -350,6 +368,7 @@ library Behavior_IDiamondLoupe {
     function errSuffix_facets_funcs(IDiamondLoupe subject) internal view returns (string memory) {
         return string.concat("facets functions for facet ", vm.getLabel(address(subject)));
     }
+
     // end::errSuffix_facets_funcs(IDiamondLoupe)[]
 
     // tag::areValid_IDiamondLoupe_facets(IDiamondLoupe-IDiamondLoupe.Facet[]-IDiamondLoupe.Facet[])[]
@@ -374,6 +393,7 @@ library Behavior_IDiamondLoupe {
             errSuffix_facets_funcs(subject)
         );
     }
+
     // end::areValid_IDiamondLoupe_facets(IDiamondLoupe-IDiamondLoupe.Facet[]-IDiamondLoupe.Facet[])[]
 
     // tag::expect_IDiamondLoupe_facets(IDiamondLoupe-IDiamondLoupe.Facet[])[]
@@ -385,6 +405,7 @@ library Behavior_IDiamondLoupe {
             );
         }
     }
+
     // end::expect_IDiamondLoupe_facets(IDiamondLoupe-IDiamondLoupe.Facet[])[]
 
     // tag::hasValid_IDiamondLoupe_facets(IDiamondLoupe)[]
@@ -399,6 +420,7 @@ library Behavior_IDiamondLoupe {
             errSuffix_facets_funcs(subject)
         );
     }
+
     // end::hasValid_IDiamondLoupe_facets(IDiamondLoupe)[]
 
     /* ------------------- facetFunctionSelectors(address) ------------------ */
@@ -408,6 +430,7 @@ library Behavior_IDiamondLoupe {
     function funcSig_facetFunctionSelectors() internal pure returns (string memory) {
         return "facetFunctionSelectors(address)";
     }
+
     // end::funcSig_facetFunctionSelectors()[]
 
     // tag::areValid_IDiamondLoupe_facetFunctionSelectors(string-bytes4[]-bytes4[])[]
@@ -424,6 +447,7 @@ library Behavior_IDiamondLoupe {
             errSuffix_facets_funcs(subjectLabel)
         );
     }
+
     // end::areValid_IDiamondLoupe_facetFunctionSelectors(string-bytes4[]-bytes4[])[]
 
     // tag::areValid_IDiamondLoupe_facetFunctionSelectors(IDiamondLoupe-bytes4[]-bytes4[])[]
@@ -436,6 +460,7 @@ library Behavior_IDiamondLoupe {
         // declareAddr(address(subject));
         return areValid_IDiamondLoupe_facetFunctionSelectors(vm.getLabel(address(subject)), expected, actual);
     }
+
     // end::areValid_IDiamondLoupe_facetFunctionSelectors(IDiamondLoupe-bytes4[]-bytes4[])[]
 
     // tag::expect_IDiamondLoupe_facetFunctionSelectors(IDiamondLoupe-address-bytes4[])[]
@@ -453,6 +478,7 @@ library Behavior_IDiamondLoupe {
             expectedFuncs_
         );
     }
+
     // end::expect_IDiamondLoupe_facetFunctionSelectors(IDiamondLoupe-address-bytes4[])[]
 
     // tag::hasValid_IDiamondLoupe_facetFunctionSelectors(IDiamondLoupe-address)[]
@@ -473,6 +499,7 @@ library Behavior_IDiamondLoupe {
             subject.facetFunctionSelectors(facet)
         );
     }
+
     // end::hasValid_IDiamondLoupe_facetFunctionSelectors(IDiamondLoupe-address)[]
 
     /* -------------------------- facetAddresses() -------------------------- */
@@ -482,6 +509,7 @@ library Behavior_IDiamondLoupe {
     function funcSig_facetAddresses() internal pure returns (string memory) {
         return "facetAddresses()";
     }
+
     // end::funcSig_facetAddresses()[]
 
     // tag::errSuffix_facetAddresses()[]
@@ -489,6 +517,7 @@ library Behavior_IDiamondLoupe {
     function errSuffix_facetAddresses() internal pure returns (string memory) {
         return "facet addresses";
     }
+
     // end::errSuffix_facetAddresses()[]
 
     // tag::areValid_IDiamondLoupe_facetAddresses(string-address[]-address[])[]
@@ -506,6 +535,7 @@ library Behavior_IDiamondLoupe {
             errSuffix_facetAddresses()
         );
     }
+
     // end::areValid_IDiamondLoupe_facetAddresses(string-address[]-address[])[]
 
     // tag::areValid_IDiamondLoupe_facetAddresses(IDiamondLoupe-address[]-address[])[]
@@ -519,6 +549,7 @@ library Behavior_IDiamondLoupe {
         // declareAddr(address(subject));
         return areValid_IDiamondLoupe_facetAddresses(vm.getLabel(address(subject)), expected, actual);
     }
+
     // end::areValid_IDiamondLoupe_facetAddresses(IDiamondLoupe-address[]-address[])[]
 
     // tag::expect_IDiamondLoupe_facetAddresses(IDiamondLoupe-address[])[]
@@ -531,6 +562,7 @@ library Behavior_IDiamondLoupe {
             address(subject), IDiamondLoupe.facetAddresses.selector, expectedFacetAddresses_
         );
     }
+
     // end::expect_IDiamondLoupe_facetAddresses(IDiamondLoupe-address[])[]
 
     // tag::expect_IDiamondLoupe_facetAddresses(IDiamondLoupe-address)[]
@@ -541,6 +573,7 @@ library Behavior_IDiamondLoupe {
             address(subject), IDiamondLoupe.facetAddresses.selector, expectedFacetAddress_
         );
     }
+
     // end::expect_IDiamondLoupe_facetAddresses(IDiamondLoupe-address)[]
 
     // tag::hasValid_IDiamondLoupe_facetAddresses(IDiamondLoupe)[]
@@ -556,6 +589,7 @@ library Behavior_IDiamondLoupe {
             subject.facetAddresses()
         );
     }
+
     // end::hasValid_IDiamondLoupe_facetAddresses(IDiamondLoupe)[]
 
     /* ------------------------ facetAddress(bytes4) ------------------------ */
@@ -565,6 +599,7 @@ library Behavior_IDiamondLoupe {
     function funcSig_facetAddress() internal pure returns (string memory) {
         return "facetAddress(bytes4)";
     }
+
     // end::funcSig_facetAddress()[]
 
     // tag::errSuffix_facetAddress()[]
@@ -572,6 +607,7 @@ library Behavior_IDiamondLoupe {
     function errSuffix_facetAddress() internal pure returns (string memory) {
         return "facet of function";
     }
+
     // end::errSuffix_facetAddress()[]
 
     // tag::areValid_IDiamondLoupe_facetAddress(string-bytes4-address-address)[]
@@ -607,6 +643,7 @@ library Behavior_IDiamondLoupe {
             );
         }
     }
+
     // end::areValid_IDiamondLoupe_facetAddress(string-bytes4-address-address)[]
 
     // tag::areValid_IDiamondLoupe_facetAddress(IDiamondLoupe-bytes4-address-address)[]
@@ -620,6 +657,7 @@ library Behavior_IDiamondLoupe {
         // declareAddr(address(subject));
         return areValid_IDiamondLoupe_facetAddress(vm.getLabel(address(subject)), func, expected, actual);
     }
+
     // end::areValid_IDiamondLoupe_facetAddress(IDiamondLoupe-bytes4-address-address)[]
 
     // tag::expect_IDiamondLoupe_facetAddress(IDiamondLoupe-bytes4-address)[]
@@ -627,6 +665,7 @@ library Behavior_IDiamondLoupe {
     function expect_IDiamondLoupe_facetAddress(IDiamondLoupe subject, bytes4 func, address facet) internal {
         Behavior_IDiamondLoupeRepo._set_expected_facetAddr(subject, func, facet);
     }
+
     // end::expect_IDiamondLoupe_facetAddress(IDiamondLoupe-bytes4-address)[]
 
     // tag::expect_IDiamondLoupe_facetAddress(IDiamondLoupe-bytes4[]-address)[]
@@ -637,6 +676,7 @@ library Behavior_IDiamondLoupe {
             Behavior_IDiamondLoupeRepo._set_expected_facetAddr(subject, funcs[cursor], facet);
         }
     }
+
     // end::expect_IDiamondLoupe_facetAddress(IDiamondLoupe-bytes4[]-address)[]
 
     // tag::hasValid_IDiamondLoupe_facetAddress(IDiamondLoupe)[]
@@ -682,5 +722,5 @@ library Behavior_IDiamondLoupe {
     }
     // end::hasValid_IDiamondLoupe_facetAddress(IDiamondLoupe)[]
 
-// end::Behavior_IDiamondLoupe[]
+    // end::Behavior_IDiamondLoupe[]
 }

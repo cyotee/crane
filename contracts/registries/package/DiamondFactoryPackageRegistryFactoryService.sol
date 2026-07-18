@@ -30,6 +30,7 @@ library DiamondFactoryPackageRegistryFactoryService {
         (string memory name, bytes4[] memory interfaces, address[] memory facets) = package.packageMetadata();
         DiamondFactoryPackageRegistryRepo._registerPackage(package, name, interfaces, facets);
     }
+
     // end::_registerPackage(IDiamondFactoryPackage)[]
 
     // tag::_deployPackage(bytes-bytes32)[]
@@ -45,6 +46,7 @@ library DiamondFactoryPackageRegistryFactoryService {
         _registerPackage(package);
         return package;
     }
+
     // end::_deployPackage(bytes-bytes32)[]
 
     // tag::_deployPackage(bytes-bytes-bytes32)[]
@@ -66,5 +68,5 @@ library DiamondFactoryPackageRegistryFactoryService {
     }
     // end::_deployPackage(bytes-bytes-bytes32)[]
 
-// end::DiamondFactoryPackageRegistryFactoryService[]
+    // end::DiamondFactoryPackageRegistryFactoryService[]
 }

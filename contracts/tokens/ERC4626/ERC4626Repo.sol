@@ -25,6 +25,7 @@ library ERC4626Repo {
      *      DeployedAddressesRepo, and other gold-standard Repos for collision-resistant deterministic storage binding.
      */
     bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("eip.erc.4626"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -41,6 +42,7 @@ library ERC4626Repo {
         uint8 decimalOffset;
         uint256 lastTotalAssets;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -54,6 +56,7 @@ library ERC4626Repo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -64,6 +67,7 @@ library ERC4626Repo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-IERC20-uint8-uint8)[]
@@ -84,6 +88,7 @@ library ERC4626Repo {
         _setReserveAsset(layoutStruct, reserveAsset_, reserveAssetDecimals_);
         _setDecimalOffset(layoutStruct, decimalOffset_);
     }
+
     // end::_initialize(Storage-IERC20-uint8-uint8)[]
 
     // tag::_initialize(IERC20-uint8-uint8)[]
@@ -96,6 +101,7 @@ library ERC4626Repo {
     function _initialize(IERC20 reserveAsset_, uint8 reserveAssetDecimals_, uint8 decimalOffset_) internal {
         _initialize(_layoutStruct(), reserveAsset_, reserveAssetDecimals_, decimalOffset_);
     }
+
     // end::_initialize(IERC20-uint8-uint8)[]
 
     // tag::_setReserveAsset(Storage-IERC20-uint8)[]
@@ -112,6 +118,7 @@ library ERC4626Repo {
         layoutStruct.reserveAsset = reserveAsset_;
         layoutStruct.reserveAssetDecimals = reserveAssetDecimals_;
     }
+
     // end::_setReserveAsset(Storage-IERC20-uint8)[]
 
     // tag::_setReserveAsset(IERC20-uint8)[]
@@ -123,6 +130,7 @@ library ERC4626Repo {
     function _setReserveAsset(IERC20 reserveAsset_, uint8 reserveAssetDecimals_) internal {
         _setReserveAsset(_layoutStruct(), reserveAsset_, reserveAssetDecimals_);
     }
+
     // end::_setReserveAsset(IERC20-uint8)[]
 
     // tag::_setDecimalOffset(Storage-uint8)[]
@@ -135,6 +143,7 @@ library ERC4626Repo {
     function _setDecimalOffset(Storage storage layoutStruct, uint8 decimalOffset_) internal {
         layoutStruct.decimalOffset = decimalOffset_;
     }
+
     // end::_setDecimalOffset(Storage-uint8)[]
 
     // tag::_setDecimalOffset(uint8)[]
@@ -145,6 +154,7 @@ library ERC4626Repo {
     function _setDecimalOffset(uint8 decimalOffset_) internal {
         _setDecimalOffset(_layoutStruct(), decimalOffset_);
     }
+
     // end::_setDecimalOffset(uint8)[]
 
     // tag::_setLastTotalAssets(Storage-uint256)[]
@@ -157,6 +167,7 @@ library ERC4626Repo {
     function _setLastTotalAssets(Storage storage layoutStruct, uint256 lastTotalAssets_) internal {
         layoutStruct.lastTotalAssets = lastTotalAssets_;
     }
+
     // end::_setLastTotalAssets(Storage-uint256)[]
 
     // tag::_setLastTotalAssets(uint256)[]
@@ -167,6 +178,7 @@ library ERC4626Repo {
     function _setLastTotalAssets(uint256 lastTotalAssets_) internal {
         _setLastTotalAssets(_layoutStruct(), lastTotalAssets_);
     }
+
     // end::_setLastTotalAssets(uint256)[]
 
     // tag::_reserveAsset(Storage)[]
@@ -179,6 +191,7 @@ library ERC4626Repo {
     function _reserveAsset(Storage storage layoutStruct) internal view returns (IERC20 reserveAsset_) {
         return layoutStruct.reserveAsset;
     }
+
     // end::_reserveAsset(Storage)[]
 
     // tag::_reserveAsset()[]
@@ -189,6 +202,7 @@ library ERC4626Repo {
     function _reserveAsset() internal view returns (IERC20 reserveAsset_) {
         return _reserveAsset(_layoutStruct());
     }
+
     // end::_reserveAsset()[]
 
     // tag::_reserveAssetDecimals(Storage)[]
@@ -201,6 +215,7 @@ library ERC4626Repo {
     function _reserveAssetDecimals(Storage storage layoutStruct) internal view returns (uint8 decimals_) {
         return layoutStruct.reserveAssetDecimals;
     }
+
     // end::_reserveAssetDecimals(Storage)[]
 
     // tag::_reserveAssetDecimals()[]
@@ -211,6 +226,7 @@ library ERC4626Repo {
     function _reserveAssetDecimals() internal view returns (uint8 decimals_) {
         return _reserveAssetDecimals(_layoutStruct());
     }
+
     // end::_reserveAssetDecimals()[]
 
     // tag::_decimalOffset(Storage)[]
@@ -223,6 +239,7 @@ library ERC4626Repo {
     function _decimalOffset(Storage storage layoutStruct) internal view returns (uint8 offset_) {
         return layoutStruct.decimalOffset;
     }
+
     // end::_decimalOffset(Storage)[]
 
     // tag::_decimalOffset()[]
@@ -233,6 +250,7 @@ library ERC4626Repo {
     function _decimalOffset() internal view returns (uint8 offset_) {
         return _decimalOffset(_layoutStruct());
     }
+
     // end::_decimalOffset()[]
 
     // tag::_lastTotalAssets(Storage)[]
@@ -245,6 +263,7 @@ library ERC4626Repo {
     function _lastTotalAssets(Storage storage layoutStruct) internal view returns (uint256 lastTotalAssets_) {
         return layoutStruct.lastTotalAssets;
     }
+
     // end::_lastTotalAssets(Storage)[]
 
     // tag::_lastTotalAssets()[]

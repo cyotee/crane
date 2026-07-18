@@ -44,6 +44,7 @@ contract ERC721Facet is IFacet, IERC721 {
     function facetName() public pure returns (string memory name) {
         return type(ERC721Facet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -58,6 +59,7 @@ contract ERC721Facet is IFacet, IERC721 {
         interfaces = new bytes4[](1);
         interfaces[0] = type(IERC721).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -80,6 +82,7 @@ contract ERC721Facet is IFacet, IERC721 {
         funcs[7] = IERC721.getApproved.selector;
         funcs[8] = IERC721.isApprovedForAll.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]
@@ -102,6 +105,7 @@ contract ERC721Facet is IFacet, IERC721 {
         interfaces = facetInterfaces();
         functions = facetFuncs();
     }
+
     // end::facetMetadata()[]
 
     /* -------------------------------------------------------------------------- */
@@ -118,6 +122,7 @@ contract ERC721Facet is IFacet, IERC721 {
     function balanceOf(address owner) public view virtual returns (uint256) {
         return ERC721Repo._balanceOf(owner);
     }
+
     // end::balanceOf(address)[]
 
     // tag::ownerOf(uint256)[]
@@ -130,6 +135,7 @@ contract ERC721Facet is IFacet, IERC721 {
     function ownerOf(uint256 tokenId) public view virtual returns (address) {
         return ERC721Repo._ownerOf(tokenId);
     }
+
     // end::ownerOf(uint256)[]
 
     // tag::safeTransferFrom(address-address-uint256-bytes)[]
@@ -145,6 +151,7 @@ contract ERC721Facet is IFacet, IERC721 {
     function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) public payable virtual {
         ERC721Repo._safeTransferFrom(from, to, tokenId, data);
     }
+
     // end::safeTransferFrom(address-address-uint256-bytes)[]
 
     // tag::safeTransferFrom(address-address-uint256)[]
@@ -158,6 +165,7 @@ contract ERC721Facet is IFacet, IERC721 {
     function safeTransferFrom(address from, address to, uint256 tokenId) public payable virtual {
         ERC721Repo._safeTransferFrom(from, to, tokenId);
     }
+
     // end::safeTransferFrom(address-address-uint256)[]
 
     // tag::transferFrom(address-address-uint256)[]
@@ -172,6 +180,7 @@ contract ERC721Facet is IFacet, IERC721 {
     function transferFrom(address from, address to, uint256 tokenId) public payable virtual {
         ERC721Repo._transferFrom(from, to, tokenId);
     }
+
     // end::transferFrom(address-address-uint256)[]
 
     // tag::approve(address,uint256)[]
@@ -185,6 +194,7 @@ contract ERC721Facet is IFacet, IERC721 {
     function approve(address to, uint256 tokenId) public payable virtual {
         ERC721Repo._approve(to, tokenId);
     }
+
     // end::approve(address,uint256)[]
 
     // tag::setApprovalForAll(address,bool)[]
@@ -198,6 +208,7 @@ contract ERC721Facet is IFacet, IERC721 {
     function setApprovalForAll(address operator, bool approved) public virtual {
         ERC721Repo._setApprovalForAll(operator, approved);
     }
+
     // end::setApprovalForAll(address,bool)[]
 
     // tag::getApproved(uint256)[]
@@ -210,6 +221,7 @@ contract ERC721Facet is IFacet, IERC721 {
     function getApproved(uint256 tokenId) public view virtual returns (address) {
         return ERC721Repo._getApproved(tokenId);
     }
+
     // end::getApproved(uint256)[]
 
     // tag::isApprovedForAll(address,address)[]

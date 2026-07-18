@@ -24,6 +24,7 @@ struct Bytes4ComparatorRequest {
     bytes4[] actual;
     ErrorMsg errorMsg;
 }
+
 // end::Bytes4ComparatorRequest[]
 
 // tag::Bytes4SetComparatorLayout[]
@@ -39,6 +40,7 @@ struct Bytes4SetComparatorLayout {
     Bytes4Set tempExpected;
     Bytes4Set actual;
 }
+
 // end::Bytes4SetComparatorLayout[]
 
 // tag::Bytes4SetComparatorRepo[]
@@ -69,6 +71,7 @@ library Bytes4SetComparatorRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_b4SetCompare(bytes32)[]
@@ -81,6 +84,7 @@ library Bytes4SetComparatorRepo {
     function _b4SetCompare(bytes32 actualHash) internal pure returns (Bytes4SetComparatorLayout storage) {
         return _layoutStruct((actualHash ^ STORAGE_RANGE_OFFSET));
     }
+
     // end::_b4SetCompare(bytes32)[]
 
     // tag::_recExpectedBytes4(address-bytes4-bytes4[])[]
@@ -94,6 +98,7 @@ library Bytes4SetComparatorRepo {
     function _recExpectedBytes4(address subject, bytes4 func, bytes4[] memory expected) internal {
         _b4SetCompare(subject._toBytes32()).recordedExpected[subject][func]._add(expected);
     }
+
     // end::_recExpectedBytes4(address-bytes4-bytes4[])[]
 
     // tag::_recExpectedBytes4(address-bytes4-bytes4)[]
@@ -107,6 +112,7 @@ library Bytes4SetComparatorRepo {
     function _recExpectedBytes4(address subject, bytes4 func, bytes4 expected) internal {
         _b4SetCompare(subject._toBytes32()).recordedExpected[subject][func]._add(expected);
     }
+
     // end::_recExpectedBytes4(address-bytes4-bytes4)[]
 
     // tag::_recedExpectedBytes4(address-bytes4)[]
@@ -120,6 +126,7 @@ library Bytes4SetComparatorRepo {
     function _recedExpectedBytes4(address subject, bytes4 func) internal view returns (Bytes4Set storage) {
         return _b4SetCompare(subject._toBytes32()).recordedExpected[subject][func];
     }
+
     // end::_recedExpectedBytes4(address-bytes4)[]
 
     // tag::_tempExpectedBytes4(bytes32)[]
@@ -132,6 +139,7 @@ library Bytes4SetComparatorRepo {
     function _tempExpectedBytes4(bytes32 actualHash) internal view returns (Bytes4Set storage) {
         return _b4SetCompare(actualHash).tempExpected;
     }
+
     // end::_tempExpectedBytes4(bytes32)[]
 
     // tag::_actualBytes4(bytes32)[]
@@ -146,6 +154,7 @@ library Bytes4SetComparatorRepo {
     }
     // end::_actualBytes4(bytes32)[]
 }
+
 // end::Bytes4SetComparatorRepo[]
 
 // tag::Bytes4SetComparator[]
@@ -206,6 +215,7 @@ library Bytes4SetComparator {
         // console.log("Bytes4SetComparator:_compare:: Exiting function.");
         return matches;
     }
+
     // end::_compare(bytes4[]-bytes4[]-string-string)[]
 
     // tag::_logCompare(Bytes4ComparatorRequest)[]
@@ -220,6 +230,7 @@ library Bytes4SetComparator {
         SetComparatorResults memory result = _compare(request.expected, request.actual);
         matches = result._logResult(request.errorMsg);
     }
+
     // end::_logCompare(Bytes4ComparatorRequest)[]
 
     // tag::_compare(bytes4[]-bytes4[])[]

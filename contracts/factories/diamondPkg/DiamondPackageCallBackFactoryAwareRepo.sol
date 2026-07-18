@@ -21,7 +21,9 @@ library DiamondPackageCallBackFactoryAwareRepo {
      *      This follows the canonical pattern used by OperableRepo, ERC2535Repo, MultiStepOwnableRepo, DeployedAddressesRepo, Create3FactoryAwareRepo, DiamondPackageFactoryAwareRepo, BalancerV3VaultAwareRepo, CamelotV2RouterAwareRepo and other
      *      gold-standard Repos for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("crane.diamond.package.callback.factory.aware"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("crane.diamond.package.callback.factory.aware"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -32,6 +34,7 @@ library DiamondPackageCallBackFactoryAwareRepo {
     struct Storage {
         IDiamondPackageCallBackFactory diamondPackageCallBackFactory;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -45,6 +48,7 @@ library DiamondPackageCallBackFactoryAwareRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -55,6 +59,7 @@ library DiamondPackageCallBackFactoryAwareRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-IDiamondPackageCallBackFactory)[]
@@ -67,6 +72,7 @@ library DiamondPackageCallBackFactoryAwareRepo {
     function _initialize(Storage storage layoutStruct, IDiamondPackageCallBackFactory factory_) internal {
         layoutStruct.diamondPackageCallBackFactory = factory_;
     }
+
     // end::_initialize(Storage-IDiamondPackageCallBackFactory)[]
 
     // tag::_initialize(IDiamondPackageCallBackFactory)[]
@@ -77,6 +83,7 @@ library DiamondPackageCallBackFactoryAwareRepo {
     function _initialize(IDiamondPackageCallBackFactory factory_) internal {
         _initialize(_layoutStruct(), factory_);
     }
+
     // end::_initialize(IDiamondPackageCallBackFactory)[]
 
     // tag::_diamondPackageCallBackFactory(Storage)[]
@@ -93,6 +100,7 @@ library DiamondPackageCallBackFactoryAwareRepo {
     {
         return layoutStruct.diamondPackageCallBackFactory;
     }
+
     // end::_diamondPackageCallBackFactory(Storage)[]
 
     // tag::_diamondPackageCallBackFactory()[]

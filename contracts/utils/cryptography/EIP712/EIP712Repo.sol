@@ -34,6 +34,7 @@ library EIP712Repo {
      *      DeployedAddressesRepo, and other gold-standard Repos for collision-resistant deterministic storage binding.
      */
     bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("eip.eip.712"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -60,6 +61,7 @@ library EIP712Repo {
         string _nameFallback;
         string _versionFallback;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -73,6 +75,7 @@ library EIP712Repo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -83,6 +86,7 @@ library EIP712Repo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-string-string)[]
@@ -104,6 +108,7 @@ library EIP712Repo {
         layoutStruct._cachedDomainSeparator = _buildDomainSeparator(layoutStruct);
         layoutStruct._cachedThis = address(this);
     }
+
     // end::_initialize(Storage-string-string)[]
 
     // tag::_initialize(string-string)[]
@@ -115,6 +120,7 @@ library EIP712Repo {
     function _initialize(string memory name, string memory version) internal {
         _initialize(_layoutStruct(), name, version);
     }
+
     // end::_initialize(string-string)[]
 
     // tag::_domainSeparatorV4(Storage)[]
@@ -131,6 +137,7 @@ library EIP712Repo {
             return _buildDomainSeparator(layoutStruct);
         }
     }
+
     // end::_domainSeparatorV4(Storage)[]
 
     // tag::_domainSeparatorV4()[]
@@ -141,6 +148,7 @@ library EIP712Repo {
     function _domainSeparatorV4() internal view returns (bytes32) {
         return _domainSeparatorV4(_layoutStruct());
     }
+
     // end::_domainSeparatorV4()[]
 
     // tag::_buildDomainSeparator(Storage)[]
@@ -156,6 +164,7 @@ library EIP712Repo {
                 EIP712_TYPE_HASH, layoutStruct._hashedName, layoutStruct._hashedVersion, block.chainid, address(this)
             )._hash();
     }
+
     // end::_buildDomainSeparator(Storage)[]
 
     // tag::_buildDomainSeparator()[]
@@ -166,6 +175,7 @@ library EIP712Repo {
     function _buildDomainSeparator() private view returns (bytes32) {
         return _buildDomainSeparator(_layoutStruct());
     }
+
     // end::_buildDomainSeparator()[]
 
     // tag::_hashTypedDataV4(Storage-bytes32)[]
@@ -179,6 +189,7 @@ library EIP712Repo {
     function _hashTypedDataV4(Storage storage layoutStruct, bytes32 structHash) internal view returns (bytes32) {
         return MessageHashUtils._toTypedDataHash(_domainSeparatorV4(layoutStruct), structHash);
     }
+
     // end::_hashTypedDataV4(Storage-bytes32)[]
 
     // tag::_hashTypedDataV4(bytes32)[]
@@ -201,6 +212,7 @@ library EIP712Repo {
     function _hashTypedDataV4(bytes32 structHash) internal view returns (bytes32) {
         return _hashTypedDataV4(_layoutStruct(), structHash);
     }
+
     // end::_hashTypedDataV4(bytes32)[]
 
     // tag::_EIP712Name(Storage)[]
@@ -217,6 +229,7 @@ library EIP712Repo {
     function _EIP712Name(Storage storage layoutStruct) internal view returns (string memory) {
         return layoutStruct._name.toStringWithFallback(layoutStruct._nameFallback);
     }
+
     // end::_EIP712Name(Storage)[]
 
     // tag::_EIP712Name()[]
@@ -227,6 +240,7 @@ library EIP712Repo {
     function _EIP712Name() internal view returns (string memory) {
         return _EIP712Name(_layoutStruct());
     }
+
     // end::_EIP712Name()[]
 
     // tag::_EIP712Version(Storage)[]
@@ -244,6 +258,7 @@ library EIP712Repo {
     function _EIP712Version(Storage storage layoutStruct) internal view returns (string memory) {
         return layoutStruct._version.toStringWithFallback(layoutStruct._versionFallback);
     }
+
     // end::_EIP712Version(Storage)[]
 
     // tag::_EIP712Version()[]

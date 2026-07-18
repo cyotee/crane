@@ -42,6 +42,7 @@ library CamelotV2Service {
         uint256 feePercent;
         uint256 unknownFee;
     }
+
     // end::ReserveInfo[]
 
     // tag::SwapParams[]
@@ -58,6 +59,7 @@ library CamelotV2Service {
         uint256 reserveOut;
         address referrer;
     }
+
     // end::SwapParams[]
 
     // tag::BalanceParams[]
@@ -74,6 +76,7 @@ library CamelotV2Service {
         uint256 reserveOut;
         address referrer;
     }
+
     // end::BalanceParams[]
 
     /* ---------------------------------------------------------------------- */
@@ -105,6 +108,7 @@ library CamelotV2Service {
             address(tokenA), address(tokenB), amountADesired, amountBDesired, 1, 1, address(this), block.timestamp
         );
     }
+
     // end::_deposit(ICamelotV2Router-IERC20-IERC20-uint256-uint256)[]
 
     /* ---------------------------------------------------------------------- */
@@ -124,6 +128,7 @@ library CamelotV2Service {
         pool.transfer(address(pool), amt);
         (amount0, amount1) = pool.burn(address(this));
     }
+
     // end::_withdrawDirect(ICamelotPair-uint256)[]
 
     /* ---------------------------------------------------------------------- */
@@ -143,6 +148,7 @@ library CamelotV2Service {
         params.tokenIn.approve(address(params.router), params.amountIn);
         return path;
     }
+
     // end::_prepareSwap(SwapParams)[]
 
     // tag::_executeSwap(SwapParams-address[])[]
@@ -162,6 +168,7 @@ library CamelotV2Service {
                 block.timestamp // uint deadline
             );
     }
+
     // end::_executeSwap(SwapParams-address[])[]
 
     // tag::_swap(ICamelotV2Router-uint256-IERC20-uint256-uint256-IERC20-uint256-address)[]
@@ -210,6 +217,7 @@ library CamelotV2Service {
         // Execute swap
         _executeSwap(params, path);
     }
+
     // end::_swap(ICamelotV2Router-uint256-IERC20-uint256-uint256-IERC20-uint256-address)[]
 
     // tag::_swap(ICamelotV2Router-ICamelotPair-uint256-IERC20-IERC20-address)[]
@@ -239,6 +247,7 @@ library CamelotV2Service {
             router, amountIn, tokenIn, reserves.reserveIn, reserves.feePercent, tokenOut, reserves.reserveOut, referrer
         );
     }
+
     // end::_swap(ICamelotV2Router-ICamelotPair-uint256-IERC20-IERC20-address)[]
 
     // tag::_sortReserves(ICamelotPair-IERC20)[]
@@ -259,6 +268,7 @@ library CamelotV2Service {
         ReserveInfo memory reserves = _sortReservesStruct(pool, knownToken);
         return (reserves.reserveIn, reserves.reserveOut, reserves.feePercent, reserves.unknownFee);
     }
+
     // end::_sortReserves(ICamelotPair-IERC20)[]
 
     // tag::_sortReservesStruct(ICamelotPair-IERC20)[]
@@ -294,6 +304,7 @@ library CamelotV2Service {
 
         return reserves;
     }
+
     // end::_sortReservesStruct(ICamelotPair-IERC20)[]
 
     // tag::_swapDeposit(ICamelotV2Router-ICamelotPair-IERC20-uint256-IERC20-address)[]
@@ -339,6 +350,7 @@ library CamelotV2Service {
 
         return poolTokenAmount;
     }
+
     // end::_swapDeposit(ICamelotV2Router-ICamelotPair-IERC20-uint256-IERC20-address)[]
 
     // tag::_balanceAssets(ICamelotV2Router-ICamelotPair-uint256-IERC20-IERC20-address)[]
@@ -379,6 +391,7 @@ library CamelotV2Service {
         // Use the helper with direct reserves
         return _balanceAssetsInternal(params);
     }
+
     // end::_balanceAssets(ICamelotV2Router-ICamelotPair-uint256-IERC20-IERC20-address)[]
 
     // tag::_balanceAssets(ICamelotV2Router-uint256-IERC20-uint256-uint256-IERC20-uint256-address)[]
@@ -418,6 +431,7 @@ library CamelotV2Service {
 
         return _balanceAssetsInternal(params);
     }
+
     // end::_balanceAssets(ICamelotV2Router-uint256-IERC20-uint256-uint256-IERC20-uint256-address)[]
 
     // tag::_balanceAssetsInternal(BalanceParams)[]
@@ -447,6 +461,7 @@ library CamelotV2Service {
 
         return amounts;
     }
+
     // end::_balanceAssetsInternal(BalanceParams)[]
 
     // tag::_calculateSwapAmount(uint256-uint256-uint256)[]
@@ -465,6 +480,7 @@ library CamelotV2Service {
     {
         return ConstProdUtils._swapDepositSaleAmt(saleAmt, saleReserve, saleTokenFeePerc);
     }
+
     // end::_calculateSwapAmount(uint256-uint256-uint256)[]
 
     /* ---------------------------------------------------------------------- */
@@ -483,6 +499,7 @@ library CamelotV2Service {
         IERC20 opToken;
         address referrer;
     }
+
     // end::WithdrawSwapParams[]
 
     // tag::_withdrawSwapDirect(ICamelotPair-ICamelotV2Router-uint256-IERC20-IERC20-address)[]
@@ -519,6 +536,7 @@ library CamelotV2Service {
         uint256 proceedsAmount = _swapWithdrawnTokens(params, saleTokenWDAmt);
         amountOut = tokenOutWDAmt + proceedsAmount;
     }
+
     // end::_withdrawSwapDirect(ICamelotPair-ICamelotV2Router-uint256-IERC20-IERC20-address)[]
 
     // tag::_determineTokenAmounts(WithdrawSwapParams-uint256-uint256)[]
@@ -545,6 +563,7 @@ library CamelotV2Service {
             saleTokenAmount = amount0;
         }
     }
+
     // end::_determineTokenAmounts(WithdrawSwapParams-uint256-uint256)[]
 
     // tag::_swapWithdrawnTokens(WithdrawSwapParams-uint256)[]
@@ -559,5 +578,5 @@ library CamelotV2Service {
     }
     // end::_swapWithdrawnTokens(WithdrawSwapParams-uint256)[]
 
-// end::CamelotV2Service[]
+    // end::CamelotV2Service[]
 }

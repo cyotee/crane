@@ -22,7 +22,9 @@ library Permit2AwareRepo {
      *      This follows the canonical pattern used by OperableRepo, ERC2535Repo, MultiStepOwnableRepo, DeployedAddressesRepo, Create3FactoryAwareRepo, DiamondPackageCallBackFactoryAwareRepo, BalancerV3VaultAwareRepo, CamelotV2RouterAwareRepo, UniswapV2*AwareRepo and other
      *      gold-standard Repos for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("protocols.utils.permit2.aware"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("protocols.utils.permit2.aware"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -33,6 +35,7 @@ library Permit2AwareRepo {
     struct Storage {
         IPermit2 permit2;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -46,6 +49,7 @@ library Permit2AwareRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -56,6 +60,7 @@ library Permit2AwareRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-IPermit2)[]
@@ -68,6 +73,7 @@ library Permit2AwareRepo {
     function _initialize(Storage storage layoutStruct, IPermit2 permit2_) internal {
         layoutStruct.permit2 = permit2_;
     }
+
     // end::_initialize(Storage-IPermit2)[]
 
     // tag::_initialize(IPermit2)[]
@@ -78,6 +84,7 @@ library Permit2AwareRepo {
     function _initialize(IPermit2 permit2_) internal {
         _initialize(_layoutStruct(), permit2_);
     }
+
     // end::_initialize(IPermit2)[]
 
     // tag::_permit2(Storage)[]
@@ -87,13 +94,10 @@ library Permit2AwareRepo {
      * @param layoutStruct The Storage struct to operate on.
      * @return permit2_ The stored IPermit2 (or zero if not initialized).
      */
-    function _permit2(Storage storage layoutStruct)
-        internal
-        view
-        returns (IPermit2 permit2_)
-    {
+    function _permit2(Storage storage layoutStruct) internal view returns (IPermit2 permit2_) {
         return layoutStruct.permit2;
     }
+
     // end::_permit2(Storage)[]
 
     // tag::_permit2()[]

@@ -21,7 +21,9 @@ library UniswapV2FactoryAwareRepo {
      *      This follows the canonical pattern used by OperableRepo, ERC2535Repo, MultiStepOwnableRepo, DeployedAddressesRepo, Create3FactoryAwareRepo, DiamondPackageFactoryAwareRepo, BalancerV3VaultAwareRepo, CamelotV2FactoryAwareRepo and other
      *      gold-standard Repos for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("protocols.dexes.uniswap.v2.factory.aware"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("protocols.dexes.uniswap.v2.factory.aware"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -32,6 +34,7 @@ library UniswapV2FactoryAwareRepo {
     struct Storage {
         IUniswapV2Factory factory;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -45,6 +48,7 @@ library UniswapV2FactoryAwareRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -55,6 +59,7 @@ library UniswapV2FactoryAwareRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-IUniswapV2Factory)[]
@@ -67,6 +72,7 @@ library UniswapV2FactoryAwareRepo {
     function _initialize(Storage storage layoutStruct, IUniswapV2Factory factory_) internal {
         layoutStruct.factory = factory_;
     }
+
     // end::_initialize(Storage-IUniswapV2Factory)[]
 
     // tag::_initialize(IUniswapV2Factory)[]
@@ -77,6 +83,7 @@ library UniswapV2FactoryAwareRepo {
     function _initialize(IUniswapV2Factory factory_) internal {
         _initialize(_layoutStruct(), factory_);
     }
+
     // end::_initialize(IUniswapV2Factory)[]
 
     // tag::_uniswapV2Factory(Storage)[]
@@ -86,13 +93,10 @@ library UniswapV2FactoryAwareRepo {
      * @param layoutStruct The Storage struct to operate on.
      * @return factory_ The stored IUniswapV2Factory (or zero if not initialized).
      */
-    function _uniswapV2Factory(Storage storage layoutStruct)
-        internal
-        view
-        returns (IUniswapV2Factory factory_)
-    {
+    function _uniswapV2Factory(Storage storage layoutStruct) internal view returns (IUniswapV2Factory factory_) {
         return layoutStruct.factory;
     }
+
     // end::_uniswapV2Factory(Storage)[]
 
     // tag::_uniswapV2Factory()[]

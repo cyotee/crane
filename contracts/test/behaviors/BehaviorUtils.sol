@@ -46,6 +46,7 @@ library BehaviorUtils {
     {
         return string.concat(behaviorName, ":", testedFuncSig, "::");
     }
+
     // end::_errPrefixFunc(string-string)[]
 
     // tag::_errPrefix(string-string-string)[]
@@ -64,6 +65,7 @@ library BehaviorUtils {
     {
         return string.concat(_errPrefixFunc(behaviorName, testedFuncSig), subjectLabel);
     }
+
     // end::_errPrefix(string-string-string)[]
 
     // tag::_errPrefix(string-string-address)[]
@@ -84,5 +86,5 @@ library BehaviorUtils {
     }
     // end::_errPrefix(string-string-address)[]
 
-// end::BehaviorUtils[]
+    // end::BehaviorUtils[]
 }

@@ -14,7 +14,9 @@ abstract contract EIP712Helpers is Test {
         IConfigPositionManager _positionManager,
         IConfigPositionManager.SetGlobalPermissionPermit memory _params
     ) internal view returns (bytes32) {
-        return _typedDataHash(_positionManager, vm.eip712HashStruct(EIP712Types.TYPE_SetGlobalPermissionPermit, abi.encode(_params)));
+        return _typedDataHash(
+            _positionManager, vm.eip712HashStruct(EIP712Types.TYPE_SetGlobalPermissionPermit, abi.encode(_params))
+        );
     }
 
     function _getTypedDataHash(
@@ -22,7 +24,8 @@ abstract contract EIP712Helpers is Test {
         IConfigPositionManager.SetCanSetUsingAsCollateralPermissionPermit memory _params
     ) internal view returns (bytes32) {
         return _typedDataHash(
-            _positionManager, vm.eip712HashStruct(EIP712Types.TYPE_SetCanSetUsingAsCollateralPermissionPermit, abi.encode(_params))
+            _positionManager,
+            vm.eip712HashStruct(EIP712Types.TYPE_SetCanSetUsingAsCollateralPermissionPermit, abi.encode(_params))
         );
     }
 
@@ -31,7 +34,8 @@ abstract contract EIP712Helpers is Test {
         IConfigPositionManager.SetCanUpdateUserRiskPremiumPermissionPermit memory _params
     ) internal view returns (bytes32) {
         return _typedDataHash(
-            _positionManager, vm.eip712HashStruct(EIP712Types.TYPE_SetCanUpdateUserRiskPremiumPermissionPermit, abi.encode(_params))
+            _positionManager,
+            vm.eip712HashStruct(EIP712Types.TYPE_SetCanUpdateUserRiskPremiumPermissionPermit, abi.encode(_params))
         );
     }
 
@@ -40,7 +44,8 @@ abstract contract EIP712Helpers is Test {
         IConfigPositionManager.SetCanUpdateUserDynamicConfigPermissionPermit memory _params
     ) internal view returns (bytes32) {
         return _typedDataHash(
-            _positionManager, vm.eip712HashStruct(EIP712Types.TYPE_SetCanUpdateUserDynamicConfigPermissionPermit, abi.encode(_params))
+            _positionManager,
+            vm.eip712HashStruct(EIP712Types.TYPE_SetCanUpdateUserDynamicConfigPermissionPermit, abi.encode(_params))
         );
     }
 

@@ -44,6 +44,7 @@ library Behavior_ICallTargetRegistryQuery {
     function _name() internal pure returns (string memory) {
         return type(Behavior_ICallTargetRegistryQuery).name;
     }
+
     // end::_name()[]
 
     // tag::_errPrefixFunc(string)[]
@@ -56,6 +57,7 @@ library Behavior_ICallTargetRegistryQuery {
     function _errPrefixFunc(string memory testedFuncSig) internal pure returns (string memory) {
         return BehaviorUtils._errPrefixFunc(_name(), testedFuncSig);
     }
+
     // end::_errPrefixFunc(string)[]
 
     // tag::_errPrefix(string-string)[]
@@ -69,6 +71,7 @@ library Behavior_ICallTargetRegistryQuery {
     function _errPrefix(string memory testedFuncSig, string memory subjectLabel) internal pure returns (string memory) {
         return string.concat(_errPrefixFunc(testedFuncSig), subjectLabel);
     }
+
     // end::_errPrefix(string-string)[]
 
     // tag::_errPrefix(string-address)[]
@@ -82,6 +85,7 @@ library Behavior_ICallTargetRegistryQuery {
     function _errPrefix(string memory testedFuncSig, address subject) internal view returns (string memory) {
         return _errPrefix(testedFuncSig, vm.getLabel(subject));
     }
+
     // end::_errPrefix(string-address)[]
 
     /* -------------------------------------------------------------------------- */
@@ -112,6 +116,7 @@ library Behavior_ICallTargetRegistryQuery {
         // Record for invariant if using comparator system
         // For simplicity in this behavior, we use direct in tests
     }
+
     // end::expect_defaultCallTargetForID(ICallTargetRegistryQuery-bytes4-address)[]
 
     // tag::hasValid_defaultCallTargetForID(ICallTargetRegistryQuery-bytes4-address)[]
@@ -135,6 +140,7 @@ library Behavior_ICallTargetRegistryQuery {
         }
         return true;
     }
+
     // end::hasValid_defaultCallTargetForID(ICallTargetRegistryQuery-bytes4-address)[]
 
     /* -------------------------------------------------------------------------- */
@@ -169,6 +175,7 @@ library Behavior_ICallTargetRegistryQuery {
     ) internal {
         // Recording for invariants
     }
+
     // end::expect_callTargetForIDForCaller(ICallTargetRegistryQuery-bytes4-address-address)[]
 
     // tag::hasValid_callTargetForIDForCaller(ICallTargetRegistryQuery-bytes4-address-address)[]
@@ -195,6 +202,7 @@ library Behavior_ICallTargetRegistryQuery {
         }
         return true;
     }
+
     // end::hasValid_callTargetForIDForCaller(ICallTargetRegistryQuery-bytes4-address-address)[]
 
     /* -------------------------------------------------------------------------- */
@@ -207,6 +215,7 @@ library Behavior_ICallTargetRegistryQuery {
     {
         expect_defaultCallTargetForID(subject, interfaceId, expected);
     }
+
     // end::recInvariant_defaultCallTargetForID(ICallTargetRegistryQuery-bytes4-address)[]
 
     // tag::recInvariant_callTargetForIDForCaller(ICallTargetRegistryQuery-bytes4-address-address)[]
@@ -218,6 +227,7 @@ library Behavior_ICallTargetRegistryQuery {
     ) internal {
         expect_callTargetForIDForCaller(subject, interfaceId, caller, expected);
     }
+
     // end::recInvariant_callTargetForIDForCaller(ICallTargetRegistryQuery-bytes4-address-address)[]
 
     // tag::hasValid_ICallTargetRegistryQuery(ICallTargetRegistryQuery-bytes4-address-address-address)[]
@@ -243,5 +253,5 @@ library Behavior_ICallTargetRegistryQuery {
     }
     // end::hasValid_ICallTargetRegistryQuery(ICallTargetRegistryQuery-bytes4-address-address-address)[]
 
-// end::Behavior_ICallTargetRegistryQuery[]
+    // end::Behavior_ICallTargetRegistryQuery[]
 }

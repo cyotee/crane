@@ -136,8 +136,9 @@ contract AuraSwEthBbAWethSYV2 is PendleAuraBalancerStableLPSYV2, BbAWethHelper {
     }
 
     function isValidTokenIn(address token) public view override returns (bool) {
-        return (token == NATIVE || token == WETH || token == WA_WETH || token == BB_A_WETH || token == SWETH
-                || token == LP);
+        return
+            (token == NATIVE || token == WETH || token == WA_WETH || token == BB_A_WETH || token == SWETH
+                    || token == LP);
     }
 
     function isValidTokenOut(address token) public view override returns (bool) {

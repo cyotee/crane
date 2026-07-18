@@ -168,6 +168,7 @@ contract DevEnvSmokeTest is CraneTest {
         assertEq(addrs.length, 1);
         assertTrue(addrs[0] != address(0));
     }
+
     // end::setUp[]
 
     // tag::testSizes[]
@@ -203,6 +204,7 @@ contract DevEnvSmokeTest is CraneTest {
         );
         console.log("Diamond Package CallBack Factory deployed size: ", address(diamondFactoryTemp).code.length);
     }
+
     // end::testSizes[]
 
     // tag::testGreeter[]
@@ -212,12 +214,14 @@ contract DevEnvSmokeTest is CraneTest {
         greeter.setMessage(controlMessage);
         assertEq(greeter.getMessage(), controlMessage);
     }
+
     // end::testGreeter[]
 
     // tag::test_greeter_IERC165[]
     function test_greeter_IERC165() public view {
         erc165Handler.assert_IERC165(IERC165(address(greeter)));
     }
+
     // end::test_greeter_IERC165[]
 
     // tag::testGreeterFacet_IFacet_Declaration[]
@@ -227,11 +231,10 @@ contract DevEnvSmokeTest is CraneTest {
         assertTrue(Behavior_IFacet.hasValid_IFacet_facetFuncs(IFacet(address(greeterFacet))));
         // metadata consistency using Behavior
         (string memory n, bytes4[] memory ifs, bytes4[] memory fns) = IFacet(address(greeterFacet)).facetMetadata();
-        assertTrue(Behavior_IFacet.areValid_IFacet_facetMetadata(
-            IFacet(address(greeterFacet)), n, ifs, fns
-        ));
+        assertTrue(Behavior_IFacet.areValid_IFacet_facetMetadata(IFacet(address(greeterFacet)), n, ifs, fns));
         assertEq(IFacet(address(greeterFacet)).facetName(), "GreeterFacet");
     }
+
     // end::testGreeterFacet_IFacet_Declaration[]
 
     // tag::testGreeterDFPkg_Declaration[]
@@ -249,6 +252,7 @@ contract DevEnvSmokeTest is CraneTest {
         bytes32 salt = abi.encode(type(GreeterDFPkg).name)._hash();
         assertTrue(salt != bytes32(0));
     }
+
     // end::testGreeterDFPkg_Declaration[]
 
     // function test_greeter_IDiamondLoupe() public {
@@ -267,6 +271,7 @@ contract DevEnvSmokeTest is CraneTest {
     function testIFacetRegistry() public {
         facetRegistryHandler.assert_IFacetRegistry(IFacetRegistry(address(create3Factory)));
     }
+
     // end::testIFacetRegistry[]
 
     // tag::testIDiamondFactoryPackageRegistry[]
@@ -385,6 +390,7 @@ contract DevEnvSmokeTest is CraneTest {
         assertTrue(pkgAddr != address(0));
         assertTrue(IDiamondFactoryPackage(pkgAddr).facetAddresses().length > 0);
     }
+
     // end::testBountyBoardDFPkg_registered[]
 
     // tag::testBountyBoard_standaloneDeploy_and_basicFlow[]
@@ -424,7 +430,18 @@ contract DevEnvSmokeTest is CraneTest {
         // Note: bounty IDs are 0-based (first bounty returns 0); creation succeeded if we reach here without revert.
         // The getBounty + field asserts below validate the record.
 
-        (uint256 id, uint8 bType, uint8 access, address issuer, address funder, uint8 status, string memory specUri, string memory encUri, uint256 createdAt, uint256 deadline) = common.getBounty(bid);
+        (
+            uint256 id,
+            uint8 bType,
+            uint8 access,
+            address issuer,
+            address funder,
+            uint8 status,
+            string memory specUri,
+            string memory encUri,
+            uint256 createdAt,
+            uint256 deadline
+        ) = common.getBounty(bid);
         assertEq(id, bid);
         assertEq(issuer, address(this));
         assertEq(funder, address(this));

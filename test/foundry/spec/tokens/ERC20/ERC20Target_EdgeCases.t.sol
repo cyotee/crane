@@ -60,10 +60,7 @@ contract ERC20Target_EdgeCases is TestBase_ERC20 {
         // LR-7: full non-0 init via InitDev + real ERC20DFPkg (facets non-zero, no stubs bypass)
         (factory, diamondFactory) = InitDevService.initEnv(address(this));
 
-        erc20Facet = factory.deployFacet(
-            type(ERC20Facet).creationCode,
-            abi.encode(type(ERC20Facet).name)._hash()
-        );
+        erc20Facet = factory.deployFacet(type(ERC20Facet).creationCode, abi.encode(type(ERC20Facet).name)._hash());
         vm.label(address(erc20Facet), "ERC20Facet");
 
         erc20DFPKG = IERC20DFPkg(
@@ -108,16 +105,10 @@ contract ERC20Target_EdgeCases is TestBase_ERC20 {
     /// @inheritdoc TestBase_ERC20
     function _deployToken(ERC20TargetStubHandler handler_) internal virtual override returns (IERC20 token_) {
         // LR-7: use real DFPkg (with non-0 facet) + callback factory for production-like Diamond ERC20
-        token_ = erc20DFPKG.deploy(
-            diamondFactory,
-            "Test Token",
-            "TT",
-            18,
-            INITIAL_SUPPLY,
-            address(handler_),
-            bytes32(0)
-        );
+        token_ =
+            erc20DFPKG.deploy(diamondFactory, "Test Token", "TT", 18, INITIAL_SUPPLY, address(handler_), bytes32(0));
     }
+
     // end::deployToken_override[]
 
     /* ---------------------------------------------------------------------- */
@@ -422,8 +413,7 @@ contract ERC20Target_EdgeCases is TestBase_ERC20 {
         assertTrue(Behavior_IFacet.hasValid_IFacet_facetInterfaces(facet), "facetInterfaces hasValid");
 
         assertTrue(
-            Behavior_IFacet.isValid_IFacet_facetMetadata_consistency(facet),
-            "facetMetadata must be consistent exactly"
+            Behavior_IFacet.isValid_IFacet_facetMetadata_consistency(facet), "facetMetadata must be consistent exactly"
         );
 
         // direct areValid with controls (exact)
@@ -438,6 +428,5 @@ contract ERC20Target_EdgeCases is TestBase_ERC20 {
         assertTrue(erc20DFPKG.facetCuts().length > 0, "facetCuts non-empty from real pkg");
     }
     // end::test_LR7_realERC20_DFPkg_init_Behavior_declaration()[]
-
 }
 // end::ERC20Target_EdgeCases[]

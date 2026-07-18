@@ -779,8 +779,8 @@ contract BaseInterestRateModel is IFundingRateModel {
             }
         } else if (_longAmount > 0 && _shortAmount > _longAmount) {
             // Shorts pay longs
-            shortFundingRate = ((_shortAmount - _longAmount) * PRECISION / _shortAmount) * FUNDING_MULTIPLIER
-                / PRECISION;
+            shortFundingRate =
+                ((_shortAmount - _longAmount) * PRECISION / _shortAmount) * FUNDING_MULTIPLIER / PRECISION;
             int256 missingAmount = _shortAmount - _longAmount;
             if (missingAmount > _liquidityPoolAmount) {
                 longFundingRate = liquidityPoolFundingRate = -shortFundingRate * _shortAmount

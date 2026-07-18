@@ -55,7 +55,8 @@ abstract contract EIP712Helpers is Test {
         view
         returns (bytes32)
     {
-        return _typedDataHash(_gateway, vm.eip712HashStruct(EIP712Types.TYPE_UpdateUserRiskPremium, abi.encode(_params)));
+        return
+            _typedDataHash(_gateway, vm.eip712HashStruct(EIP712Types.TYPE_UpdateUserRiskPremium, abi.encode(_params)));
     }
 
     function _getTypedDataHash(ISignatureGateway _gateway, ISignatureGateway.UpdateUserDynamicConfig memory _params)
@@ -63,7 +64,8 @@ abstract contract EIP712Helpers is Test {
         view
         returns (bytes32)
     {
-        return _typedDataHash(_gateway, vm.eip712HashStruct(EIP712Types.TYPE_UpdateUserDynamicConfig, abi.encode(_params)));
+        return
+            _typedDataHash(_gateway, vm.eip712HashStruct(EIP712Types.TYPE_UpdateUserDynamicConfig, abi.encode(_params)));
     }
 
     function _typedDataHash(ISignatureGateway _gateway, bytes32 typeHash) internal view returns (bytes32) {

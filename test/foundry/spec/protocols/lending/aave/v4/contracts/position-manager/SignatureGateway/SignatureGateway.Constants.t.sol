@@ -108,7 +108,9 @@ contract SignatureGatewayConstantsTest is SignatureGatewayBaseTest {
     }
 
     function test_updateUserDynamicConfig_typeHash() public view {
-        assertEq(gateway.UPDATE_USER_DYNAMIC_CONFIG_TYPEHASH(), vm.eip712HashType(EIP712Types.TYPE_UpdateUserDynamicConfig));
+        assertEq(
+            gateway.UPDATE_USER_DYNAMIC_CONFIG_TYPEHASH(), vm.eip712HashType(EIP712Types.TYPE_UpdateUserDynamicConfig)
+        );
         assertEq(
             gateway.UPDATE_USER_DYNAMIC_CONFIG_TYPEHASH(),
             keccak256("UpdateUserDynamicConfig(address spoke,address onBehalfOf,uint256 nonce,uint256 deadline)")

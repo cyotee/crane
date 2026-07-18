@@ -5,6 +5,7 @@ pragma solidity ^0.8.0;
 struct GreeterLayout {
     string message;
 }
+
 // end::GreeterLayout[]
 
 // tag::GreeterRepo[]
@@ -26,6 +27,7 @@ library GreeterRepo {
      *      and other gold-standard Repos for collision-resistant deterministic storage binding.
      */
     bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("crane.test.stubs.greeter"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -39,6 +41,7 @@ library GreeterRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -49,6 +52,7 @@ library GreeterRepo {
     function _layoutStruct() internal pure returns (GreeterLayout storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_setMessage(GreeterLayout-string)[]
@@ -61,6 +65,7 @@ library GreeterRepo {
     function _setMessage(GreeterLayout storage layoutStruct, string memory message) internal {
         layoutStruct.message = message;
     }
+
     // end::_setMessage(GreeterLayout-string)[]
 
     // tag::_setMessage(string)[]
@@ -71,6 +76,7 @@ library GreeterRepo {
     function _setMessage(string memory message) internal {
         _setMessage(_layoutStruct(), message);
     }
+
     // end::_setMessage(string)[]
 
     // tag::_getMessage(GreeterLayout)[]
@@ -83,6 +89,7 @@ library GreeterRepo {
     function _getMessage(GreeterLayout storage layoutStruct) internal view returns (string memory) {
         return layoutStruct.message;
     }
+
     // end::_getMessage(GreeterLayout)[]
 
     // tag::_getMessage()[]

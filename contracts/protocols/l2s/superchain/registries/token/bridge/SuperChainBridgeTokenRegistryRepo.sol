@@ -27,7 +27,9 @@ library SuperChainBridgeTokenRegistryRepo {
      *      This follows the canonical pattern used by OperableRepo, ERC20Repo, MultiStepOwnableRepo, ERC2535Repo,
      *      FacetRegistryRepo and other gold-standard Repos for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("crane.protocols.l2s.superchain.registries.token.bridge"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("crane.protocols.l2s.superchain.registries.token.bridge"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -40,6 +42,7 @@ library SuperChainBridgeTokenRegistryRepo {
         mapping(uint256 chainId => mapping(IERC20 localToken => IERC20 remoteToken)) remoteToken;
         mapping(uint256 chainId => mapping(IERC20 remoteToken => uint256 minGasLimit)) minGasLimit;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -53,6 +56,7 @@ library SuperChainBridgeTokenRegistryRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -63,6 +67,7 @@ library SuperChainBridgeTokenRegistryRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_getRemoteToken(Storage-uint256-IERC20)[]
@@ -81,6 +86,7 @@ library SuperChainBridgeTokenRegistryRepo {
     {
         return layoutStruct.remoteToken[chainId][localToken];
     }
+
     // end::_getRemoteToken(Storage-uint256-IERC20)[]
 
     // tag::_getRemoteToken(uint256-IERC20)[]
@@ -93,6 +99,7 @@ library SuperChainBridgeTokenRegistryRepo {
     function _getRemoteToken(uint256 chainId, IERC20 localToken) internal view returns (IERC20 remoteToken) {
         return _getRemoteToken(_layoutStruct(), chainId, localToken);
     }
+
     // end::_getRemoteToken(uint256-IERC20)[]
 
     // tag::_getMinGasLimit(Storage-uint256-IERC20)[]
@@ -111,6 +118,7 @@ library SuperChainBridgeTokenRegistryRepo {
     {
         return layoutStruct.minGasLimit[chainId][remoteToken];
     }
+
     // end::_getMinGasLimit(Storage-uint256-IERC20)[]
 
     // tag::_getMinGasLimit(uint256-IERC20)[]
@@ -123,6 +131,7 @@ library SuperChainBridgeTokenRegistryRepo {
     function _getMinGasLimit(uint256 chainId, IERC20 remoteToken) internal view returns (uint256 minGasLimit) {
         return _getMinGasLimit(_layoutStruct(), chainId, remoteToken);
     }
+
     // end::_getMinGasLimit(uint256-IERC20)[]
 
     // tag::_getRemoteTokenAndLimit(Storage-uint256-IERC20)[]
@@ -144,6 +153,7 @@ library SuperChainBridgeTokenRegistryRepo {
         remoteToken = _getRemoteToken(layoutStruct, chainId, localToken);
         minGasLimit = _getMinGasLimit(layoutStruct, chainId, remoteToken);
     }
+
     // end::_getRemoteTokenAndLimit(Storage-uint256-IERC20)[]
 
     // tag::_getRemoteTokenAndLimit(uint256-IERC20)[]
@@ -161,6 +171,7 @@ library SuperChainBridgeTokenRegistryRepo {
     {
         return _getRemoteTokenAndLimit(_layoutStruct(), chainId, localToken);
     }
+
     // end::_getRemoteTokenAndLimit(uint256-IERC20)[]
 
     // tag::_setRemoteToken(Storage-uint256-IERC20-IERC20-uint256)[]
@@ -184,6 +195,7 @@ library SuperChainBridgeTokenRegistryRepo {
         layoutStruct.remoteToken[chainId][localToken] = remoteToken;
         layoutStruct.minGasLimit[chainId][remoteToken] = minGasLimit;
     }
+
     // end::_setRemoteToken(Storage-uint256-IERC20-IERC20-uint256)[]
 
     // tag::_setRemoteToken(uint256-IERC20-IERC20-uint256)[]
@@ -197,6 +209,7 @@ library SuperChainBridgeTokenRegistryRepo {
     function _setRemoteToken(uint256 chainId, IERC20 localToken, IERC20 remoteToken, uint256 minGasLimit) internal {
         _setRemoteToken(_layoutStruct(), chainId, localToken, remoteToken, minGasLimit);
     }
+
     // end::_setRemoteToken(uint256-IERC20-IERC20-uint256)[]
 
     // tag::_setRemoteTokenMinGasLimit(Storage-uint256-IERC20-uint256)[]
@@ -216,6 +229,7 @@ library SuperChainBridgeTokenRegistryRepo {
     ) internal {
         layoutStruct.minGasLimit[chainId][remoteToken] = minGasLimit;
     }
+
     // end::_setRemoteTokenMinGasLimit(Storage-uint256-IERC20-uint256)[]
 
     // tag::_setRemoteTokenMinGasLimit(uint256-IERC20-uint256)[]

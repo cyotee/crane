@@ -51,6 +51,7 @@ abstract contract Proxy {
      * @return The implementation address.
      */
     function _implementation() internal view virtual returns (address);
+
     // end::_implementation()[]
 
     // tag::_fallback()[]
@@ -61,6 +62,7 @@ abstract contract Proxy {
     function _fallback() internal virtual {
         _delegate(_implementation());
     }
+
     // end::_fallback()[]
 
     // tag::fallback()[]

@@ -21,6 +21,7 @@ contract ReentrancyLockTarget is IReentrancyLock {
     function isLocked() external view returns (bool) {
         return ReentrancyLockRepo._isLocked();
     }
+
     // end::isLocked()[]
 
     // tag::lock()[]
@@ -31,6 +32,7 @@ contract ReentrancyLockTarget is IReentrancyLock {
     function lock() external {
         ReentrancyLockRepo._lock();
     }
+
     // end::lock()[]
 
     // tag::unlock()[]

@@ -34,6 +34,7 @@ abstract contract ERC721MetadataFacet is IFacet, IERC721Metadata {
     function facetName() public pure returns (string memory) {
         return type(ERC721MetadataFacet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -48,6 +49,7 @@ abstract contract ERC721MetadataFacet is IFacet, IERC721Metadata {
         facetInterfaces_ = new bytes4[](1);
         facetInterfaces_[0] = type(IERC721Metadata).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -64,6 +66,7 @@ abstract contract ERC721MetadataFacet is IFacet, IERC721Metadata {
         facetFuncs_[1] = IERC721Metadata.symbol.selector;
         facetFuncs_[2] = IERC721Metadata.tokenURI.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]
@@ -86,6 +89,7 @@ abstract contract ERC721MetadataFacet is IFacet, IERC721Metadata {
         interfaces = facetInterfaces();
         functions = facetFuncs();
     }
+
     // end::facetMetadata()[]
 
     /* -------------------------------------------------------------------------- */
@@ -101,6 +105,7 @@ abstract contract ERC721MetadataFacet is IFacet, IERC721Metadata {
     function name() external view returns (string memory) {
         return ERC721MetadataRepo._name();
     }
+
     // end::name()[]
 
     // tag::symbol()[]
@@ -112,6 +117,7 @@ abstract contract ERC721MetadataFacet is IFacet, IERC721Metadata {
     function symbol() external view returns (string memory) {
         return ERC721MetadataRepo._symbol();
     }
+
     // end::symbol()[]
 
     // tag::tokenURI(uint256)[]

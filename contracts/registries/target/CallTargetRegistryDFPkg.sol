@@ -24,6 +24,7 @@ interface ICallTargetRegistryDFPkg is IDiamondFactoryPackage {
         IFacet callTargetRegistryManagementFacet;
         IDiamondPackageCallBackFactory diamondFactory;
     }
+
     // end::PkgInit[]
 
     // tag::PkgArgs[]
@@ -42,6 +43,7 @@ interface ICallTargetRegistryDFPkg is IDiamondFactoryPackage {
     function deployCallTargetRegistry(address owner) external returns (IDiamond);
     // end::deployCallTargetRegistry[]
 }
+
 // end::ICallTargetRegistryDFPkg[]
 
 // tag::CallTargetRegistryDFPkg[]
@@ -67,6 +69,7 @@ contract CallTargetRegistryDFPkg is ICallTargetRegistryDFPkg {
         CALL_TARGET_REGISTRY_MANAGEMENT_FACET = pkgInit.callTargetRegistryManagementFacet;
         DIAMOND_FACTORY = pkgInit.diamondFactory;
     }
+
     // end::constructor-calltargetdfpkg[]
 
     // tag::deployCallTargetRegistry-impl[]
@@ -79,6 +82,7 @@ contract CallTargetRegistryDFPkg is ICallTargetRegistryDFPkg {
     function deployCallTargetRegistry(address owner) external returns (IDiamond) {
         return IDiamond(DIAMOND_FACTORY.deploy(SELF, abi.encode(PkgArgs({owner: owner}))));
     }
+
     // end::deployCallTargetRegistry-impl[]
 
     // tag::packageName-calltarget[]
@@ -90,6 +94,7 @@ contract CallTargetRegistryDFPkg is ICallTargetRegistryDFPkg {
     function packageName() public pure returns (string memory name_) {
         return type(CallTargetRegistryDFPkg).name;
     }
+
     // end::packageName-calltarget[]
 
     // tag::packageMetadata-calltarget[]
@@ -107,6 +112,7 @@ contract CallTargetRegistryDFPkg is ICallTargetRegistryDFPkg {
     {
         return (packageName(), facetInterfaces(), facetAddresses());
     }
+
     // end::packageMetadata-calltarget[]
 
     // tag::facetAddresses-calltarget[]
@@ -122,6 +128,7 @@ contract CallTargetRegistryDFPkg is ICallTargetRegistryDFPkg {
         facetAddresses_[2] = address(CALL_TARGET_REGISTRY_QUERY_FACET);
         facetAddresses_[3] = address(CALL_TARGET_REGISTRY_MANAGEMENT_FACET);
     }
+
     // end::facetAddresses-calltarget[]
 
     // tag::facetInterfaces-calltarget[]
@@ -137,6 +144,7 @@ contract CallTargetRegistryDFPkg is ICallTargetRegistryDFPkg {
         interfaces[2] = type(ICallTargetRegistryQuery).interfaceId;
         interfaces[3] = type(ICallTargetRegistryManagement).interfaceId;
     }
+
     // end::facetInterfaces-calltarget[]
 
     // tag::facetCuts-calltarget[]
@@ -168,6 +176,7 @@ contract CallTargetRegistryDFPkg is ICallTargetRegistryDFPkg {
             functionSelectors: CALL_TARGET_REGISTRY_MANAGEMENT_FACET.facetFuncs()
         });
     }
+
     // end::facetCuts-calltarget[]
 
     // tag::diamondConfig-calltarget[]
@@ -179,6 +188,7 @@ contract CallTargetRegistryDFPkg is ICallTargetRegistryDFPkg {
     function diamondConfig() public view returns (DiamondConfig memory config) {
         config = IDiamondFactoryPackage.DiamondConfig({facetCuts: facetCuts(), interfaces: facetInterfaces()});
     }
+
     // end::diamondConfig-calltarget[]
 
     // tag::calcSalt-calltarget[]
@@ -191,6 +201,7 @@ contract CallTargetRegistryDFPkg is ICallTargetRegistryDFPkg {
     function calcSalt(bytes memory pkgArgs) public pure returns (bytes32 salt) {
         return pkgArgs._hash();
     }
+
     // end::calcSalt-calltarget[]
 
     // tag::processArgs-calltarget[]
@@ -203,6 +214,7 @@ contract CallTargetRegistryDFPkg is ICallTargetRegistryDFPkg {
     function processArgs(bytes memory pkgArgs) public pure returns (bytes memory processedPkgArgs) {
         return pkgArgs;
     }
+
     // end::processArgs-calltarget[]
 
     // tag::updatePkg-calltarget[]
@@ -213,13 +225,10 @@ contract CallTargetRegistryDFPkg is ICallTargetRegistryDFPkg {
     /// @custom:signature updatePkg(address,bytes)
     /// @custom:selector 0xa9089235
     /// @inheritdoc IDiamondFactoryPackage
-    function updatePkg(address expectedProxy, bytes memory pkgArgs)
-        public
-        pure
-        returns (bool)
-    {
+    function updatePkg(address expectedProxy, bytes memory pkgArgs) public pure returns (bool) {
         return true;
     }
+
     // end::updatePkg-calltarget[]
 
     // tag::initAccount-calltarget[]
@@ -232,6 +241,7 @@ contract CallTargetRegistryDFPkg is ICallTargetRegistryDFPkg {
         (PkgArgs memory accountInit) = abi.decode(initArgs, (PkgArgs));
         MultiStepOwnableRepo._initialize(accountInit.owner, 1 days);
     }
+
     // end::initAccount-calltarget[]
 
     // tag::postDeploy-calltarget[]
@@ -241,11 +251,7 @@ contract CallTargetRegistryDFPkg is ICallTargetRegistryDFPkg {
     /// @custom:signature postDeploy(address)
     /// @custom:selector 0x70068fcf
     /// @inheritdoc IDiamondFactoryPackage
-    function postDeploy(address account)
-        public
-        pure
-        returns (bool)
-    {
+    function postDeploy(address account) public pure returns (bool) {
         return true;
     }
     // end::postDeploy-calltarget[]

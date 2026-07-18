@@ -29,7 +29,9 @@ library TokenTransferRelayerRepo {
      *      OperableRepo, MultiStepOwnableRepo, ERC2535Repo, FacetRegistryRepo and other gold-standard Repos for
      *      collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("crane.protocols.l2s.superchain.relayers.token"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("crane.protocols.l2s.superchain.relayers.token"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -41,6 +43,7 @@ library TokenTransferRelayerRepo {
     struct Storage {
         IApprovedMessageSenderRegistry approvedMessageSenderRegistry;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -54,6 +57,7 @@ library TokenTransferRelayerRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -64,6 +68,7 @@ library TokenTransferRelayerRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-IApprovedMessageSenderRegistry)[]
@@ -78,6 +83,7 @@ library TokenTransferRelayerRepo {
     {
         layoutStruct.approvedMessageSenderRegistry = approvedMessageSenderRegistry;
     }
+
     // end::_initialize(Storage-IApprovedMessageSenderRegistry)[]
 
     // tag::_initialize(IApprovedMessageSenderRegistry)[]
@@ -88,6 +94,7 @@ library TokenTransferRelayerRepo {
     function _initialize(IApprovedMessageSenderRegistry approvedMessageSenderRegistry) internal {
         _initialize(_layoutStruct(), approvedMessageSenderRegistry);
     }
+
     // end::_initialize(IApprovedMessageSenderRegistry)[]
 
     // tag::_approvedMessageSenderRegistry(Storage)[]
@@ -104,6 +111,7 @@ library TokenTransferRelayerRepo {
     {
         return layoutStruct.approvedMessageSenderRegistry;
     }
+
     // end::_approvedMessageSenderRegistry(Storage)[]
 
     // tag::_approvedMessageSenderRegistry()[]

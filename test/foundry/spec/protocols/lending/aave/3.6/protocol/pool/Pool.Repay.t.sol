@@ -428,8 +428,8 @@ contract PoolRepayTests is TestnetProcedures {
         uint256 balanceBefore = usdx.balanceOf(alice);
         uint256 debtBalanceBefore = varDebtUSDX.scaledBalanceOf(alice);
         uint256 repayAmount = varDebtUSDX.scaledBalanceOf(alice) / 2;
-        uint256 isolationDebtRepaid = repayAmount
-            / (10 ** (6 - contracts.protocolDataProvider.getDebtCeilingDecimals()));
+        uint256 isolationDebtRepaid =
+            repayAmount / (10 ** (6 - contracts.protocolDataProvider.getDebtCeilingDecimals()));
         uint256 isolationModeTotalDebt = contracts.poolProxy.getReserveData(tokenList.wbtc).isolationModeTotalDebt;
 
         vm.expectEmit(report.poolProxy);

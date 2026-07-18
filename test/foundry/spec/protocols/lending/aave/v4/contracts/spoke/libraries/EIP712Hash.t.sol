@@ -17,7 +17,9 @@ contract EIP712HashTest is Test {
                 "SetUserPositionManagers(address onBehalfOf,PositionManagerUpdate[] updates,uint256 nonce,uint256 deadline)PositionManagerUpdate(address positionManager,bool approve)"
             )
         );
-        assertEq(EIP712Hash.SET_USER_POSITION_MANAGERS_TYPEHASH, vm.eip712HashType(EIP712Types.TYPE_SetUserPositionManagers));
+        assertEq(
+            EIP712Hash.SET_USER_POSITION_MANAGERS_TYPEHASH, vm.eip712HashType(EIP712Types.TYPE_SetUserPositionManagers)
+        );
 
         assertEq(
             EIP712Hash.POSITION_MANAGER_UPDATE, keccak256("PositionManagerUpdate(address positionManager,bool approve)")

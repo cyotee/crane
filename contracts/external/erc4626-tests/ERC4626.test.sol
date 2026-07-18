@@ -35,19 +35,19 @@ abstract contract ERC4626Test is ERC4626Prop {
             // shares
             uint256 shares = init.share[i];
             try IMockERC20(_underlying_).mint(user, shares) {}
-                catch {
+            catch {
                 vm.assume(false);
             }
             _approve(_underlying_, user, _vault_, shares);
             vm.prank(user);
             try IERC4626(_vault_).deposit(shares, user) {}
-                catch {
+            catch {
                 vm.assume(false);
             }
             // assets
             uint256 assets = init.asset[i];
             try IMockERC20(_underlying_).mint(user, assets) {}
-                catch {
+            catch {
                 vm.assume(false);
             }
         }
@@ -62,7 +62,7 @@ abstract contract ERC4626Test is ERC4626Prop {
             // gain
             uint256 gain = uint256(init.yield);
             try IMockERC20(_underlying_).mint(_vault_, gain) {}
-                catch { // this can be replaced by calling yield generating functions if provided by the vault
+            catch { // this can be replaced by calling yield generating functions if provided by the vault
                 vm.assume(false);
             }
         } else {
@@ -70,7 +70,7 @@ abstract contract ERC4626Test is ERC4626Prop {
             vm.assume(init.yield > type(int256).min); // avoid overflow in conversion
             uint256 loss = uint256(-1 * init.yield);
             try IMockERC20(_underlying_).burn(_vault_, loss) {}
-                catch { // this can be replaced by calling yield generating functions if provided by the vault
+            catch { // this can be replaced by calling yield generating functions if provided by the vault
                 vm.assume(false);
             }
         }

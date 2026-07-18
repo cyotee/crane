@@ -100,7 +100,9 @@ contract CREATE3Test is DSTestPlus {
         bytes calldata,
         /* bytecode1 */
         bytes calldata bytecode2
-    ) public {
+    )
+        public
+    {
         // Same salt-based collision as above; the second deploy reverts before executing
         // its creation code, so the fuzzed bytecode need not be valid creation code.
         CREATE3.deploy(salt, type(WETH).creationCode, 0);

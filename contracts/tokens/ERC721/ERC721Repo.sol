@@ -37,6 +37,7 @@ library ERC721Repo {
      *      MultiStepOwnableRepo, DeployedAddressesRepo, and other gold-standard Repos for collision-resistant deterministic storage binding.
      */
     bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("eip.erc.721"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -58,6 +59,7 @@ library ERC721Repo {
         mapping(uint256 tokenId => address) approvedForTokenId;
         mapping(address owner => mapping(address operator => bool)) operatorApprovals;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -71,6 +73,7 @@ library ERC721Repo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -81,6 +84,7 @@ library ERC721Repo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_balanceOf(Storage-address)[]
@@ -94,6 +98,7 @@ library ERC721Repo {
     function _balanceOf(Storage storage layoutStruct, address owner_) internal view returns (uint256) {
         return layoutStruct.balanceOfAccount[owner_];
     }
+
     // end::_balanceOf(Storage-address)[]
 
     // tag::_balanceOf(address)[]
@@ -105,6 +110,7 @@ library ERC721Repo {
     function _balanceOf(address owner_) internal view returns (uint256) {
         return _balanceOf(_layoutStruct(), owner_);
     }
+
     // end::_balanceOf(address)[]
 
     // tag::_ownerOf(Storage-uint256)[]
@@ -118,6 +124,7 @@ library ERC721Repo {
     function _ownerOf(Storage storage layoutStruct, uint256 tokenId_) internal view returns (address) {
         return layoutStruct.ownerOfTokenId[tokenId_];
     }
+
     // end::_ownerOf(Storage-uint256)[]
 
     // tag::_ownerOf(uint256)[]
@@ -129,6 +136,7 @@ library ERC721Repo {
     function _ownerOf(uint256 tokenId_) internal view returns (address) {
         return _ownerOf(_layoutStruct(), tokenId_);
     }
+
     // end::_ownerOf(uint256)[]
 
     // tag::_safeTransferFrom(Storage-address-address-uint256-bytes-memory)[]
@@ -160,6 +168,7 @@ library ERC721Repo {
         }
         _transferFrom(layoutStruct, from_, to_, tokenId_);
     }
+
     // end::_safeTransferFrom(Storage-address-address-uint256-bytes-memory)[]
 
     // tag::_safeTransferFrom(address-address-uint256-bytes-memory)[]
@@ -174,6 +183,7 @@ library ERC721Repo {
     function _safeTransferFrom(address from_, address to_, uint256 tokenId_, bytes memory data_) internal {
         _safeTransferFrom(_layoutStruct(), from_, to_, tokenId_, data_);
     }
+
     // end::_safeTransferFrom(address-address-uint256-bytes-memory)[]
 
     // tag::_safeTransferFrom(Storage-address-address-uint256)[]
@@ -189,6 +199,7 @@ library ERC721Repo {
     function _safeTransferFrom(Storage storage layoutStruct, address from_, address to_, uint256 tokenId_) internal {
         _safeTransferFrom(layoutStruct, from_, to_, tokenId_, "");
     }
+
     // end::_safeTransferFrom(Storage-address-address-uint256)[]
 
     // tag::_safeTransferFrom(address-address-uint256)[]
@@ -202,6 +213,7 @@ library ERC721Repo {
     function _safeTransferFrom(address from_, address to_, uint256 tokenId_) internal {
         _safeTransferFrom(_layoutStruct(), from_, to_, tokenId_, "");
     }
+
     // end::_safeTransferFrom(address-address-uint256)[]
 
     // tag::_transferFrom(Storage-address-address-uint256)[]
@@ -240,6 +252,7 @@ library ERC721Repo {
         layoutStruct.balanceOfAccount[to_]++;
         emit IERC721Events.Transfer(from_, to_, tokenId_);
     }
+
     // end::_transferFrom(Storage-address-address-uint256)[]
 
     // tag::_transferFrom(address-address-uint256)[]
@@ -253,6 +266,7 @@ library ERC721Repo {
     function _transferFrom(address from_, address to_, uint256 tokenId_) internal {
         _transferFrom(_layoutStruct(), from_, to_, tokenId_);
     }
+
     // end::_transferFrom(address-address-uint256)[]
 
     // tag::_approve(Storage-address-uint256)[]
@@ -275,6 +289,7 @@ library ERC721Repo {
         layoutStruct.approvedForTokenId[tokenId_] = operator_;
         emit IERC721Events.Approval(owner_, operator_, tokenId_);
     }
+
     // end::_approve(Storage-address-uint256)[]
 
     // tag::_approve(address-uint256)[]
@@ -287,6 +302,7 @@ library ERC721Repo {
     function _approve(address operator_, uint256 tokenId_) internal {
         _approve(_layoutStruct(), operator_, tokenId_);
     }
+
     // end::_approve(address-uint256)[]
 
     // tag::_setApprovalForAll(Storage-address-bool)[]
@@ -305,6 +321,7 @@ library ERC721Repo {
         layoutStruct.operatorApprovals[msg.sender][operator_] = approved_;
         emit IERC721Events.ApprovalForAll(msg.sender, operator_, approved_);
     }
+
     // end::_setApprovalForAll(Storage-address-bool)[]
 
     // tag::_setApprovalForAll(address-bool)[]
@@ -317,6 +334,7 @@ library ERC721Repo {
     function _setApprovalForAll(address operator_, bool approved_) internal {
         _setApprovalForAll(_layoutStruct(), operator_, approved_);
     }
+
     // end::_setApprovalForAll(address-bool)[]
 
     // tag::_getApproved(Storage-uint256)[]
@@ -330,6 +348,7 @@ library ERC721Repo {
     function _getApproved(Storage storage layoutStruct, uint256 tokenId_) internal view returns (address) {
         return layoutStruct.approvedForTokenId[tokenId_];
     }
+
     // end::_getApproved(Storage-uint256)[]
 
     // tag::_getApproved(uint256)[]
@@ -341,6 +360,7 @@ library ERC721Repo {
     function _getApproved(uint256 tokenId_) internal view returns (address) {
         return _getApproved(_layoutStruct(), tokenId_);
     }
+
     // end::_getApproved(uint256)[]
 
     // tag::_isApprovedForAll(Storage-address-address)[]
@@ -359,6 +379,7 @@ library ERC721Repo {
     {
         return layoutStruct.operatorApprovals[owner_][operator_];
     }
+
     // end::_isApprovedForAll(Storage-address-address)[]
 
     // tag::_isApprovedForAll(address-address)[]
@@ -371,6 +392,7 @@ library ERC721Repo {
     function _isApprovedForAll(address owner_, address operator_) internal view returns (bool) {
         return _isApprovedForAll(_layoutStruct(), owner_, operator_);
     }
+
     // end::_isApprovedForAll(address-address)[]
 
     // tag::_mint(Storage-address)[]
@@ -392,6 +414,7 @@ library ERC721Repo {
         layoutStruct.balanceOfAccount[to_]++;
         emit IERC721Events.Transfer(address(0), to_, tokenId);
     }
+
     // end::_mint(Storage-address)[]
 
     // tag::_mint(address)[]
@@ -404,6 +427,7 @@ library ERC721Repo {
     function _mint(address to_) internal returns (uint256 tokenId) {
         return _mint(_layoutStruct(), to_);
     }
+
     // end::_mint(address)[]
 
     // tag::_burn(Storage-address-uint256)[]
@@ -431,6 +455,7 @@ library ERC721Repo {
         layoutStruct.balanceOfAccount[owner_]--;
         emit IERC721Events.Transfer(owner_, address(0), tokenId_);
     }
+
     // end::_burn(Storage-address-uint256)[]
 
     // tag::_burn(address-uint256)[]
@@ -443,6 +468,7 @@ library ERC721Repo {
     function _burn(address owner_, uint256 tokenId_) internal {
         _burn(_layoutStruct(), owner_, tokenId_);
     }
+
     // end::_burn(address-uint256)[]
 
     // tag::_burn(Storage-uint256)[]
@@ -457,6 +483,7 @@ library ERC721Repo {
         address owner_ = layoutStruct.ownerOfTokenId[tokenId_];
         _burn(layoutStruct, owner_, tokenId_);
     }
+
     // end::_burn(Storage-uint256)[]
 
     // tag::_burn(uint256)[]
@@ -470,5 +497,5 @@ library ERC721Repo {
     }
     // end::_burn(uint256)[]
 
-// end::ERC721Repo[]
+    // end::ERC721Repo[]
 }

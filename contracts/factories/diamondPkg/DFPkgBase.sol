@@ -46,6 +46,7 @@ abstract contract DFPkgBase is IDiamondFactoryPackage {
     /// @custom:selector 0x52ef6b2c
     /// @inheritdoc IDiamondFactoryPackage
     function facetAddresses() public view virtual returns (address[] memory facetAddresses);
+
     // end::facetAddresses()[]
 
     // tag::packageMetadata()[]
@@ -74,6 +75,7 @@ abstract contract DFPkgBase is IDiamondFactoryPackage {
     /// @custom:selector 0xa4b3ad35
     /// @inheritdoc IDiamondFactoryPackage
     function facetCuts() public view virtual returns (IDiamond.FacetCut[] memory facetCuts_);
+
     // end::facetCuts()[]
 
     // tag::diamondConfig()[]
@@ -85,6 +87,7 @@ abstract contract DFPkgBase is IDiamondFactoryPackage {
     function diamondConfig() public view returns (DiamondConfig memory config) {
         config = IDiamondFactoryPackage.DiamondConfig({facetCuts: facetCuts(), interfaces: facetInterfaces()});
     }
+
     // end::diamondConfig()[]
 
     // tag::calcSalt(bytes)[]
@@ -97,6 +100,7 @@ abstract contract DFPkgBase is IDiamondFactoryPackage {
     function calcSalt(bytes memory pkgArgs) public view virtual returns (bytes32 salt) {
         return pkgArgs._hash();
     }
+
     // end::calcSalt(bytes)[]
 
     // tag::processArgs(bytes)[]
@@ -110,6 +114,7 @@ abstract contract DFPkgBase is IDiamondFactoryPackage {
     function processArgs(bytes memory pkgArgs) public virtual returns (bytes memory processedPkgArgs) {
         return pkgArgs;
     }
+
     // end::processArgs(bytes)[]
 
     // tag::updatePkg(address,bytes)[]
@@ -121,14 +126,7 @@ abstract contract DFPkgBase is IDiamondFactoryPackage {
     /// @custom:signature updatePkg(address,bytes)
     /// @custom:selector 0xa9089235
     /// @inheritdoc IDiamondFactoryPackage
-    function updatePkg(
-        address expectedProxy,
-        bytes memory pkgArgs
-    )
-        public
-        virtual
-        returns (bool)
-    {
+    function updatePkg(address expectedProxy, bytes memory pkgArgs) public virtual returns (bool) {
         return true;
     }
     // end::updatePkg(address,bytes)[]
@@ -142,11 +140,8 @@ abstract contract DFPkgBase is IDiamondFactoryPackage {
     /// @custom:signature initAccount(bytes)
     /// @custom:selector 0x870d4838
     /// @inheritdoc IDiamondFactoryPackage
-    function initAccount(
-        bytes memory initArgs
-    )
-        public
-        virtual;
+    function initAccount(bytes memory initArgs) public virtual;
+
     // end::initAccount(bytes)[]
 
     // tag::postDeploy(address)[]
@@ -158,13 +153,7 @@ abstract contract DFPkgBase is IDiamondFactoryPackage {
     /// @custom:signature postDeploy(address)
     /// @custom:selector 0x70068fcf
     /// @inheritdoc IDiamondFactoryPackage
-    function postDeploy(
-        address account
-    )
-        public
-        virtual
-        returns (bool)
-    {
+    function postDeploy(address account) public virtual returns (bool) {
         return true;
     }
     // end::postDeploy(address)[]

@@ -43,6 +43,7 @@ contract DiamondCutFacet is DiamondCutTarget, IFacet {
     function facetName() public pure returns (string memory name) {
         return type(DiamondCutFacet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -57,6 +58,7 @@ contract DiamondCutFacet is DiamondCutTarget, IFacet {
         interfaces = new bytes4[](1);
         interfaces[0] = type(IDiamondCut).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -71,6 +73,7 @@ contract DiamondCutFacet is DiamondCutTarget, IFacet {
         funcs = new bytes4[](1);
         funcs[0] = IDiamondCut.diamondCut.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]

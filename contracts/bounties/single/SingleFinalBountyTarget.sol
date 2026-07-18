@@ -50,7 +50,7 @@ contract SingleFinalBountyTarget is BountyCommonTarget, ISingleFinalBounty {
         // the approver/issuer is expected to know or we emit; actual transfer per call not here.
         // Better: we can have a payOutRemaining or on approve just close and let rule or separate payout.
         // To make functional: on approve we mark closed, actual token release can be triggered by a withdraw-like for the recipient.
-        // For end to end, we'll transfer nothing auto (to avoid enumerating tokens), worker or issuer calls a payout helper? 
+        // For end to end, we'll transfer nothing auto (to avoid enumerating tokens), worker or issuer calls a payout helper?
         // For v1 working demo we will use _recordPayout in a follow up or assume single token common case.
         // Here: close it. Real payout can be added as "releaseTo" but to avoid token enum we leave to rule or add explicit release.
         BountyRepo._markClosed(rs, bountyId);

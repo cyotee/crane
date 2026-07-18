@@ -27,6 +27,7 @@ contract DiamondLoupeTarget is IDiamondLoupe {
     function facets() external view returns (Facet[] memory facets_) {
         facets_ = ERC2535Repo._facets();
     }
+
     // end::facets()[]
 
     // tag::facetFunctionSelectors(address)[]
@@ -40,6 +41,7 @@ contract DiamondLoupeTarget is IDiamondLoupe {
     function facetFunctionSelectors(address _facet) external view returns (bytes4[] memory facetFunctionSelectors_) {
         facetFunctionSelectors_ = ERC2535Repo._facetFunctionSelectors(_facet);
     }
+
     // end::facetFunctionSelectors(address)[]
 
     // tag::facetAddresses()[]
@@ -54,6 +56,7 @@ contract DiamondLoupeTarget is IDiamondLoupe {
     function facetAddresses() external view returns (address[] memory facetAddresses_) {
         facetAddresses_ = ERC2535Repo._facetAddresses();
     }
+
     // end::facetAddresses()[]
 
     // tag::facetAddress(bytes4)[]

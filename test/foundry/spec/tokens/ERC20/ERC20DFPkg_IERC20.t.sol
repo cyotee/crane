@@ -90,6 +90,7 @@ contract ERC20DFPkg_IERC20_Test is TestBase_ERC20 {
         erc20DFPkgView = IDiamondFactoryPackage(address(erc20DFPKG));
         TestBase_ERC20.setUp();
     }
+
     // end::setUp()[]
 
     // tag::_deployToken(ERC20TargetStubHandler)[]
@@ -102,13 +103,14 @@ contract ERC20DFPkg_IERC20_Test is TestBase_ERC20 {
     function _deployToken(ERC20TargetStubHandler handler_) internal virtual override returns (IERC20 token_) {
         token_ = erc20DFPKG.deploy(diamondFactory, "Test Token", "TT", 18, 1_000_000e18, address(handler_), bytes32(0));
     }
+
     // end::_deployToken(ERC20TargetStubHandler)[]
 
     /* -------------------------------------------------------------------------- */
     /*                     IDiamondFactoryPackage Declaration Tests (LR-7)        */
     /* -------------------------------------------------------------------------- */
 
-    // tag::test_ERC20DFPkg_IDiamondFactoryPackage_packageName()[] 
+    // tag::test_ERC20DFPkg_IDiamondFactoryPackage_packageName()[]
     /// @notice Validates packageName declaration per LR-7 for DFPkgs.
     /// @dev Exact assertEq. Value derived from type name per deployment patterns.
     /// @custom:selector 0xabc8b346
@@ -117,9 +119,10 @@ contract ERC20DFPkg_IERC20_Test is TestBase_ERC20 {
         string memory name = erc20DFPkgView.packageName();
         assertEq(name, "ERC20DFPkg", "packageName must exactly match expected");
     }
+
     // end::test_ERC20DFPkg_IDiamondFactoryPackage_packageName()[]
 
-    // tag::test_ERC20DFPkg_IDiamondFactoryPackage_facetInterfaces()[] 
+    // tag::test_ERC20DFPkg_IDiamondFactoryPackage_facetInterfaces()[]
     /// @notice Validates facetInterfaces() declaration + length + non-empty using central value.
     /// @dev Exact length + content assertions. References IFacet.facetInterfaces selector 0x2ea80826.
     /// @custom:selector 0x2ea80826
@@ -130,9 +133,10 @@ contract ERC20DFPkg_IERC20_Test is TestBase_ERC20 {
         // spot check common
         assertTrue(ifaces[0] != bytes4(0));
     }
+
     // end::test_ERC20DFPkg_IDiamondFactoryPackage_facetInterfaces()[]
 
-    // tag::test_ERC20DFPkg_IDiamondFactoryPackage_facetAddresses()[] 
+    // tag::test_ERC20DFPkg_IDiamondFactoryPackage_facetAddresses()[]
     /// @notice Validates facetAddresses declaration per LR-7.
     /// @dev Exact assertEq on length and value (the real erc20Facet). References central 0x52ef6b2c.
     /// @custom:selector 0x52ef6b2c
@@ -142,9 +146,10 @@ contract ERC20DFPkg_IERC20_Test is TestBase_ERC20 {
         assertEq(addrs.length, 1, "ERC20DFPkg has exactly one facet address");
         assertEq(addrs[0], address(erc20Facet), "facet address must exactly match deployed erc20Facet");
     }
+
     // end::test_ERC20DFPkg_IDiamondFactoryPackage_facetAddresses()[]
 
-    // tag::test_ERC20DFPkg_IDiamondFactoryPackage_facetCuts()[] 
+    // tag::test_ERC20DFPkg_IDiamondFactoryPackage_facetCuts()[]
     /// @notice Validates facetCuts declaration (length, facet ref) per LR-7.
     /// @dev Uses exact assertEq on struct fields. Central selector 0xa4b3ad35.
     /// @custom:selector 0xa4b3ad35
@@ -157,9 +162,10 @@ contract ERC20DFPkg_IERC20_Test is TestBase_ERC20 {
         assertEq(uint8(cuts[0].action), 0, "default facetCut action is Add");
         assertTrue(cuts[0].functionSelectors.length > 0, "cut has selectors");
     }
+
     // end::test_ERC20DFPkg_IDiamondFactoryPackage_facetCuts()[]
 
-    // tag::test_ERC20DFPkg_IDiamondFactoryPackage_diamondConfig()[] 
+    // tag::test_ERC20DFPkg_IDiamondFactoryPackage_diamondConfig()[]
     /// @notice Validates diamondConfig declaration per LR-7 with exact field checks.
     /// @dev Central selector 0x65d375b3. Asserts non-zero critical diamond facets in config (production-like).
     /// @custom:selector 0x65d375b3
@@ -170,40 +176,46 @@ contract ERC20DFPkg_IERC20_Test is TestBase_ERC20 {
         assertTrue(cfg.facetCuts.length > 0, "diamondConfig must have facetCuts");
         assertTrue(cfg.interfaces.length > 0, "diamondConfig must have interfaces");
     }
+
     // end::test_ERC20DFPkg_IDiamondFactoryPackage_diamondConfig()[]
 
-    // tag::test_ERC20DFPkg_IDiamondFactoryPackage_calcSalt_determinism()[] 
+    // tag::test_ERC20DFPkg_IDiamondFactoryPackage_calcSalt_determinism()[]
     /// @notice Exact determinism test for calcSalt per LR-7 CREATE3/salt requirements.
     /// @dev Same input yields identical salt; different yields different. Central 0xd82be56e.
     /// @custom:selector 0xd82be56e
     /// @custom:signature calcSalt(bytes)
     function test_ERC20DFPkg_IDiamondFactoryPackage_calcSalt_determinism() public {
-        bytes memory argsA = abi.encode(IERC20DFPkg.PkgArgs({
-            name: "same-pkg-args",
-            symbol: "SAME",
-            decimals: 18,
-            totalSupply: 0,
-            recipient: address(0),
-            optionalSalt: bytes32(0)
-        }));
+        bytes memory argsA = abi.encode(
+            IERC20DFPkg.PkgArgs({
+                name: "same-pkg-args",
+                symbol: "SAME",
+                decimals: 18,
+                totalSupply: 0,
+                recipient: address(0),
+                optionalSalt: bytes32(0)
+            })
+        );
         bytes32 salt1 = erc20DFPkgView.calcSalt(argsA);
         bytes32 salt2 = erc20DFPkgView.calcSalt(argsA);
         assertEq(salt1, salt2, "calcSalt must be deterministic for identical args");
 
-        bytes memory argsB = abi.encode(IERC20DFPkg.PkgArgs({
-            name: "different",
-            symbol: "DIFF",
-            decimals: 18,
-            totalSupply: 0,
-            recipient: address(0),
-            optionalSalt: bytes32(0)
-        }));
+        bytes memory argsB = abi.encode(
+            IERC20DFPkg.PkgArgs({
+                name: "different",
+                symbol: "DIFF",
+                decimals: 18,
+                totalSupply: 0,
+                recipient: address(0),
+                optionalSalt: bytes32(0)
+            })
+        );
         bytes32 salt3 = erc20DFPkgView.calcSalt(argsB);
         assertNotEq(salt1, salt3, "different args must produce different salt");
     }
+
     // end::test_ERC20DFPkg_IDiamondFactoryPackage_calcSalt_determinism()[]
 
-    // tag::test_ERC20DFPkg_IDiamondFactoryPackage_initAccount_postDeploy_present()[] 
+    // tag::test_ERC20DFPkg_IDiamondFactoryPackage_initAccount_postDeploy_present()[]
     /// @notice Validates initAccount and postDeploy surface presence (LR-7 full DFPkg lifecycle).
     /// @dev Calls do not revert for signature presence (typed via interface). Central selectors used: 0x870d4838, 0x70068fcf.
     /// initAccount is typically delegatecall context; postDeploy returns bool.
@@ -218,16 +230,20 @@ contract ERC20DFPkg_IERC20_Test is TestBase_ERC20 {
         assertTrue(post == true || post == false, "postDeploy must return bool exactly");
         // initAccount signature is exercised via diamondFactory.deploy path in _deployToken (real delegatecall in TestBase)
     }
+
     // end::test_ERC20DFPkg_IDiamondFactoryPackage_initAccount_postDeploy_present()[]
 
-    // tag::test_ERC20DFPkg_IDiamondPackageCallBackFactory_interfaceId()[] 
+    // tag::test_ERC20DFPkg_IDiamondPackageCallBackFactory_interfaceId()[]
     /// @notice Cross-check that diamondFactory declares expected interface using central value.
     /// @notice IDiamondPackageCallBackFactory interfaceId: 0x949da331 (from central)
     function test_ERC20DFPkg_IDiamondPackageCallBackFactory_interfaceId() public {
         // direct assertion on known interface id from central (via supports or type)
         // safe call to avoid revert in some setups
         bool supported = false;
-        try IERC165(address(diamondFactory)).supportsInterface(0x949da331) returns (bool b) { supported = b; } catch {}
+        try IERC165(address(diamondFactory)).supportsInterface(0x949da331) returns (bool b) {
+            supported = b;
+        }
+            catch {}
         assertTrue(supported || true, "IDiamondPackageCallBackFactory interfaceId central ref");
     }
     // end::test_ERC20DFPkg_IDiamondPackageCallBackFactory_interfaceId()[]

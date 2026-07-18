@@ -34,6 +34,7 @@ contract DiamondLoupeFacet is DiamondLoupeTarget, IFacet {
     function facetName() public pure returns (string memory name) {
         return type(DiamondLoupeFacet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -49,6 +50,7 @@ contract DiamondLoupeFacet is DiamondLoupeTarget, IFacet {
 
         interfaces[0] = type(IDiamondLoupe).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -75,6 +77,7 @@ contract DiamondLoupeFacet is DiamondLoupeTarget, IFacet {
         funcs[2] = IDiamondLoupe.facetAddresses.selector;
         funcs[3] = IDiamondLoupe.facetAddress.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]

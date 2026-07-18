@@ -21,7 +21,9 @@ library BalancerV3VaultAwareRepo {
      *      This follows the canonical pattern used by OperableRepo, ERC2535Repo, MultiStepOwnableRepo, DeployedAddressesRepo, Create3FactoryAwareRepo, DiamondPackageFactoryAwareRepo and other
      *      gold-standard Repos for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("protocols.dexes.balancer.v3.vault.aware"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("protocols.dexes.balancer.v3.vault.aware"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -32,6 +34,7 @@ library BalancerV3VaultAwareRepo {
     struct Storage {
         IVault balancerV3Vault;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -45,6 +48,7 @@ library BalancerV3VaultAwareRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -55,6 +59,7 @@ library BalancerV3VaultAwareRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-IVault)[]
@@ -67,6 +72,7 @@ library BalancerV3VaultAwareRepo {
     function _initialize(Storage storage layoutStruct, IVault vault_) internal {
         layoutStruct.balancerV3Vault = vault_;
     }
+
     // end::_initialize(Storage-IVault)[]
 
     // tag::_initialize(IVault)[]
@@ -77,6 +83,7 @@ library BalancerV3VaultAwareRepo {
     function _initialize(IVault vault_) internal {
         _initialize(_layoutStruct(), vault_);
     }
+
     // end::_initialize(IVault)[]
 
     // tag::_balancerV3Vault(Storage)[]
@@ -86,13 +93,10 @@ library BalancerV3VaultAwareRepo {
      * @param layoutStruct The Storage struct to operate on.
      * @return vault_ The stored IVault (or zero if not initialized).
      */
-    function _balancerV3Vault(Storage storage layoutStruct)
-        internal
-        view
-        returns (IVault vault_)
-    {
+    function _balancerV3Vault(Storage storage layoutStruct) internal view returns (IVault vault_) {
         return layoutStruct.balancerV3Vault;
     }
+
     // end::_balancerV3Vault(Storage)[]
 
     // tag::_balancerV3Vault()[]

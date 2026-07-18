@@ -83,6 +83,7 @@ contract BalancerV3PoolTokenFacet is
     function facetName() public pure returns (string memory name_) {
         return type(BalancerV3PoolTokenFacet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -103,6 +104,7 @@ contract BalancerV3PoolTokenFacet is
         interfaces[5] = type(IRateProvider).interfaceId;
         interfaces[6] = type(IBalancerPoolToken).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -136,6 +138,7 @@ contract BalancerV3PoolTokenFacet is
         funcs[14] = IBalancerPoolToken.emitTransfer.selector;
         funcs[15] = IBalancerPoolToken.emitApproval.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]
@@ -158,6 +161,7 @@ contract BalancerV3PoolTokenFacet is
         interfaces = facetInterfaces();
         functions = facetFuncs();
     }
+
     // end::facetMetadata()[]
 
     /* -------------------------------------------------------------------------- */
@@ -174,6 +178,7 @@ contract BalancerV3PoolTokenFacet is
     function name() external view returns (string memory) {
         return ERC20Repo._name();
     }
+
     // end::name()[]
 
     // tag::symbol()[]
@@ -186,6 +191,7 @@ contract BalancerV3PoolTokenFacet is
     function symbol() external view returns (string memory) {
         return ERC20Repo._symbol();
     }
+
     // end::symbol()[]
 
     // tag::decimals()[]
@@ -197,6 +203,7 @@ contract BalancerV3PoolTokenFacet is
     function decimals() external pure returns (uint8) {
         return 18;
     }
+
     // end::decimals()[]
 
     // tag::totalSupply()[]
@@ -208,6 +215,7 @@ contract BalancerV3PoolTokenFacet is
     function totalSupply() external view returns (uint256) {
         return BalancerV3VaultAwareRepo._balancerV3Vault().totalSupply(address(this));
     }
+
     // end::totalSupply()[]
 
     // tag::balanceOf(address)[]
@@ -220,6 +228,7 @@ contract BalancerV3PoolTokenFacet is
     function balanceOf(address account) external view returns (uint256) {
         return BalancerV3VaultAwareRepo._balancerV3Vault().balanceOf(address(this), account);
     }
+
     // end::balanceOf(address)[]
 
     // tag::transfer(address,uint256)[]
@@ -227,6 +236,7 @@ contract BalancerV3PoolTokenFacet is
         BalancerV3VaultAwareRepo._balancerV3Vault().transfer(msg.sender, recipient, amount);
         return true;
     }
+
     // end::transfer(address,uint256)[]
 
     // tag::allowance(address,address)[]
@@ -240,6 +250,7 @@ contract BalancerV3PoolTokenFacet is
     function allowance(address owner, address spender) external view returns (uint256) {
         return BalancerV3VaultAwareRepo._balancerV3Vault().allowance(address(this), owner, spender);
     }
+
     // end::allowance(address,address)[]
 
     // tag::approve(address,uint256)[]
@@ -254,6 +265,7 @@ contract BalancerV3PoolTokenFacet is
         BalancerV3VaultAwareRepo._balancerV3Vault().approve(msg.sender, spender, amount);
         return true;
     }
+
     // end::approve(address,uint256)[]
 
     // tag::transferFrom(address,address,uint256)[]
@@ -266,6 +278,7 @@ contract BalancerV3PoolTokenFacet is
         BalancerV3VaultAwareRepo._balancerV3Vault().transferFrom(msg.sender, sender, recipient, amount);
         return true;
     }
+
     // end::transferFrom(address,address,uint256)[]
 
     // tag::emitTransfer(address,address,uint256)[]
@@ -273,6 +286,7 @@ contract BalancerV3PoolTokenFacet is
     function emitTransfer(address from, address to, uint256 amount) external onlyBalancerV3Vault {
         emit IERC20Events.Transfer(from, to, amount);
     }
+
     // end::emitTransfer(address,address,uint256)[]
 
     // tag::emitApproval(address,address,uint256)[]
@@ -280,6 +294,7 @@ contract BalancerV3PoolTokenFacet is
     function emitApproval(address owner, address spender, uint256 amount) external onlyBalancerV3Vault {
         emit IERC20Events.Approval(owner, spender, amount);
     }
+
     // end::emitApproval(address,address,uint256)[]
 
     // tag::getRate()[]
@@ -293,6 +308,7 @@ contract BalancerV3PoolTokenFacet is
     function getRate() public view virtual returns (uint256) {
         return BalancerV3VaultAwareRepo._balancerV3Vault().getBptRate(address(this));
     }
+
     // end::getRate()[]
 
     // tag::permit(address,address,uint256,uint256,uint8,bytes32,bytes32)[]
@@ -329,6 +345,7 @@ contract BalancerV3PoolTokenFacet is
 
         BalancerV3VaultAwareRepo._balancerV3Vault().approve(owner, spender, amount);
     }
+
     // end::permit(address,address,uint256,uint256,uint8,bytes32,bytes32)[]
 
     // tag::nonces(address)[]
@@ -341,6 +358,7 @@ contract BalancerV3PoolTokenFacet is
     function nonces(address owner) public view virtual override returns (uint256) {
         return ERC2612Repo._nonces(owner);
     }
+
     // end::nonces(address)[]
 
     // tag::DOMAIN_SEPARATOR()[]
@@ -355,6 +373,7 @@ contract BalancerV3PoolTokenFacet is
     function DOMAIN_SEPARATOR() external view virtual returns (bytes32) {
         return EIP712Repo._domainSeparatorV4();
     }
+
     // end::DOMAIN_SEPARATOR()[]
 
     // tag::eip712Domain()[]

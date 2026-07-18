@@ -71,6 +71,7 @@ abstract contract TestBase_ERC721 is Test {
      * @return token_ The deployed token subject.
      */
     function _deployToken(ERC721TargetStubHandler handler_) internal virtual returns (ERC721TargetStub token_);
+
     // end::_deployToken(ERC721TargetStubHandler)[]
 
     // tag::_deployHandler()[]
@@ -81,6 +82,7 @@ abstract contract TestBase_ERC721 is Test {
     function _deployHandler() internal virtual returns (ERC721TargetStubHandler handler_) {
         handler_ = new ERC721TargetStubHandler();
     }
+
     // end::_deployHandler()[]
 
     // tag::_registerToken(ERC721TargetStubHandler-ERC721TargetStub)[]
@@ -92,6 +94,7 @@ abstract contract TestBase_ERC721 is Test {
     function _registerToken(ERC721TargetStubHandler handler_, ERC721TargetStub token_) internal virtual {
         handler_.attachToken(token_);
     }
+
     // end::_registerToken(ERC721TargetStubHandler-ERC721TargetStub)[]
 
     /* ---------------------------------------------------------------------- */
@@ -115,6 +118,7 @@ abstract contract TestBase_ERC721 is Test {
         uint256 expectedSupply = handler.ghostTotalMinted() - handler.ghostTotalBurned();
         assertEq(sumBalances, expectedSupply, "Sum of balances should equal minted - burned");
     }
+
     // end::invariant_sumBalances_equals_supply()[]
 
     // tag::invariant_token_has_single_owner()[]
@@ -130,12 +134,14 @@ abstract contract TestBase_ERC721 is Test {
             if (handler.tokenExists(tokenId)) {
                 address owner = handler.ownerOf(tokenId);
                 // exact non-zero via Behavior wrapped
-                bool ownerValid = Behavior_IERC721.isValid_ownerOf(IERC721(address(tokenSubject)), tokenId, owner) && owner != address(0);
+                bool ownerValid = Behavior_IERC721.isValid_ownerOf(IERC721(address(tokenSubject)), tokenId, owner)
+                    && owner != address(0);
                 assertTrue(ownerValid, "Existing token should have non-zero owner (via Behavior_IERC721)");
                 assertNotEq(owner, address(0), "Existing token should have non-zero owner");
             }
         }
     }
+
     // end::invariant_token_has_single_owner()[]
 
     // tag::invariant_balances_nonnegative()[]
@@ -157,6 +163,7 @@ abstract contract TestBase_ERC721 is Test {
             assertGe(balance, 0, "Balance should be non-negative");
         }
     }
+
     // end::invariant_balances_nonnegative()[]
 
     // tag::invariant_ghost_consistent()[]

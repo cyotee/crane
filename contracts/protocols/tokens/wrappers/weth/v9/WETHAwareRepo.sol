@@ -22,7 +22,9 @@ library WETHAwareRepo {
      *      This follows the canonical pattern used by OperableRepo, ERC2535Repo, MultiStepOwnableRepo, DeployedAddressesRepo, Create3FactoryAwareRepo, DiamondPackageFactoryAwareRepo, BalancerV3VaultAwareRepo, CamelotV2FactoryAwareRepo and other
      *      gold-standard Repos for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("protocols.tokens.wrappers.weth.v9"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("protocols.tokens.wrappers.weth.v9"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -33,6 +35,7 @@ library WETHAwareRepo {
     struct Storage {
         IWETH weth;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -46,6 +49,7 @@ library WETHAwareRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -56,6 +60,7 @@ library WETHAwareRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-IWETH)[]
@@ -68,6 +73,7 @@ library WETHAwareRepo {
     function _initialize(Storage storage layoutStruct, IWETH weth_) internal {
         _setWeth(layoutStruct, weth_);
     }
+
     // end::_initialize(Storage-IWETH)[]
 
     // tag::_initialize(IWETH)[]
@@ -78,6 +84,7 @@ library WETHAwareRepo {
     function _initialize(IWETH weth_) internal {
         _initialize(_layoutStruct(), weth_);
     }
+
     // end::_initialize(IWETH)[]
 
     // tag::_setWeth(Storage-IWETH)[]
@@ -90,6 +97,7 @@ library WETHAwareRepo {
     function _setWeth(Storage storage layoutStruct, IWETH weth_) internal {
         layoutStruct.weth = weth_;
     }
+
     // end::_setWeth(Storage-IWETH)[]
 
     // tag::_setWeth(IWETH)[]
@@ -100,6 +108,7 @@ library WETHAwareRepo {
     function _setWeth(IWETH weth_) internal {
         _setWeth(_layoutStruct(), weth_);
     }
+
     // end::_setWeth(IWETH)[]
 
     // tag::_weth(Storage)[]
@@ -109,13 +118,10 @@ library WETHAwareRepo {
      * @param layoutStruct The Storage struct to operate on.
      * @return weth_ The stored IWETH (or zero if not initialized).
      */
-    function _weth(Storage storage layoutStruct)
-        internal
-        view
-        returns (IWETH weth_)
-    {
+    function _weth(Storage storage layoutStruct) internal view returns (IWETH weth_) {
         return layoutStruct.weth;
     }
+
     // end::_weth(Storage)[]
 
     // tag::_weth()[]

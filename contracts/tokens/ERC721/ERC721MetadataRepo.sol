@@ -18,6 +18,7 @@ library ERC721MetadataRepo {
      *      This follows the canonical pattern used by ERC20Repo (eip.erc.20), ERC4626Repo etc.
      */
     bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("eip.erc.721.metadata"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -34,6 +35,7 @@ library ERC721MetadataRepo {
         string baseURI;
         mapping(uint256 tokenId => string tokenURI) tokenURIs;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -47,6 +49,7 @@ library ERC721MetadataRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -57,6 +60,7 @@ library ERC721MetadataRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-string-memory-string-memory)[]
@@ -71,6 +75,7 @@ library ERC721MetadataRepo {
         layoutStruct.name = name_;
         layoutStruct.symbol = symbol_;
     }
+
     // end::_initialize(Storage-string-memory-string-memory)[]
 
     // tag::_initialize(string-memory-string-memory)[]
@@ -82,6 +87,7 @@ library ERC721MetadataRepo {
     function _initialize(string memory name_, string memory symbol_) internal {
         _initialize(_layoutStruct(), name_, symbol_);
     }
+
     // end::_initialize(string-memory-string-memory)[]
 
     // tag::_initialize(Storage-string-memory-string-memory-string-memory)[]
@@ -102,6 +108,7 @@ library ERC721MetadataRepo {
         _initialize(layoutStruct, name_, symbol_);
         layoutStruct.baseURI = baseURI_;
     }
+
     // end::_initialize(Storage-string-memory-string-memory-string-memory)[]
 
     // tag::_name(Storage)[]
@@ -114,6 +121,7 @@ library ERC721MetadataRepo {
     function _name(Storage storage layoutStruct) internal view returns (string storage) {
         return layoutStruct.name;
     }
+
     // end::_name(Storage)[]
 
     // tag::_name()[]
@@ -124,6 +132,7 @@ library ERC721MetadataRepo {
     function _name() internal view returns (string memory) {
         return _name(_layoutStruct());
     }
+
     // end::_name()[]
 
     // tag::_symbol(Storage)[]
@@ -136,6 +145,7 @@ library ERC721MetadataRepo {
     function _symbol(Storage storage layoutStruct) internal view returns (string storage) {
         return layoutStruct.symbol;
     }
+
     // end::_symbol(Storage)[]
 
     // tag::_symbol()[]
@@ -146,6 +156,7 @@ library ERC721MetadataRepo {
     function _symbol() internal view returns (string memory) {
         return _symbol(_layoutStruct());
     }
+
     // end::_symbol()[]
 
     // tag::_baseURI(Storage)[]
@@ -158,6 +169,7 @@ library ERC721MetadataRepo {
     function _baseURI(Storage storage layoutStruct) internal view returns (string storage) {
         return layoutStruct.baseURI;
     }
+
     // end::_baseURI(Storage)[]
 
     // tag::_baseURI()[]
@@ -168,6 +180,7 @@ library ERC721MetadataRepo {
     function _baseURI() internal view returns (string memory) {
         return _baseURI(_layoutStruct());
     }
+
     // end::_baseURI()[]
 
     // tag::_tokenURI(Storage-uint256)[]
@@ -181,6 +194,7 @@ library ERC721MetadataRepo {
     function _tokenURI(Storage storage layoutStruct, uint256 tokenId_) internal view returns (string storage) {
         return layoutStruct.tokenURIs[tokenId_];
     }
+
     // end::_tokenURI(Storage-uint256)[]
 
     // tag::_tokenURI(uint256)[]
@@ -192,6 +206,7 @@ library ERC721MetadataRepo {
     function _tokenURI(uint256 tokenId_) internal view returns (string memory) {
         return _tokenURI(_layoutStruct(), tokenId_);
     }
+
     // end::_tokenURI(uint256)[]
 
     // tag::_setTokenURI(Storage-uint256-string-memory)[]
@@ -205,6 +220,7 @@ library ERC721MetadataRepo {
     function _setTokenURI(Storage storage layoutStruct, uint256 tokenId_, string memory tokenURI_) internal {
         layoutStruct.tokenURIs[tokenId_] = tokenURI_;
     }
+
     // end::_setTokenURI(Storage-uint256-string-memory)[]
 
     // tag::_setTokenURI(uint256-string-memory)[]
@@ -218,5 +234,5 @@ library ERC721MetadataRepo {
     }
     // end::_setTokenURI(uint256-string-memory)[]
 
-// end::ERC721MetadataRepo[]
+    // end::ERC721MetadataRepo[]
 }

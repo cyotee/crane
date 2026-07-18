@@ -395,7 +395,7 @@ contract FraxPoolvAMM is AccessControl {
             fxs_needed = 0;
         } else if (global_collateral_ratio == 0) {
             // Algorithmic
-        // Assumes 1 collat = 1 FRAX at all times
+            // Assumes 1 collat = 1 FRAX at all times
             total_frax_mint = getAmountOut(fxs_amount, fxs_virtual_reserves, collat_virtual_reserves, minting_fee);
             _update(
                 fxs_virtual_reserves.add(fxs_amount),
@@ -409,7 +409,7 @@ contract FraxPoolvAMM is AccessControl {
             fxs_needed = fxs_amount;
         } else {
             // Fractional
-        // Assumes 1 collat = 1 FRAX at all times
+            // Assumes 1 collat = 1 FRAX at all times
             uint256 frax_mint_from_fxs =
                 getAmountOut(fxs_amount, fxs_virtual_reserves, collat_virtual_reserves, minting_fee);
             _update(

@@ -42,7 +42,8 @@ contract ConfigPositionManagerPermitTest is ConfigPositionManagerBaseTest {
 
     function test_setGlobalPermissionPermit_typeHash() public view {
         assertEq(
-            positionManager.SET_GLOBAL_PERMISSION_PERMIT_TYPEHASH(), vm.eip712HashType(EIP712Types.TYPE_SetGlobalPermissionPermit)
+            positionManager.SET_GLOBAL_PERMISSION_PERMIT_TYPEHASH(),
+            vm.eip712HashType(EIP712Types.TYPE_SetGlobalPermissionPermit)
         );
         assertEq(
             positionManager.SET_GLOBAL_PERMISSION_PERMIT_TYPEHASH(),

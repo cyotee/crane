@@ -49,6 +49,7 @@ library Behavior_IERC165 {
     function _Behavior_IERC165Name() internal pure returns (string memory) {
         return type(Behavior_IERC165).name;
     }
+
     // end::_Behavior_IERC165Name()[]
 
     // tag::_ierc165_errPrefixFunc(string)[]
@@ -61,6 +62,7 @@ library Behavior_IERC165 {
     function _ierc165_errPrefixFunc(string memory testedFuncSig) internal pure returns (string memory) {
         return BehaviorUtils._errPrefixFunc(_Behavior_IERC165Name(), testedFuncSig);
     }
+
     // end::_ierc165_errPrefixFunc(string)[]
 
     // tag::_ierc165_errPrefix(string-string)[]
@@ -78,6 +80,7 @@ library Behavior_IERC165 {
     {
         return string.concat(_ierc165_errPrefixFunc(testedFuncSig), subjectLabel);
     }
+
     // end::_ierc165_errPrefix(string-string)[]
 
     // tag::_ierc165_errPrefix(string-address)[]
@@ -91,6 +94,7 @@ library Behavior_IERC165 {
     function _ierc165_errPrefix(string memory testedFuncSig, address subject) internal view returns (string memory) {
         return _ierc165_errPrefix(testedFuncSig, vm.getLabel(subject));
     }
+
     // end::_ierc165_errPrefix(string-address)[]
 
     /* ---------------------- supportsInterFace(bytes4) --------------------- */
@@ -106,6 +110,7 @@ library Behavior_IERC165 {
     function funcSig_IERC165_supportsInterFace() public pure returns (string memory) {
         return "supportsInterFace(bytes4)";
     }
+
     // end::funcSig_IERC165_supportsInterFace()[]
 
     // tag::_errPrefix_IERC165_supportsInterFace(string)[]
@@ -118,6 +123,7 @@ library Behavior_IERC165 {
     function _errPrefix_IERC165_supportsInterFace(string memory subjectLabel) internal pure returns (string memory) {
         return _ierc165_errPrefix(funcSig_IERC165_supportsInterFace(), subjectLabel);
     }
+
     // end::_errPrefix_IERC165_supportsInterFace(string)[]
 
     // tag::errBody_IERC165_supportsInterFace()[]
@@ -129,6 +135,7 @@ library Behavior_IERC165 {
     function errBody_IERC165_supportsInterFace() public pure returns (string memory) {
         return "Interface support mismatch";
     }
+
     // end::errBody_IERC165_supportsInterFace()[]
 
     // tag::isValid_IERC165_supportsInterfaces(string-bool-bool)[]
@@ -172,6 +179,7 @@ library Behavior_IERC165 {
         console.logBehaviorExit(_Behavior_IERC165Name(), "isValid_IERC165_supportsInterfaces");
         return isValid;
     }
+
     // end::isValid_IERC165_supportsInterfaces(string-bool-bool)[]
 
     // tag::isValid_IERC165_supportsInterfaces(IERC165-bool-bool)[]
@@ -190,6 +198,7 @@ library Behavior_IERC165 {
     {
         return isValid_IERC165_supportsInterfaces(vm.getLabel(address(subject)), expected, actual);
     }
+
     // end::isValid_IERC165_supportsInterfaces(IERC165-bool-bool)[]
 
     // tag::expect_IERC165_supportsInterface(IERC165-bytes4)[]
@@ -213,6 +222,7 @@ library Behavior_IERC165 {
 
         console.logBehaviorExit(_Behavior_IERC165Name(), "expect_IERC165_supportsInterface");
     }
+
     // end::expect_IERC165_supportsInterface(IERC165-bytes4)[]
 
     // tag::expect_IERC165_supportsInterface(IERC165-bytes4[])[]
@@ -240,6 +250,7 @@ library Behavior_IERC165 {
 
         console.logBehaviorExit(_Behavior_IERC165Name(), "expect_IERC165_supportsInterface");
     }
+
     // end::expect_IERC165_supportsInterface(IERC165-bytes4[])[]
 
     // tag::_expected_IERC165_supportsInterface(IERC165)[]
@@ -253,6 +264,7 @@ library Behavior_IERC165 {
     function _expected_IERC165_supportsInterface(IERC165 subject) internal view returns (Bytes4Set storage) {
         return Bytes4SetComparatorRepo._recedExpectedBytes4(address(subject), IERC165.supportsInterface.selector);
     }
+
     // end::_expected_IERC165_supportsInterface(IERC165)[]
 
     // tag::hasValid_IERC165_supportsInterface(IERC165)[]
@@ -310,5 +322,5 @@ library Behavior_IERC165 {
     }
     // end::hasValid_IERC165_supportsInterface(IERC165)[]
 
-// end::Behavior_IERC165[]
+    // end::Behavior_IERC165[]
 }

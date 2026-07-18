@@ -28,6 +28,7 @@ library MultiStepOwnableRepo {
      *      gold-standard Repos for collision-resistant deterministic storage binding.
      */
     bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("eip.erc.8023"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -43,6 +44,7 @@ library MultiStepOwnableRepo {
         uint256 ownershipBufferPeriod;
         uint256 bufferPeriodEnd;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -56,6 +58,7 @@ library MultiStepOwnableRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -66,6 +69,7 @@ library MultiStepOwnableRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-address-uint256)[]
@@ -80,6 +84,7 @@ library MultiStepOwnableRepo {
         layoutStruct.owner = initialOwner_;
         layoutStruct.ownershipBufferPeriod = ownershipBufferPeriod_;
     }
+
     // end::_initialize(Storage-address-uint256)[]
 
     // tag::_initialize(address-uint256)[]
@@ -91,6 +96,7 @@ library MultiStepOwnableRepo {
     function _initialize(address initialOwner_, uint256 ownershipBufferPeriod_) internal {
         _initialize(_layoutStruct(), initialOwner_, ownershipBufferPeriod_);
     }
+
     // end::_initialize(address-uint256)[]
 
     // tag::_onlyOwner(Storage)[]
@@ -104,6 +110,7 @@ library MultiStepOwnableRepo {
             revert IMultiStepOwnable.NotOwner(msg.sender);
         }
     }
+
     // end::_onlyOwner(Storage)[]
 
     // tag::_onlyOwner()[]
@@ -113,6 +120,7 @@ library MultiStepOwnableRepo {
     function _onlyOwner() internal view {
         _onlyOwner(_layoutStruct());
     }
+
     // end::_onlyOwner()[]
 
     // tag::_onlyPendingOwner(Storage)[]
@@ -126,6 +134,7 @@ library MultiStepOwnableRepo {
             revert IMultiStepOwnable.NotPending(msg.sender);
         }
     }
+
     // end::_onlyPendingOwner(Storage)[]
 
     // tag::_onlyPendingOwner()[]
@@ -135,6 +144,7 @@ library MultiStepOwnableRepo {
     function _onlyPendingOwner() internal view {
         _onlyPendingOwner(_layoutStruct());
     }
+
     // end::_onlyPendingOwner()[]
 
     // tag::_initiateOwnershipTransfer(Storage-address)[]
@@ -154,6 +164,7 @@ library MultiStepOwnableRepo {
         layoutStruct.pendingOwner = pendingOwner_;
         emit IMultiStepOwnable.OwnershipTransferInitiated(owner, pendingOwner_);
     }
+
     // end::_initiateOwnershipTransfer(Storage-address)[]
 
     // tag::_initiateOwnershipTransfer(address)[]
@@ -164,6 +175,7 @@ library MultiStepOwnableRepo {
     function _initiateOwnershipTransfer(address pendingOwner_) internal {
         _initiateOwnershipTransfer(_layoutStruct(), pendingOwner_);
     }
+
     // end::_initiateOwnershipTransfer(address)[]
 
     // tag::_confirmOwnershipTransfer(Storage-address)[]
@@ -189,6 +201,7 @@ library MultiStepOwnableRepo {
         layoutStruct.pendingOwnerConfirmed = true;
         emit IMultiStepOwnable.OwnershipTransferConfirmed(owner, layoutStruct.pendingOwner);
     }
+
     // end::_confirmOwnershipTransfer(Storage-address)[]
 
     // tag::_confirmOwnershipTransfer(address)[]
@@ -199,6 +212,7 @@ library MultiStepOwnableRepo {
     function _confirmOwnershipTransfer(address pendingOwner_) internal {
         _confirmOwnershipTransfer(_layoutStruct(), pendingOwner_);
     }
+
     // end::_confirmOwnershipTransfer(address)[]
 
     // tag::_cancelPendingOwnershipTransfer(Storage)[]
@@ -216,6 +230,7 @@ library MultiStepOwnableRepo {
         delete layoutStruct.pendingOwnerConfirmed;
         delete layoutStruct.bufferPeriodEnd;
     }
+
     // end::_cancelPendingOwnershipTransfer(Storage)[]
 
     // tag::_cancelPendingOwnershipTransfer()[]
@@ -225,6 +240,7 @@ library MultiStepOwnableRepo {
     function _cancelPendingOwnershipTransfer() internal {
         _cancelPendingOwnershipTransfer(_layoutStruct());
     }
+
     // end::_cancelPendingOwnershipTransfer()[]
 
     // tag::_acceptOwnershipTransfer(Storage)[]
@@ -246,6 +262,7 @@ library MultiStepOwnableRepo {
         delete layoutStruct.bufferPeriodEnd;
         emit IMultiStepOwnable.OwnershipTransferred(previousOwner, pendingOwner);
     }
+
     // end::_acceptOwnershipTransfer(Storage)[]
 
     // tag::_acceptOwnershipTransfer()[]
@@ -255,6 +272,7 @@ library MultiStepOwnableRepo {
     function _acceptOwnershipTransfer() internal {
         _acceptOwnershipTransfer(_layoutStruct());
     }
+
     // end::_acceptOwnershipTransfer()[]
 
     // tag::_owner(Storage)[]
@@ -267,6 +285,7 @@ library MultiStepOwnableRepo {
     function _owner(Storage storage layoutStruct) internal view returns (address owner_) {
         return layoutStruct.owner;
     }
+
     // end::_owner(Storage)[]
 
     // tag::_owner()[]
@@ -277,6 +296,7 @@ library MultiStepOwnableRepo {
     function _owner() internal view returns (address owner_) {
         return _owner(_layoutStruct());
     }
+
     // end::_owner()[]
 
     // tag::_pendingOwner(Storage)[]
@@ -289,6 +309,7 @@ library MultiStepOwnableRepo {
     function _pendingOwner(Storage storage layoutStruct) internal view returns (address pendingOwner_) {
         return layoutStruct.pendingOwner;
     }
+
     // end::_pendingOwner(Storage)[]
 
     // tag::_pendingOwner()[]
@@ -299,6 +320,7 @@ library MultiStepOwnableRepo {
     function _pendingOwner() internal view returns (address pendingOwner_) {
         return _pendingOwner(_layoutStruct());
     }
+
     // end::_pendingOwner()[]
 
     // tag::_preConfirmedOwner(Storage)[]
@@ -314,6 +336,7 @@ library MultiStepOwnableRepo {
         }
         return layoutStruct.pendingOwner;
     }
+
     // end::_preConfirmedOwner(Storage)[]
 
     // tag::_preConfirmedOwner()[]
@@ -324,6 +347,7 @@ library MultiStepOwnableRepo {
     function _preConfirmedOwner() internal view returns (address preConfirmedOwner_) {
         return _preConfirmedOwner(_layoutStruct());
     }
+
     // end::_preConfirmedOwner()[]
 
     // tag::_ownershipBufferPeriod(Storage)[]
@@ -333,9 +357,14 @@ library MultiStepOwnableRepo {
      * @param layoutStruct The Storage struct to operate on.
      * @return ownershipBufferPeriod_ The buffer period in seconds.
      */
-    function _ownershipBufferPeriod(Storage storage layoutStruct) internal view returns (uint256 ownershipBufferPeriod_) {
+    function _ownershipBufferPeriod(Storage storage layoutStruct)
+        internal
+        view
+        returns (uint256 ownershipBufferPeriod_)
+    {
         return layoutStruct.ownershipBufferPeriod;
     }
+
     // end::_ownershipBufferPeriod(Storage)[]
 
     // tag::_ownershipBufferPeriod()[]

@@ -11,6 +11,7 @@ struct Bytes4Set {
     // Values in set.
     bytes4[] values;
 }
+
 // end::Bytes4Set[]
 
 // tag::Bytes4SetRepo[]
@@ -38,6 +39,7 @@ library Bytes4SetRepo {
         set.values.length._isValidIndex(index);
         return set.values[index];
     }
+
     // end::_index(Bytes4Set-uint256)[]
 
     // tag::_indexOf(Bytes4Set-bytes4)[]
@@ -54,6 +56,7 @@ library Bytes4SetRepo {
             return set.indexes[value] - 1;
         }
     }
+
     // end::_indexOf(Bytes4Set-bytes4)[]
 
     // tag::_contains(Bytes4Set-bytes4)[]
@@ -66,6 +69,7 @@ library Bytes4SetRepo {
     function _contains(Bytes4Set storage set, bytes4 value) internal view returns (bool isPresent) {
         return set.indexes[value] != 0;
     }
+
     // end::_contains(Bytes4Set-bytes4)[]
 
     // tag::_length(Bytes4Set)[]
@@ -77,6 +81,7 @@ library Bytes4SetRepo {
     function _length(Bytes4Set storage set) internal view returns (uint256 length_) {
         return set.values.length;
     }
+
     // end::_length(Bytes4Set)[]
 
     // tag::_add(Bytes4Set-bytes4)[]
@@ -98,6 +103,7 @@ library Bytes4SetRepo {
         }
         return true;
     }
+
     // end::_add(Bytes4Set-bytes4)[]
 
     // tag::_add(Bytes4Set-bytes4[])[]
@@ -113,6 +119,7 @@ library Bytes4SetRepo {
         }
         return true;
     }
+
     // end::_add(Bytes4Set-bytes4[])[]
 
     // tag::_addAsc(Bytes4Set-bytes4)[]
@@ -155,6 +162,7 @@ library Bytes4SetRepo {
         set.values[insertIdx] = value;
         set.indexes[value] = left;
     }
+
     // end::_addAsc(Bytes4Set-bytes4)[]
 
     // tag::_remove(Bytes4Set-bytes4)[]
@@ -186,6 +194,7 @@ library Bytes4SetRepo {
             delete set.indexes[value];
         }
     }
+
     // end::_remove(Bytes4Set-bytes4)[]
 
     // tag::_remove(Bytes4Set-bytes4[])[]
@@ -199,6 +208,7 @@ library Bytes4SetRepo {
             _remove(set, values[iteration]);
         }
     }
+
     // end::_remove(Bytes4Set-bytes4[])[]
 
     // tag::_removeAsc(Bytes4Set-bytes4)[]
@@ -224,6 +234,7 @@ library Bytes4SetRepo {
         set.values.pop();
         delete set.indexes[value];
     }
+
     // end::_removeAsc(Bytes4Set-bytes4)[]
 
     // tag::_asArray(Bytes4Set)[]
@@ -235,6 +246,7 @@ library Bytes4SetRepo {
     function _asArray(Bytes4Set storage set) internal view returns (bytes4[] memory array) {
         array = set.values;
     }
+
     // end::_asArray(Bytes4Set)[]
 
     // tag::_values(Bytes4Set)[]
@@ -249,6 +261,7 @@ library Bytes4SetRepo {
     function _values(Bytes4Set storage set) internal view returns (bytes4[] storage values) {
         values = set.values;
     }
+
     // end::_values(Bytes4Set)[]
 
     // tag::_range(Bytes4Set-uint256-uint256)[]
@@ -276,6 +289,7 @@ library Bytes4SetRepo {
             }
         }
     }
+
     // end::_range(Bytes4Set-uint256-uint256)[]
 
     // tag::_sortAsc(Bytes4Set)[]
@@ -312,6 +326,7 @@ library Bytes4SetRepo {
             set.indexes[val] = i + 1; // 1-indexed
         }
     }
+
     // end::_sortAsc(Bytes4Set)[]
 
     // tag::_quickSort(Bytes4Set)[]
@@ -323,6 +338,7 @@ library Bytes4SetRepo {
     function _quickSort(Bytes4Set storage set) internal {
         _quickSort(set, 0, int256(set.values.length) - 1);
     }
+
     // end::_quickSort(Bytes4Set)[]
 
     // tag::_quickSort(Bytes4Set-int256-int256)[]
@@ -355,6 +371,7 @@ library Bytes4SetRepo {
         if (left < j) _quickSort(set, left, j);
         if (i < right) _quickSort(set, i, right);
     }
+
     // end::_quickSort(Bytes4Set-int256-int256)[]
 
     // tag::_sort(bytes4[])[]
@@ -383,6 +400,7 @@ library Bytes4SetRepo {
 
         return array;
     }
+
     // end::_sort(bytes4[])[]
 
     // tag::_sort(bytes4[]-uint256)[]
@@ -406,6 +424,7 @@ library Bytes4SetRepo {
         }
         _sort(_arr, unsortedLen - 1);
     }
+
     // end::_sort(bytes4[]-uint256)[]
 
     // tag::_wipeSet(Bytes4Set)[]

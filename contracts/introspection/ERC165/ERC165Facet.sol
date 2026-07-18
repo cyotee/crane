@@ -34,6 +34,7 @@ contract ERC165Facet is ERC165Target, IFacet {
     function facetName() public pure returns (string memory name) {
         return type(ERC165Facet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -49,6 +50,7 @@ contract ERC165Facet is ERC165Target, IFacet {
 
         interfaces[0] = type(IERC165).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -72,6 +74,7 @@ contract ERC165Facet is ERC165Target, IFacet {
 
         funcs[0] = IERC165.supportsInterface.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]

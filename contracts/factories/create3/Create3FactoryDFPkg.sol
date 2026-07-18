@@ -35,6 +35,7 @@ interface ICREATE3DFPkg is IDiamondFactoryPackage {
         IFacet callTargetRegistryManagementFacet;
         IDiamondPackageCallBackFactory diamondFactory;
     }
+
     // end::PkgInit-create3[]
 
     // tag::PkgArgs-create3[]
@@ -53,6 +54,7 @@ interface ICREATE3DFPkg is IDiamondFactoryPackage {
     function deployCreate3Factory(address owner) external returns (ICreate3FactoryProxy);
     // end::deployCreate3Factory[]
 }
+
 // end::ICREATE3DFPkg[]
 
 // tag::Create3FactoryDFPkg[]
@@ -88,6 +90,7 @@ contract Create3FactoryDFPkg is ICREATE3DFPkg {
         CALL_TARGET_REGISTRY_MANAGEMENT_FACET = pkgInit.callTargetRegistryManagementFacet;
         DIAMOND_FACTORY = pkgInit.diamondFactory;
     }
+
     // end::constructor-create3dfpkg[]
 
     // tag::deployCreate3Factory-impl[]
@@ -100,6 +103,7 @@ contract Create3FactoryDFPkg is ICREATE3DFPkg {
     function deployCreate3Factory(address owner) external returns (ICreate3FactoryProxy) {
         return ICreate3FactoryProxy(DIAMOND_FACTORY.deploy(SELF, abi.encode(PkgArgs({owner: owner}))));
     }
+
     // end::deployCreate3Factory-impl[]
 
     // tag::packageName-create3[]
@@ -111,6 +115,7 @@ contract Create3FactoryDFPkg is ICREATE3DFPkg {
     function packageName() public pure returns (string memory name_) {
         return type(Create3FactoryDFPkg).name;
     }
+
     // end::packageName-create3[]
 
     // tag::packageMetadata-create3[]
@@ -128,6 +133,7 @@ contract Create3FactoryDFPkg is ICREATE3DFPkg {
     {
         return (packageName(), facetInterfaces(), facetAddresses());
     }
+
     // end::packageMetadata-create3[]
 
     // tag::facetAddresses-create3[]
@@ -147,6 +153,7 @@ contract Create3FactoryDFPkg is ICREATE3DFPkg {
         facetAddresses_[6] = address(CALL_TARGET_REGISTRY_QUERY_FACET);
         facetAddresses_[7] = address(CALL_TARGET_REGISTRY_MANAGEMENT_FACET);
     }
+
     // end::facetAddresses-create3[]
 
     // tag::facetInterfaces-create3[]
@@ -166,6 +173,7 @@ contract Create3FactoryDFPkg is ICREATE3DFPkg {
         interfaces[6] = type(ICallTargetRegistryQuery).interfaceId;
         interfaces[7] = type(ICallTargetRegistryManagement).interfaceId;
     }
+
     // end::facetInterfaces-create3[]
 
     // tag::facetCuts-create3[]
@@ -217,6 +225,7 @@ contract Create3FactoryDFPkg is ICREATE3DFPkg {
             functionSelectors: CALL_TARGET_REGISTRY_MANAGEMENT_FACET.facetFuncs()
         });
     }
+
     // end::facetCuts-create3[]
 
     // tag::diamondConfig-create3[]
@@ -228,6 +237,7 @@ contract Create3FactoryDFPkg is ICREATE3DFPkg {
     function diamondConfig() public view returns (DiamondConfig memory config) {
         config = IDiamondFactoryPackage.DiamondConfig({facetCuts: facetCuts(), interfaces: facetInterfaces()});
     }
+
     // end::diamondConfig-create3[]
 
     // tag::calcSalt-create3[]
@@ -240,6 +250,7 @@ contract Create3FactoryDFPkg is ICREATE3DFPkg {
     function calcSalt(bytes memory pkgArgs) public pure returns (bytes32 salt) {
         return pkgArgs._hash();
     }
+
     // end::calcSalt-create3[]
 
     // tag::processArgs-create3[]
@@ -252,6 +263,7 @@ contract Create3FactoryDFPkg is ICREATE3DFPkg {
     function processArgs(bytes memory pkgArgs) public pure returns (bytes memory processedPkgArgs) {
         return pkgArgs;
     }
+
     // end::processArgs-create3[]
 
     // tag::updatePkg-create3[]
@@ -262,13 +274,10 @@ contract Create3FactoryDFPkg is ICREATE3DFPkg {
     /// @custom:signature updatePkg(address,bytes)
     /// @custom:selector 0xa9089235
     /// @inheritdoc IDiamondFactoryPackage
-    function updatePkg(address expectedProxy, bytes memory pkgArgs)
-        public
-        pure
-        returns (bool)
-    {
+    function updatePkg(address expectedProxy, bytes memory pkgArgs) public pure returns (bool) {
         return true;
     }
+
     // end::updatePkg-create3[]
 
     // tag::initAccount-create3[]
@@ -281,6 +290,7 @@ contract Create3FactoryDFPkg is ICREATE3DFPkg {
         (PkgArgs memory accountInit) = abi.decode(initArgs, (PkgArgs));
         MultiStepOwnableRepo._initialize(accountInit.owner, 1 days);
     }
+
     // end::initAccount-create3[]
 
     // tag::postDeploy-create3[]
@@ -290,11 +300,7 @@ contract Create3FactoryDFPkg is ICREATE3DFPkg {
     /// @custom:signature postDeploy(address)
     /// @custom:selector 0x70068fcf
     /// @inheritdoc IDiamondFactoryPackage
-    function postDeploy(address account)
-        public
-        pure
-        returns (bool)
-    {
+    function postDeploy(address account) public pure returns (bool) {
         return true;
     }
     // end::postDeploy-create3[]

@@ -197,7 +197,8 @@ contract TakerPositionManager_Gas_Tests is Base {
             nonce: positionManager.nonces(alice, withdrawNonceKey),
             deadline: vm.getBlockTimestamp()
         });
-        bytes32 digest = _typedDataHash(positionManager, vm.eip712HashStruct(EIP712Types.TYPE_WithdrawPermit, abi.encode(p)));
+        bytes32 digest =
+            _typedDataHash(positionManager, vm.eip712HashStruct(EIP712Types.TYPE_WithdrawPermit, abi.encode(p)));
         bytes memory signature = _sign(alicePk, digest);
 
         vm.prank(vm.randomAddress());
@@ -239,7 +240,8 @@ contract TakerPositionManager_Gas_Tests is Base {
             nonce: positionManager.nonces(alice, creditNonceKey),
             deadline: vm.getBlockTimestamp()
         });
-        bytes32 digest = _typedDataHash(positionManager, vm.eip712HashStruct(EIP712Types.TYPE_BorrowPermit, abi.encode(p)));
+        bytes32 digest =
+            _typedDataHash(positionManager, vm.eip712HashStruct(EIP712Types.TYPE_BorrowPermit, abi.encode(p)));
         bytes memory signature = _sign(alicePk, digest);
 
         vm.prank(vm.randomAddress());

@@ -14,7 +14,9 @@ abstract contract EIP712Helpers is Test {
         ITakerPositionManager _positionManager,
         ITakerPositionManager.WithdrawPermit memory _params
     ) internal view returns (bytes32) {
-        return _typedDataHash(_positionManager, vm.eip712HashStruct(EIP712Types.TYPE_WithdrawPermit, abi.encode(_params)));
+        return _typedDataHash(
+            _positionManager, vm.eip712HashStruct(EIP712Types.TYPE_WithdrawPermit, abi.encode(_params))
+        );
     }
 
     function _getTypedDataHash(

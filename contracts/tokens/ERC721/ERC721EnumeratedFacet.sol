@@ -40,6 +40,7 @@ contract ERC721EnumeratedFacet is IFacet, IERC721Enumerated {
     function facetName() public pure returns (string memory name) {
         return type(ERC721EnumeratedFacet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -54,6 +55,7 @@ contract ERC721EnumeratedFacet is IFacet, IERC721Enumerated {
         facetInterfaces_ = new bytes4[](1);
         facetInterfaces_[0] = type(IERC721Enumerated).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -96,6 +98,7 @@ contract ERC721EnumeratedFacet is IFacet, IERC721Enumerated {
         interfaces = facetInterfaces();
         functions = facetFuncs();
     }
+
     // end::facetMetadata()[]
 
     /* -------------------------------------------------------------------------- */
@@ -114,6 +117,7 @@ contract ERC721EnumeratedFacet is IFacet, IERC721Enumerated {
     function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) external {
         ERC721EnumeratedRepo._safeTransferFrom(from, to, tokenId, data);
     }
+
     // end::safeTransferFrom(address-address-uint256-bytes)[]
 
     // tag::safeTransferFrom(address-address-uint256)[]
@@ -127,6 +131,7 @@ contract ERC721EnumeratedFacet is IFacet, IERC721Enumerated {
     function safeTransferFrom(address from, address to, uint256 tokenId) external {
         ERC721EnumeratedRepo._safeTransferFrom(from, to, tokenId);
     }
+
     // end::safeTransferFrom(address-address-uint256)[]
 
     // tag::transferFrom(address-address-uint256)[]
@@ -140,6 +145,7 @@ contract ERC721EnumeratedFacet is IFacet, IERC721Enumerated {
     function transferFrom(address from, address to, uint256 tokenId) external {
         ERC721EnumeratedRepo._transferFrom(from, to, tokenId);
     }
+
     // end::transferFrom(address-address-uint256)[]
 
     /* -------------------------------------------------------------------------- */
@@ -155,6 +161,7 @@ contract ERC721EnumeratedFacet is IFacet, IERC721Enumerated {
     function tokenIds() external view returns (uint256[] memory) {
         return ERC721EnumeratedRepo._tokenIds();
     }
+
     // end::tokenIds()[]
 
     // tag::ownedIds(address)[]
@@ -167,6 +174,7 @@ contract ERC721EnumeratedFacet is IFacet, IERC721Enumerated {
     function ownedIds(address owner) external view returns (uint256[] memory) {
         return ERC721EnumeratedRepo._ownedIds(owner);
     }
+
     // end::ownedIds(address)[]
 
     // tag::globalOperatorOf(address)[]

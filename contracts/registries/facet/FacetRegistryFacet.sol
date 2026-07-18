@@ -28,6 +28,7 @@ contract FacetRegistryFacet is FacetRegistryTarget, IFacet {
     function facetName() public pure returns (string memory name) {
         return type(FacetRegistryFacet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -38,6 +39,7 @@ contract FacetRegistryFacet is FacetRegistryTarget, IFacet {
         interfaces = new bytes4[](1);
         interfaces[0] = type(IFacetRegistry).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -61,6 +63,7 @@ contract FacetRegistryFacet is FacetRegistryTarget, IFacet {
         funcs[12] = IFacetRegistry.registerFacet.selector;
         funcs[13] = IFacetRegistry.setCanonicalFacet.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]

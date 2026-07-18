@@ -30,6 +30,7 @@ library ERC721EnumeratedRepo {
      *      This follows the canonical pattern ... (hierarchical equivalent for ERC721 enumeration).
      */
     bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("eip.erc.721.enummerated"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -44,6 +45,7 @@ library ERC721EnumeratedRepo {
         mapping(address owner => UInt256Set ownedIds) ownedIds;
         mapping(address owner => address globalOperator) globalOperatorOfAccount;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -57,6 +59,7 @@ library ERC721EnumeratedRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -67,6 +70,7 @@ library ERC721EnumeratedRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_tokenIds(Storage)[]
@@ -79,6 +83,7 @@ library ERC721EnumeratedRepo {
     function _tokenIds(Storage storage layoutStruct) internal view returns (uint256[] storage) {
         return layoutStruct.allTokenIds._values();
     }
+
     // end::_tokenIds(Storage)[]
 
     // tag::_tokenIds()[]
@@ -89,6 +94,7 @@ library ERC721EnumeratedRepo {
     function _tokenIds() internal view returns (uint256[] storage) {
         return _tokenIds(_layoutStruct());
     }
+
     // end::_tokenIds()[]
 
     // tag::_ownedIds(Storage-address)[]
@@ -102,6 +108,7 @@ library ERC721EnumeratedRepo {
     function _ownedIds(Storage storage layoutStruct, address owner_) internal view returns (uint256[] storage) {
         return layoutStruct.ownedIds[owner_]._values();
     }
+
     // end::_ownedIds(Storage-address)[]
 
     // tag::_ownedIds(address)[]
@@ -113,6 +120,7 @@ library ERC721EnumeratedRepo {
     function _ownedIds(address owner_) internal view returns (uint256[] storage) {
         return _ownedIds(_layoutStruct(), owner_);
     }
+
     // end::_ownedIds(address)[]
 
     // tag::_globalOperatorOf(Storage-address)[]
@@ -126,6 +134,7 @@ library ERC721EnumeratedRepo {
     function _globalOperatorOf(Storage storage layoutStruct, address owner_) internal view returns (address) {
         return layoutStruct.globalOperatorOfAccount[owner_];
     }
+
     // end::_globalOperatorOf(Storage-address)[]
 
     // tag::_globalOperatorOf(address)[]
@@ -137,6 +146,7 @@ library ERC721EnumeratedRepo {
     function _globalOperatorOf(address owner_) internal view returns (address) {
         return _globalOperatorOf(_layoutStruct(), owner_);
     }
+
     // end::_globalOperatorOf(address)[]
 
     // tag::_safeTransferFrom(Storage-ERC721Repo.Storage-address-address-uint256-bytes-memory)[]
@@ -162,6 +172,7 @@ library ERC721EnumeratedRepo {
         enumLayout.ownedIds[from_]._remove(tokenId_);
         enumLayout.ownedIds[to_]._add(tokenId_);
     }
+
     // end::_safeTransferFrom(Storage-ERC721Repo.Storage-address-address-uint256-bytes-memory)[]
 
     // tag::_safeTransferFrom(address-address-uint256-bytes-memory)[]
@@ -177,6 +188,7 @@ library ERC721EnumeratedRepo {
         ERC721Repo.Storage storage layoutStruct = ERC721Repo._layoutStruct();
         _safeTransferFrom(enumLayout, layoutStruct, from_, to_, tokenId_, data_);
     }
+
     // end::_safeTransferFrom(address-address-uint256-bytes-memory)[]
 
     // tag::_safeTransferFrom(Storage-ERC721Repo.Storage-address-address-uint256)[]
@@ -198,6 +210,7 @@ library ERC721EnumeratedRepo {
     ) internal {
         _safeTransferFrom(enumLayout, layoutStruct, from_, to_, tokenId_, "");
     }
+
     // end::_safeTransferFrom(Storage-ERC721Repo.Storage-address-address-uint256)[]
 
     // tag::_safeTransferFrom(address-address-uint256)[]
@@ -212,6 +225,7 @@ library ERC721EnumeratedRepo {
         ERC721Repo.Storage storage layoutStruct = ERC721Repo._layoutStruct();
         _safeTransferFrom(enumLayout, layoutStruct, from_, to_, tokenId_, "");
     }
+
     // end::_safeTransferFrom(address-address-uint256)[]
 
     // tag::_transferFrom(Storage-ERC721Repo.Storage-address-address-uint256)[]
@@ -235,6 +249,7 @@ library ERC721EnumeratedRepo {
         enumLayout.ownedIds[from_]._remove(tokenId_);
         enumLayout.ownedIds[to_]._add(tokenId_);
     }
+
     // end::_transferFrom(Storage-ERC721Repo.Storage-address-address-uint256)[]
 
     // tag::_transferFrom(address-address-uint256)[]
@@ -249,6 +264,7 @@ library ERC721EnumeratedRepo {
         ERC721Repo.Storage storage layoutStruct = ERC721Repo._layoutStruct();
         _transferFrom(enumLayout, layoutStruct, from_, to_, tokenId_);
     }
+
     // end::_transferFrom(address-address-uint256)[]
 
     // tag::_setApprovalForAll(Storage-ERC721Repo.Storage-address-bool)[]
@@ -273,6 +289,7 @@ library ERC721EnumeratedRepo {
             delete enumLayout.globalOperatorOfAccount[msg.sender];
         }
     }
+
     // end::_setApprovalForAll(Storage-ERC721Repo.Storage-address-bool)[]
 
     // tag::_mint(Storage-ERC721Repo.Storage-address)[]
@@ -291,6 +308,7 @@ library ERC721EnumeratedRepo {
         tokenId = ERC721Repo._mint(layoutStruct, to_);
         enumLayout.ownedIds[to_]._add(tokenId);
     }
+
     // end::_mint(Storage-ERC721Repo.Storage-address)[]
 
     // tag::_mint(address)[]
@@ -304,6 +322,7 @@ library ERC721EnumeratedRepo {
         ERC721Repo.Storage storage layoutStruct = ERC721Repo._layoutStruct();
         tokenId = _mint(enumLayout, layoutStruct, to_);
     }
+
     // end::_mint(address)[]
 
     // tag::_burn(Storage-ERC721Repo.Storage-uint256)[]
@@ -319,6 +338,7 @@ library ERC721EnumeratedRepo {
         ERC721Repo._burn(layoutStruct, owner_, tokenId_);
         enumLayout.ownedIds[owner_]._remove(tokenId_);
     }
+
     // end::_burn(Storage-ERC721Repo.Storage-uint256)[]
 
     // tag::_burn(uint256)[]
@@ -333,5 +353,5 @@ library ERC721EnumeratedRepo {
     }
     // end::_burn(uint256)[]
 
-// end::ERC721EnumeratedRepo[]
+    // end::ERC721EnumeratedRepo[]
 }

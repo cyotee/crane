@@ -45,6 +45,7 @@ contract ContestBountyTarget is BountyCommonTarget, IContestBounty {
         );
         _addInitialFunding(bountyId, tokens, amounts);
     }
+
     // end::createContestBounty(string-uint256[]-address-uint256-uint8-address[]-uint256[])[]
 
     // tag::submitForContest(uint256-string[])[]
@@ -58,6 +59,7 @@ contract ContestBountyTarget is BountyCommonTarget, IContestBounty {
         require(BountyRepo._isSubmitterAllowed(rs, bountyId, msg.sender), "not allowed");
         emit DeliverableSubmitted(bountyId, msg.sender, deliverableUris);
     }
+
     // end::submitForContest(uint256-string[])[]
 
     // tag::assignPrizes(uint256-address[])[]

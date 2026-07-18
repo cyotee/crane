@@ -74,7 +74,7 @@ library EnumerableSet {
 
         if (valueIndex != 0) {
             // Equivalent to contains(set, value)
-        // To delete an element from the _values array in O(1), we swap the element to delete with the last one in
+            // To delete an element from the _values array in O(1), we swap the element to delete with the last one in
             // the array, and then remove the last element (sometimes called as 'swap and pop').
             // This modifies the order of the array, as noted in {at}.
 

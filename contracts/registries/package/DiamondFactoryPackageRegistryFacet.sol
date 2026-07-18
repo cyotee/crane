@@ -31,6 +31,7 @@ contract DiamondFactoryPackageRegistryFacet is DiamondFactoryPackageRegistryTarg
     function facetName() public pure returns (string memory name) {
         return type(DiamondFactoryPackageRegistryFacet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -45,6 +46,7 @@ contract DiamondFactoryPackageRegistryFacet is DiamondFactoryPackageRegistryTarg
         interfaces = new bytes4[](1);
         interfaces[0] = type(IDiamondFactoryPackageRegistry).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -70,6 +72,7 @@ contract DiamondFactoryPackageRegistryFacet is DiamondFactoryPackageRegistryTarg
         funcs[10] = IDiamondFactoryPackageRegistry.packagesByInterface.selector;
         funcs[11] = IDiamondFactoryPackageRegistry.packagesByFacet.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]

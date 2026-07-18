@@ -71,8 +71,8 @@ contract LiquidationLogicCollateralToLiquidateTest is LiquidationLogicBaseTest {
         pure
         returns (uint256)
     {
-        uint256 debtRayToLiquidate = params.drawnSharesToLiquidate * params.drawnIndex
-            + params.premiumDebtRayToLiquidate;
+        uint256 debtRayToLiquidate =
+            params.drawnSharesToLiquidate * params.drawnIndex + params.premiumDebtRayToLiquidate;
 
         uint256 collateralToLiquidate = Math.mulDiv(
             debtRayToLiquidate,

@@ -58,6 +58,7 @@ contract ERC4626RateProviderFacet is ERC4626RateProviderTarget, IFacet {
     function facetName() public pure returns (string memory name) {
         return type(ERC4626RateProviderFacet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -73,6 +74,7 @@ contract ERC4626RateProviderFacet is ERC4626RateProviderTarget, IFacet {
         interfaces[0] = type(IRateProvider).interfaceId;
         interfaces[1] = type(IERC4626RateProvider).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -88,6 +90,7 @@ contract ERC4626RateProviderFacet is ERC4626RateProviderTarget, IFacet {
         funcs[0] = IRateProvider.getRate.selector;
         funcs[1] = IERC4626RateProvider.erc4626Vault.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]

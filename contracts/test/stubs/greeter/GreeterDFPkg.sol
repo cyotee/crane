@@ -23,6 +23,7 @@ interface IGreeterDFPkg is IDiamondFactoryPackage {
         IDiamondPackageCallBackFactory diamondPackageFactory;
         IFacet greeterFacet;
     }
+
     // end::PkgInit[]
 
     // tag::PkgArgs[]
@@ -32,6 +33,7 @@ interface IGreeterDFPkg is IDiamondFactoryPackage {
     }
     // end::PkgArgs[]
 }
+
 // end::IGreeterDFPkg[]
 
 // tag::GreeterDFPkg[]
@@ -59,6 +61,7 @@ contract GreeterDFPkg is GreeterFacet, IGreeterDFPkg {
     /// @notice The Greeter facet implementation attached to every Diamond deployed by this package.
     /// @dev Exposed as public immutable (getter auto-generated). Used in facetCuts / facetAddresses.
     IFacet public immutable GREETER_FACET;
+
     // end::GREETER_FACET()[]
 
     // tag::constructor(IGreeterDFPkg.PkgInit)[]
@@ -72,6 +75,7 @@ contract GreeterDFPkg is GreeterFacet, IGreeterDFPkg {
         DIAMOND_FACTORY = pkgInit.diamondPackageFactory;
         GREETER_FACET = pkgInit.greeterFacet;
     }
+
     // end::constructor(IGreeterDFPkg.PkgInit)[]
 
     // tag::deployGreeter(string)[]
@@ -83,6 +87,7 @@ contract GreeterDFPkg is GreeterFacet, IGreeterDFPkg {
     function deployGreeter(string memory initMessage) public returns (IGreeter instance) {
         return IGreeter(DIAMOND_FACTORY.deploy(SELF, abi.encode(IGreeterDFPkg.PkgArgs({message: initMessage}))));
     }
+
     // end::deployGreeter(string)[]
 
     // tag::packageName-greeterdfpkg[]
@@ -94,6 +99,7 @@ contract GreeterDFPkg is GreeterFacet, IGreeterDFPkg {
     function packageName() public pure returns (string memory name_) {
         return type(GreeterDFPkg).name;
     }
+
     // end::packageName-greeterdfpkg[]
 
     // tag::packageMetadata-greeterdfpkg[]
@@ -113,6 +119,7 @@ contract GreeterDFPkg is GreeterFacet, IGreeterDFPkg {
         interfaces = facetInterfaces();
         facets = facetAddresses();
     }
+
     // end::packageMetadata-greeterdfpkg[]
 
     // tag::facetAddresses-greeterdfpkg[]
@@ -125,6 +132,7 @@ contract GreeterDFPkg is GreeterFacet, IGreeterDFPkg {
         facetAddresses_ = new address[](1);
         facetAddresses_[0] = address(GREETER_FACET);
     }
+
     // end::facetAddresses-greeterdfpkg[]
 
     // tag::facetInterfaces-greeterdfpkg[]
@@ -143,6 +151,7 @@ contract GreeterDFPkg is GreeterFacet, IGreeterDFPkg {
     {
         return GreeterFacet.facetInterfaces();
     }
+
     // end::facetInterfaces-greeterdfpkg[]
 
     // tag::facetCuts-greeterdfpkg[]
@@ -162,6 +171,7 @@ contract GreeterDFPkg is GreeterFacet, IGreeterDFPkg {
             functionSelectors: GREETER_FACET.facetFuncs()
         });
     }
+
     // end::facetCuts-greeterdfpkg[]
 
     // tag::diamondConfig-greeterdfpkg[]
@@ -173,6 +183,7 @@ contract GreeterDFPkg is GreeterFacet, IGreeterDFPkg {
     function diamondConfig() public view virtual returns (IDiamondFactoryPackage.DiamondConfig memory config) {
         config = IDiamondFactoryPackage.DiamondConfig({facetCuts: facetCuts(), interfaces: facetInterfaces()});
     }
+
     // end::diamondConfig-greeterdfpkg[]
 
     // tag::calcSalt-greeterdfpkg[]
@@ -185,6 +196,7 @@ contract GreeterDFPkg is GreeterFacet, IGreeterDFPkg {
     function calcSalt(bytes memory pkgArgs) public pure returns (bytes32 salt) {
         salt = abi.encode(pkgArgs)._hash();
     }
+
     // end::calcSalt-greeterdfpkg[]
 
     // tag::processArgs-greeterdfpkg[]
@@ -206,6 +218,7 @@ contract GreeterDFPkg is GreeterFacet, IGreeterDFPkg {
         // salt = keccak256(abi.encode(pkgArgs));
         processedPkgArgs = pkgArgs;
     }
+
     // end::processArgs-greeterdfpkg[]
 
     // tag::updatePkg-greeterdfpkg[]
@@ -225,6 +238,7 @@ contract GreeterDFPkg is GreeterFacet, IGreeterDFPkg {
     {
         return true;
     }
+
     // end::updatePkg-greeterdfpkg[]
 
     // tag::initAccount-greeterdfpkg[]
@@ -240,6 +254,7 @@ contract GreeterDFPkg is GreeterFacet, IGreeterDFPkg {
         PkgArgs memory pkgArgs = abi.decode(initArgs, (PkgArgs));
         GreeterRepo._setMessage(pkgArgs.message);
     }
+
     // end::initAccount-greeterdfpkg[]
 
     // tag::postDeploy-greeterdfpkg[]

@@ -46,6 +46,7 @@ contract MilestoneBountyTarget is BountyCommonTarget, IMilestoneBounty {
         _addInitialFunding(bountyId, tokens, amounts);
         // milestone uris stored off-chain via uri or event in full impl
     }
+
     // end::createMilestoneBounty(string-string[]-address-uint256-uint8-address[]-uint256[])[]
 
     // tag::submitMilestone(uint256-uint256-string[])[]
@@ -59,6 +60,7 @@ contract MilestoneBountyTarget is BountyCommonTarget, IMilestoneBounty {
         require(BountyRepo._isSubmitterAllowed(rs, bountyId, msg.sender), "not allowed");
         emit DeliverableSubmitted(bountyId, msg.sender, deliverableUris);
     }
+
     // end::submitMilestone(uint256-uint256-string[])[]
 
     // tag::approveMilestone(uint256-uint256)[]

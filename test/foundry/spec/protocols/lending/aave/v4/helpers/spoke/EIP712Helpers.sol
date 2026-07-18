@@ -19,7 +19,9 @@ abstract contract EIP712Helpers is Test {
 
     function _getTypedDataHash(TestnetERC20 token, EIP712Types.Permit memory permit) internal view returns (bytes32) {
         return keccak256(
-            abi.encodePacked("\x19\x01", token.DOMAIN_SEPARATOR(), vm.eip712HashStruct(EIP712Types.TYPE_Permit, abi.encode(permit)))
+            abi.encodePacked(
+                "\x19\x01", token.DOMAIN_SEPARATOR(), vm.eip712HashStruct(EIP712Types.TYPE_Permit, abi.encode(permit))
+            )
         );
     }
 

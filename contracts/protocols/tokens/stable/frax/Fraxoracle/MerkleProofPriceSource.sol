@@ -29,13 +29,11 @@ contract MerkleProofPriceSource {
             uint256 priceLow =
                 uint256(MerkleTreeProver.proofStorageSlotValue(accountPool.storageRoot, slot1, _proofValue[i]).value);
             bytes32 slot2 = bytes32(uint256(keccak256(abi.encodePacked(uint256(0)))) + i + 1);
-            uint256 priceHigh =
-                uint256(
+            uint256 priceHigh = uint256(
                 MerkleTreeProver.proofStorageSlotValue(accountPool.storageRoot, slot2, _proofValue[i + 1]).value
             );
             bytes32 slot3 = bytes32(uint256(keccak256(abi.encodePacked(uint256(0)))) + i + 2);
-            uint256 value3 =
-                uint256(
+            uint256 value3 = uint256(
                 MerkleTreeProver.proofStorageSlotValue(accountPool.storageRoot, slot3, _proofValue[i + 2]).value
             );
             bool isBadData = uint8(value3 >> 32) == 1;

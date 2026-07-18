@@ -25,7 +25,9 @@ library BalancerV3PoolRepo {
      *      This follows the canonical pattern used by BalancerV3VaultAwareRepo, OperableRepo, ERC2535Repo,
      *      MultiStepOwnableRepo, DeployedAddressesRepo, and other gold-standard Repos for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("protocols.dexes.balancer.v3.pool.common"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("protocols.dexes.balancer.v3.pool.common"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -45,6 +47,7 @@ library BalancerV3PoolRepo {
         uint256 maximumSwapFeePercentage;
         AddressSet tokens;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -58,6 +61,7 @@ library BalancerV3PoolRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -68,6 +72,7 @@ library BalancerV3PoolRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-uint256-uint256-uint256-uint256-address[]-memory)[]
@@ -97,6 +102,7 @@ library BalancerV3PoolRepo {
         layoutStruct.maximumSwapFeePercentage = maximumSwapFeePercentage_;
         layoutStruct.tokens._add(tokens_);
     }
+
     // end::_initialize(Storage-uint256-uint256-uint256-uint256-address[]-memory)[]
 
     // tag::_initialize(uint256-uint256-uint256-uint256-address[]-memory)[]
@@ -126,6 +132,7 @@ library BalancerV3PoolRepo {
             tokens_
         );
     }
+
     // end::_initialize(uint256-uint256-uint256-uint256-address[]-memory)[]
 
     // tag::_minimumInvariantRatio(Storage)[]
@@ -138,6 +145,7 @@ library BalancerV3PoolRepo {
     function _minimumInvariantRatio(Storage storage layoutStruct) internal view returns (uint256) {
         return layoutStruct.minimumInvariantRatio;
     }
+
     // end::_minimumInvariantRatio(Storage)[]
 
     // tag::_minimumInvariantRatio()[]
@@ -148,6 +156,7 @@ library BalancerV3PoolRepo {
     function _minimumInvariantRatio() internal view returns (uint256) {
         return _minimumInvariantRatio(_layoutStruct());
     }
+
     // end::_minimumInvariantRatio()[]
 
     // tag::_maximumInvariantRatio(Storage)[]
@@ -160,6 +169,7 @@ library BalancerV3PoolRepo {
     function _maximumInvariantRatio(Storage storage layoutStruct) internal view returns (uint256) {
         return layoutStruct.maximumInvariantRatio;
     }
+
     // end::_maximumInvariantRatio(Storage)[]
 
     // tag::_maximumInvariantRatio()[]
@@ -170,6 +180,7 @@ library BalancerV3PoolRepo {
     function _maximumInvariantRatio() internal view returns (uint256) {
         return _maximumInvariantRatio(_layoutStruct());
     }
+
     // end::_maximumInvariantRatio()[]
 
     // tag::_minimumSwapFeePercentage(Storage)[]
@@ -182,6 +193,7 @@ library BalancerV3PoolRepo {
     function _minimumSwapFeePercentage(Storage storage layoutStruct) internal view returns (uint256) {
         return layoutStruct.minimumSwapFeePercentage;
     }
+
     // end::_minimumSwapFeePercentage(Storage)[]
 
     // tag::_minimumSwapFeePercentage()[]
@@ -192,6 +204,7 @@ library BalancerV3PoolRepo {
     function _minimumSwapFeePercentage() internal view returns (uint256) {
         return _minimumSwapFeePercentage(_layoutStruct());
     }
+
     // end::_minimumSwapFeePercentage()[]
 
     // tag::_maximumSwapFeePercentage(Storage)[]
@@ -204,6 +217,7 @@ library BalancerV3PoolRepo {
     function _maximumSwapFeePercentage(Storage storage layoutStruct) internal view returns (uint256) {
         return layoutStruct.maximumSwapFeePercentage;
     }
+
     // end::_maximumSwapFeePercentage(Storage)[]
 
     // tag::_maximumSwapFeePercentage()[]

@@ -7,7 +7,7 @@ pragma solidity ^0.8.24;
  * @author cyotee doge <not_cyotee@proton.me>
  * @notice Interface for a simple reentrancy lock mechanism.
  * @dev Declares the query (isLocked) and controls (lock, unlock). Used with ReentrancyLockRepo (transient) and ReentrancyLockModifiers.nonReentrant for protection.
- *      Follows Permit2Aware / ICallTarget* / IMultiStepOwnable gold for NatSpec + exact tags. 
+ *      Follows Permit2Aware / ICallTarget* / IMultiStepOwnable gold for NatSpec + exact tags.
  *      custom values (interfaceid/selector/signature) omitted: CENTRALLY_COMPUTED_NATSPEC_VALUES.md has no entries/prose for IReentrancyLock or IsLocked (do not fabricate).
  */
 interface IReentrancyLock {

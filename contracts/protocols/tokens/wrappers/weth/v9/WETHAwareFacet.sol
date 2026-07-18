@@ -33,6 +33,7 @@ contract WETHAwareFacet is IWETHAware, IFacet {
     function facetName() public pure returns (string memory name) {
         return type(WETHAwareFacet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -48,6 +49,7 @@ contract WETHAwareFacet is IWETHAware, IFacet {
         interfaces[0] = type(IWETHAware).interfaceId;
         return interfaces;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -63,6 +65,7 @@ contract WETHAwareFacet is IWETHAware, IFacet {
         funcs[0] = IWETHAware.weth.selector;
         return funcs;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]
@@ -85,6 +88,7 @@ contract WETHAwareFacet is IWETHAware, IFacet {
         interfaces = facetInterfaces();
         functions = facetFuncs();
     }
+
     // end::facetMetadata()[]
 
     /* -------------------------------------------------------------------------- */

@@ -21,6 +21,7 @@ contract GreeterTarget is IGreeter {
     function getMessage() public view virtual returns (string memory) {
         return GreeterRepo._getMessage();
     }
+
     // end::getMessage()[]
 
     // tag::setMessage(string)[]

@@ -14,34 +14,36 @@ Crane provides:
 
 ## Core Benefit: Facet Reuse
 
-Facets are deployed as independent contracts at deterministic addresses. A single facet implementation serves any number of Diamond proxies on any number of chains.
+Facets are separate contracts. You **must deploy a facet instance on each chain** where you use it. CREATE3 can place those instances at the **same address** on every chain, but they are still distinct deployments (one per chain).
+
+**Within one chain**, a single facet instance is shared by many Diamond proxies (deploy logic once, attach everywhere).
 
 ```mermaid
-flowchart LR
-    Facet["ERC20Facet<br/>(one deployment, one address)"]:::facet
-
-    subgraph Chain1["Ethereum"]
-        P1["Proxy A<br/>(Token)"]
-        P2["Proxy B<br/>(Vault)"]
+flowchart TB
+    subgraph Eth["Ethereum"]
+        F1["ERC20Facet<br/>instance on Ethereum"]:::facet
+        P1["Proxy A"]
+        P2["Proxy B"]
+        F1 --> P1
+        F1 --> P2
     end
 
-    subgraph Chain2["Arbitrum"]
-        P3["Proxy C<br/>(Token)"]
+    subgraph Arb["Arbitrum"]
+        F2["ERC20Facet<br/>instance on Arbitrum"]:::facet
+        P3["Proxy C"]
+        F2 --> P3
     end
 
-    subgraph Chain3["Base"]
-        P4["Proxy D<br/>(Token)"]
+    subgraph Base["Base"]
+        F3["ERC20Facet<br/>instance on Base"]:::facet
+        P4["Proxy D"]
+        F3 --> P4
     end
-
-    Facet --> P1
-    Facet --> P2
-    Facet --> P3
-    Facet --> P4
 
     classDef facet fill:#1b5e20,stroke:#81c784,color:#e8f5e9,stroke-width:2px
 ```
 
-Deployment cost for logic and bytecode is incurred once. Subsequent proxies pay only for storage initialization and minimal proxy deployment.
+On a given chain, deployment cost for facet bytecode is paid once; later proxies mainly pay for storage init and minimal proxy deploy. Cross-chain, you pay to deploy the facet (and factories/packages) on each chain you support—CREATE3 keeps addresses predictable, not shared across chains.
 
 Packages define the set of facets and the initialization steps required to produce a functioning proxy. The same package produces consistent instances at predictable addresses when given the same arguments.
 

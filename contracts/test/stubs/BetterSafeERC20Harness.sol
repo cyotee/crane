@@ -34,6 +34,7 @@ contract BetterSafeERC20Harness {
     function safeTransfer(IERC20 token, address to, uint256 value) external returns (bool) {
         return token.safeTransfer(to, value);
     }
+
     // end::safeTransfer(IERC20-address-uint256)[]
 
     // tag::safeTransferFrom(IERC20-address-address-uint256)[]
@@ -49,6 +50,7 @@ contract BetterSafeERC20Harness {
     function safeTransferFrom(IERC20 token, address from, address to, uint256 value) external returns (bool) {
         return token.safeTransferFrom(from, to, value);
     }
+
     // end::safeTransferFrom(IERC20-address-address-uint256)[]
 
     // tag::trySafeTransfer(IERC20-address-uint256)[]
@@ -63,6 +65,7 @@ contract BetterSafeERC20Harness {
     function trySafeTransfer(IERC20 token, address to, uint256 value) external returns (bool) {
         return token.trySafeTransfer(to, value);
     }
+
     // end::trySafeTransfer(IERC20-address-uint256)[]
 
     // tag::trySafeTransferFrom(IERC20-address-address-uint256)[]
@@ -78,6 +81,7 @@ contract BetterSafeERC20Harness {
     function trySafeTransferFrom(IERC20 token, address from, address to, uint256 value) external returns (bool) {
         return token.trySafeTransferFrom(from, to, value);
     }
+
     // end::trySafeTransferFrom(IERC20-address-address-uint256)[]
 
     // tag::safeIncreaseAllowance(IERC20-address-uint256)[]
@@ -91,6 +95,7 @@ contract BetterSafeERC20Harness {
     function safeIncreaseAllowance(IERC20 token, address spender, uint256 value) external {
         token.safeIncreaseAllowance(spender, value);
     }
+
     // end::safeIncreaseAllowance(IERC20-address-uint256)[]
 
     // tag::safeDecreaseAllowance(IERC20-address-uint256)[]
@@ -104,6 +109,7 @@ contract BetterSafeERC20Harness {
     function safeDecreaseAllowance(IERC20 token, address spender, uint256 value) external {
         token.safeDecreaseAllowance(spender, value);
     }
+
     // end::safeDecreaseAllowance(IERC20-address-uint256)[]
 
     // tag::forceApprove(IERC20-address-uint256)[]
@@ -117,6 +123,7 @@ contract BetterSafeERC20Harness {
     function forceApprove(IERC20 token, address spender, uint256 value) external {
         token.forceApprove(spender, value);
     }
+
     // end::forceApprove(IERC20-address-uint256)[]
 
     // tag::safeApprove(IERC20-address-uint256)[]
@@ -130,6 +137,7 @@ contract BetterSafeERC20Harness {
     function safeApprove(IERC20 token, address spender, uint256 value) external {
         token.safeApprove(spender, value);
     }
+
     // end::safeApprove(IERC20-address-uint256)[]
 
     /* -------------------------------------------------------------------------- */
@@ -146,6 +154,7 @@ contract BetterSafeERC20Harness {
     function safeName(IERC20Metadata asset) external view returns (string memory) {
         return asset.safeName();
     }
+
     // end::safeName(IERC20Metadata)[]
 
     // tag::safeSymbol(IERC20Metadata)[]
@@ -158,6 +167,7 @@ contract BetterSafeERC20Harness {
     function safeSymbol(IERC20Metadata asset) external view returns (string memory) {
         return asset.safeSymbol();
     }
+
     // end::safeSymbol(IERC20Metadata)[]
 
     // tag::safeDecimals(IERC20Metadata)[]
@@ -170,6 +180,7 @@ contract BetterSafeERC20Harness {
     function safeDecimals(IERC20Metadata asset) external view returns (uint8) {
         return asset.safeDecimals();
     }
+
     // end::safeDecimals(IERC20Metadata)[]
 
     /* -------------------------------------------------------------------------- */

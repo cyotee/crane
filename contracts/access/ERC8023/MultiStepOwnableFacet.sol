@@ -36,6 +36,7 @@ contract MultiStepOwnableFacet is MultiStepOwnableTarget, IFacet {
     function facetName() public pure returns (string memory name) {
         return type(MultiStepOwnableFacet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -46,6 +47,7 @@ contract MultiStepOwnableFacet is MultiStepOwnableTarget, IFacet {
         interfaces = new bytes4[](1);
         interfaces[0] = type(IMultiStepOwnable).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -63,6 +65,7 @@ contract MultiStepOwnableFacet is MultiStepOwnableTarget, IFacet {
         funcs[6] = IMultiStepOwnable.preConfirmedOwner.selector;
         funcs[7] = IMultiStepOwnable.getOwnershipTransferBuffer.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]

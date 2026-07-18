@@ -21,7 +21,9 @@ library CamelotV2RouterAwareRepo {
      *      This follows the canonical pattern used by OperableRepo, ERC2535Repo, MultiStepOwnableRepo, DeployedAddressesRepo, Create3FactoryAwareRepo, DiamondPackageFactoryAwareRepo, BalancerV3VaultAwareRepo, CamelotV2FactoryAwareRepo and other
      *      gold-standard Repos for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("protocols.dexes.camelot.v2.router.aware"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("protocols.dexes.camelot.v2.router.aware"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -32,6 +34,7 @@ library CamelotV2RouterAwareRepo {
     struct Storage {
         ICamelotV2Router router;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -45,6 +48,7 @@ library CamelotV2RouterAwareRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -55,6 +59,7 @@ library CamelotV2RouterAwareRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-ICamelotV2Router)[]
@@ -67,6 +72,7 @@ library CamelotV2RouterAwareRepo {
     function _initialize(Storage storage layoutStruct, ICamelotV2Router router_) internal {
         layoutStruct.router = router_;
     }
+
     // end::_initialize(Storage-ICamelotV2Router)[]
 
     // tag::_initialize(ICamelotV2Router)[]
@@ -77,6 +83,7 @@ library CamelotV2RouterAwareRepo {
     function _initialize(ICamelotV2Router router_) internal {
         _initialize(_layoutStruct(), router_);
     }
+
     // end::_initialize(ICamelotV2Router)[]
 
     // tag::_camelotV2Router(Storage)[]
@@ -86,13 +93,10 @@ library CamelotV2RouterAwareRepo {
      * @param layoutStruct The Storage struct to operate on.
      * @return router_ The stored ICamelotV2Router (or zero if not initialized).
      */
-    function _camelotV2Router(Storage storage layoutStruct)
-        internal
-        view
-        returns (ICamelotV2Router router_)
-    {
+    function _camelotV2Router(Storage storage layoutStruct) internal view returns (ICamelotV2Router router_) {
         return layoutStruct.router;
     }
+
     // end::_camelotV2Router(Storage)[]
 
     // tag::_camelotV2Router()[]
@@ -105,5 +109,5 @@ library CamelotV2RouterAwareRepo {
     }
     // end::_camelotV2Router()[]
 
-// end::CamelotV2RouterAwareRepo[]
+    // end::CamelotV2RouterAwareRepo[]
 }

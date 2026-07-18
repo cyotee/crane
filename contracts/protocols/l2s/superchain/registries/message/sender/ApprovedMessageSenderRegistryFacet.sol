@@ -36,6 +36,7 @@ contract ApprovedMessageSenderRegistryFacet is ApprovedMessageSenderRegistryTarg
     function facetName() public pure override returns (string memory name) {
         return "ApprovedMessageSenderRegistryFacet";
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -51,6 +52,7 @@ contract ApprovedMessageSenderRegistryFacet is ApprovedMessageSenderRegistryTarg
         interfaces[0] = type(IApprovedMessageSenderRegistry).interfaceId;
         return interfaces;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -68,6 +70,7 @@ contract ApprovedMessageSenderRegistryFacet is ApprovedMessageSenderRegistryTarg
         funcs[2] = IApprovedMessageSenderRegistry.approveSender.selector;
         return funcs;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]

@@ -35,6 +35,7 @@ contract OperableFacet is OperableTarget, IFacet {
     function facetName() public pure returns (string memory name) {
         return type(OperableFacet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -49,6 +50,7 @@ contract OperableFacet is OperableTarget, IFacet {
         interfaces = new bytes4[](1);
         interfaces[0] = type(IOperable).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -66,6 +68,7 @@ contract OperableFacet is OperableTarget, IFacet {
         funcs[2] = IOperable.setOperator.selector;
         funcs[3] = IOperable.setOperatorFor.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]

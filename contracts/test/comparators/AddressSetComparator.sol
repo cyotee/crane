@@ -24,6 +24,7 @@ struct AddressComparatorRequest {
     address[] actual;
     ErrorMsg errorMsg;
 }
+
 // end::AddressComparatorRequest[]
 
 // tag::AddressSetComparatorLayout[]
@@ -39,6 +40,7 @@ struct AddressSetComparatorLayout {
     AddressSet tempExpected;
     AddressSet actual;
 }
+
 // end::AddressSetComparatorLayout[]
 
 // tag::AddressSetComparatorRepo[]
@@ -70,6 +72,7 @@ library AddressSetComparatorRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_addrSetCompare(bytes32)[]
@@ -82,6 +85,7 @@ library AddressSetComparatorRepo {
     function _addrSetCompare(bytes32 actualHash) internal pure returns (AddressSetComparatorLayout storage) {
         return _layoutStruct((actualHash ^ STORAGE_RANGE_OFFSET));
     }
+
     // end::_addrSetCompare(bytes32)[]
 
     // tag::_recExpectedAddrs(address-bytes32-address)[]
@@ -95,6 +99,7 @@ library AddressSetComparatorRepo {
     function _recExpectedAddrs(address subject, bytes32 func, address expected) internal {
         _addrSetCompare(subject._toBytes32()).recordedExpected[subject][func]._add(expected);
     }
+
     // end::_recExpectedAddrs(address-bytes32-address)[]
 
     // tag::_recExpectedAddrs(address-bytes32-address[])[]
@@ -108,6 +113,7 @@ library AddressSetComparatorRepo {
     function _recExpectedAddrs(address subject, bytes32 func, address[] memory expected) internal {
         _addrSetCompare(subject._toBytes32()).recordedExpected[subject][func]._add(expected);
     }
+
     // end::_recExpectedAddrs(address-bytes32-address[])[]
 
     // tag::_recedExpectedAddrs(address-bytes32)[]
@@ -121,6 +127,7 @@ library AddressSetComparatorRepo {
     function _recedExpectedAddrs(address subject, bytes32 func) internal view returns (AddressSet storage) {
         return _addrSetCompare(subject._toBytes32()).recordedExpected[subject][func];
     }
+
     // end::_recedExpectedAddrs(address-bytes32)[]
 
     // tag::_tempExpectedAddrs(bytes32)[]
@@ -133,6 +140,7 @@ library AddressSetComparatorRepo {
     function _tempExpectedAddrs(bytes32 actualHash) internal view returns (AddressSet storage) {
         return _addrSetCompare(actualHash).tempExpected;
     }
+
     // end::_tempExpectedAddrs(bytes32)[]
 
     // tag::_actualAddrs(bytes32)[]
@@ -147,6 +155,7 @@ library AddressSetComparatorRepo {
     }
     // end::_actualAddrs(bytes32)[]
 }
+
 // end::AddressSetComparatorRepo[]
 
 // tag::AddressSetComparator[]
@@ -199,6 +208,7 @@ library AddressSetComparator {
             })
         );
     }
+
     // end::_compare(address[]-address[]-string-string)[]
 
     // tag::_logCompare(AddressComparatorRequest)[]
@@ -213,6 +223,7 @@ library AddressSetComparator {
         SetComparatorResults memory result = _compare(request.expected, request.actual);
         matches = SetComparatorLogger._logResult(result, request.errorMsg);
     }
+
     // end::_logCompare(AddressComparatorRequest)[]
 
     // tag::_compare(address[]-address[])[]

@@ -84,7 +84,7 @@ library EnumerableMap {
 
         if (keyIndex != 0) {
             // Equivalent to contains(map, key)
-        // To delete a key-value pair from the _entries array in O(1), we swap the entry to delete with the last one
+            // To delete a key-value pair from the _entries array in O(1), we swap the entry to delete with the last one
             // in the array, and then remove the last entry (sometimes called as 'swap and pop').
             // This modifies the order of the array, as noted in {at}.
 

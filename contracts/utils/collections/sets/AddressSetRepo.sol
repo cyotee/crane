@@ -11,6 +11,7 @@ struct AddressSet {
     // Values in set.
     address[] values;
 }
+
 // end::AddressSet[]
 
 // tag::AddressSetRepo[]
@@ -39,6 +40,7 @@ library AddressSetRepo {
         set.values.length._isValidIndex(index);
         return set.values[index];
     }
+
     // end::_index(AddressSet-uint256)[]
 
     // tag::_indexOf(AddressSet-address)[]
@@ -55,6 +57,7 @@ library AddressSetRepo {
             return set.indexes[value] - 1;
         }
     }
+
     // end::_indexOf(AddressSet-address)[]
 
     // tag::_contains(AddressSet-address)[]
@@ -67,6 +70,7 @@ library AddressSetRepo {
     function _contains(AddressSet storage set, address value) internal view returns (bool isPresent) {
         return set.indexes[value] != 0;
     }
+
     // end::_contains(AddressSet-address)[]
 
     // tag::_length(AddressSet)[]
@@ -78,6 +82,7 @@ library AddressSetRepo {
     function _length(AddressSet storage set) internal view returns (uint256 length_) {
         return set.values.length;
     }
+
     // end::_length(AddressSet)[]
 
     // tag::_add(AddressSet-address)[]
@@ -99,6 +104,7 @@ library AddressSetRepo {
         }
         return true;
     }
+
     // end::_add(AddressSet-address)[]
 
     // tag::_add(AddressSet-address[])[]
@@ -114,6 +120,7 @@ library AddressSetRepo {
         }
         return true;
     }
+
     // end::_add(AddressSet-address[])[]
 
     // tag::_addAsc(AddressSet-address)[]
@@ -156,6 +163,7 @@ library AddressSetRepo {
         set.values[insertIdx] = addr;
         set.indexes[addr] = left;
     }
+
     // end::_addAsc(AddressSet-address)[]
 
     // tag::_remove(AddressSet-address)[]
@@ -187,6 +195,7 @@ library AddressSetRepo {
             delete set.indexes[value];
         }
     }
+
     // end::_remove(AddressSet-address)[]
 
     // tag::_remove(AddressSet-address[])[]
@@ -200,6 +209,7 @@ library AddressSetRepo {
             _remove(set, values[iteration]);
         }
     }
+
     // end::_remove(AddressSet-address[])[]
 
     // tag::_removeAsc(AddressSet-address)[]
@@ -225,6 +235,7 @@ library AddressSetRepo {
         set.values.pop();
         delete set.indexes[value];
     }
+
     // end::_removeAsc(AddressSet-address)[]
 
     // tag::_asArray(AddressSet)[]
@@ -236,6 +247,7 @@ library AddressSetRepo {
     function _asArray(AddressSet storage set) internal view returns (address[] memory array) {
         array = set.values;
     }
+
     // end::_asArray(AddressSet)[]
 
     // tag::_values(AddressSet)[]
@@ -250,6 +262,7 @@ library AddressSetRepo {
     function _values(AddressSet storage set) internal view returns (address[] storage values) {
         values = set.values;
     }
+
     // end::_values(AddressSet)[]
 
     // tag::_range(AddressSet-uint256-uint256)[]
@@ -279,6 +292,7 @@ library AddressSetRepo {
             }
         }
     }
+
     // end::_range(AddressSet-uint256-uint256)[]
 
     // tag::_sortAsc(AddressSet)[]
@@ -316,6 +330,7 @@ library AddressSetRepo {
             set.indexes[addr] = i + 1; // 1-indexed
         }
     }
+
     // end::_sortAsc(AddressSet)[]
 
     // tag::_quickSort(AddressSet)[]
@@ -327,6 +342,7 @@ library AddressSetRepo {
     function _quickSort(AddressSet storage set) internal {
         _quickSort(set, 0, int256(set.values.length) - 1);
     }
+
     // end::_quickSort(AddressSet)[]
 
     // tag::_quickSort(AddressSet-int256-int256)[]
@@ -359,6 +375,7 @@ library AddressSetRepo {
         if (left < j) _quickSort(set, left, j);
         if (i < right) _quickSort(set, i, right);
     }
+
     // end::_quickSort(AddressSet-int256-int256)[]
 
     // tag::_sort(address[])[]
@@ -387,6 +404,7 @@ library AddressSetRepo {
 
         return array;
     }
+
     // end::_sort(address[])[]
 
     // tag::_sort(address[]-uint256)[]

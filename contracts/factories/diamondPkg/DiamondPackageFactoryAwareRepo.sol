@@ -22,7 +22,9 @@ library DiamondPackageFactoryAwareRepo {
      *      This follows the canonical pattern used by OperableRepo, ERC2535Repo, MultiStepOwnableRepo, DeployedAddressesRepo and other
      *      gold-standard Repos for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("crane.contracts.factories.diamondPkg.aware"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("crane.contracts.factories.diamondPkg.aware"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -33,6 +35,7 @@ library DiamondPackageFactoryAwareRepo {
     struct Storage {
         IDiamondPackageCallBackFactory diamondPackageFactory;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -46,6 +49,7 @@ library DiamondPackageFactoryAwareRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -56,6 +60,7 @@ library DiamondPackageFactoryAwareRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-IDiamondPackageCallBackFactory)[]
@@ -68,6 +73,7 @@ library DiamondPackageFactoryAwareRepo {
     function _initialize(Storage storage layoutStruct, IDiamondPackageCallBackFactory diamondPackageFactory_) internal {
         layoutStruct.diamondPackageFactory = diamondPackageFactory_;
     }
+
     // end::_initialize(Storage-IDiamondPackageCallBackFactory)[]
 
     // tag::_initialize(IDiamondPackageCallBackFactory)[]
@@ -78,6 +84,7 @@ library DiamondPackageFactoryAwareRepo {
     function _initialize(IDiamondPackageCallBackFactory diamondPackageFactory_) internal {
         _initialize(_layoutStruct(), diamondPackageFactory_);
     }
+
     // end::_initialize(IDiamondPackageCallBackFactory)[]
 
     // tag::_diamondPackageFactory(Storage)[]
@@ -94,6 +101,7 @@ library DiamondPackageFactoryAwareRepo {
     {
         return layoutStruct.diamondPackageFactory;
     }
+
     // end::_diamondPackageFactory(Storage)[]
 
     // tag::_diamondPackageFactory()[]

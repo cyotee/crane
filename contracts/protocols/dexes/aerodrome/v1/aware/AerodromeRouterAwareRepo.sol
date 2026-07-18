@@ -21,7 +21,9 @@ library AerodromeRouterAwareRepo {
      *      This follows the canonical pattern used by OperableRepo, ERC2535Repo, MultiStepOwnableRepo, DeployedAddressesRepo, Create3FactoryAwareRepo, DiamondPackageFactoryAwareRepo, BalancerV3VaultAwareRepo, CamelotV2RouterAwareRepo and other
      *      gold-standard Repos for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("protocols.dexes.aerodrome.v1.router.aware"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("protocols.dexes.aerodrome.v1.router.aware"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -32,6 +34,7 @@ library AerodromeRouterAwareRepo {
     struct Storage {
         IRouter router;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -45,6 +48,7 @@ library AerodromeRouterAwareRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -55,6 +59,7 @@ library AerodromeRouterAwareRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-IRouter)[]
@@ -67,6 +72,7 @@ library AerodromeRouterAwareRepo {
     function _initialize(Storage storage layoutStruct, IRouter router_) internal {
         layoutStruct.router = router_;
     }
+
     // end::_initialize(Storage-IRouter)[]
 
     // tag::_initialize(IRouter)[]
@@ -77,6 +83,7 @@ library AerodromeRouterAwareRepo {
     function _initialize(IRouter router_) internal {
         _initialize(_layoutStruct(), router_);
     }
+
     // end::_initialize(IRouter)[]
 
     // tag::_aerodromeRouter(Storage)[]
@@ -86,13 +93,10 @@ library AerodromeRouterAwareRepo {
      * @param layoutStruct The Storage struct to operate on.
      * @return router_ The stored IRouter (or zero if not initialized).
      */
-    function _aerodromeRouter(Storage storage layoutStruct)
-        internal
-        view
-        returns (IRouter router_)
-    {
+    function _aerodromeRouter(Storage storage layoutStruct) internal view returns (IRouter router_) {
         return layoutStruct.router;
     }
+
     // end::_aerodromeRouter(Storage)[]
 
     // tag::_aerodromeRouter()[]

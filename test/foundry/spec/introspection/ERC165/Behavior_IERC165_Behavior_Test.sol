@@ -52,6 +52,7 @@ contract Behavior_GoodIERC165Stub is IERC165, IFacet {
         functions = facetFuncs();
     }
 }
+
 // end::Behavior_GoodIERC165Stub[]
 
 // tag::Behavior_BadIERC165Stub[]
@@ -59,10 +60,18 @@ contract Behavior_GoodIERC165Stub is IERC165, IFacet {
  * @notice Bad stub for negative testing (reports no interfaces supported).
  */
 contract Behavior_BadIERC165Stub is IERC165 {
-    function supportsInterface(bytes4 /*interfaceId*/) external pure override returns (bool) {
+    function supportsInterface(
+        bytes4 /*interfaceId*/
+    )
+        external
+        pure
+        override
+        returns (bool)
+    {
         return false;
     }
 }
+
 // end::Behavior_BadIERC165Stub[]
 
 // tag::Behavior_IERC165_Behavior_Test[]
@@ -93,6 +102,7 @@ contract Behavior_IERC165_Behavior_Test is Test {
         _badStub = new Behavior_BadIERC165Stub();
         vm.label(address(_badStub), type(Behavior_BadIERC165Stub).name);
     }
+
     // end::setUp()
 
     // tag::goodStub()[]
@@ -105,6 +115,7 @@ contract Behavior_IERC165_Behavior_Test is Test {
     function goodStub() public view returns (IERC165 good) {
         good = IERC165(address(_goodStub));
     }
+
     // end::goodStub()[]
 
     // tag::badStub()[]
@@ -117,6 +128,7 @@ contract Behavior_IERC165_Behavior_Test is Test {
     function badStub() public view returns (IERC165 bad) {
         bad = IERC165(address(_badStub));
     }
+
     // end::badStub()[]
 
     // tag::goodAsFacet()[]
@@ -129,6 +141,7 @@ contract Behavior_IERC165_Behavior_Test is Test {
     function goodAsFacet() public view returns (IFacet f) {
         f = IFacet(address(_goodStub));
     }
+
     // end::goodAsFacet()[]
 
     // tag::test_IERC165_supportsInterface_full()[]
@@ -149,11 +162,14 @@ contract Behavior_IERC165_Behavior_Test is Test {
 
         // direct isValid_ exact + also 0xffffffff negative built-in in behavior
         assertEq(
-            Behavior_IERC165.isValid_IERC165_supportsInterfaces(goodStub(), true, goodStub().supportsInterface(type(IERC165).interfaceId)),
+            Behavior_IERC165.isValid_IERC165_supportsInterfaces(
+                goodStub(), true, goodStub().supportsInterface(type(IERC165).interfaceId)
+            ),
             true,
             "isValid must be exact true for supported"
         );
     }
+
     // end::test_IERC165_supportsInterface_full()[]
 
     // tag::test_IERC165_supportsInterface_missing()[]
@@ -174,11 +190,14 @@ contract Behavior_IERC165_Behavior_Test is Test {
         assertEq(ok, false, "hasValid must be exact false when expected interface missing");
 
         assertEq(
-            Behavior_IERC165.isValid_IERC165_supportsInterfaces(badStub(), true, badStub().supportsInterface(type(IERC165).interfaceId)),
+            Behavior_IERC165.isValid_IERC165_supportsInterfaces(
+                badStub(), true, badStub().supportsInterface(type(IERC165).interfaceId)
+            ),
             false,
             "isValid must be exact false"
         );
     }
+
     // end::test_IERC165_supportsInterface_missing()[]
 
     /* -------------------------------------------------------------------------- */
@@ -220,6 +239,7 @@ contract Behavior_IERC165_Behavior_Test is Test {
         assertEq(f.facetInterfaces().length, 1, "interfaces length must be exact 1");
         assertEq(f.facetFuncs().length, 1, "funcs length must be exact 1");
     }
+
     // end::test_LR7_IERC165Stub_declaration_viaBehavior_IFacet()[]
 
     // tag::test_IFacet_IERC165_selectors_match_central()[]

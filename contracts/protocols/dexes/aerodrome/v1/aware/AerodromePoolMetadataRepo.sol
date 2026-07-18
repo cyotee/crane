@@ -21,7 +21,9 @@ library AerodromePoolMetadataRepo {
      *      This follows the canonical pattern used by OperableRepo, ERC2535Repo, MultiStepOwnableRepo, DeployedAddressesRepo, Create3FactoryAwareRepo, DiamondPackageCallBackFactoryAwareRepo, BalancerV3VaultAwareRepo, CamelotV2RouterAwareRepo, UniswapV2* and the just-closed AerodromeRouterAwareRepo
      *      gold-standard Repos for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("protocols.dexes.aerodrome.v1.pool.metadata.repo"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("protocols.dexes.aerodrome.v1.pool.metadata.repo"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -34,6 +36,7 @@ library AerodromePoolMetadataRepo {
         IPoolFactory factory;
         bool isStable;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -47,6 +50,7 @@ library AerodromePoolMetadataRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -57,6 +61,7 @@ library AerodromePoolMetadataRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-IPoolFactory-bool)[]
@@ -71,6 +76,7 @@ library AerodromePoolMetadataRepo {
         layoutStruct.factory = factory_;
         layoutStruct.isStable = isStable_;
     }
+
     // end::_initialize(Storage-IPoolFactory-bool)[]
 
     // tag::_initialize(IPoolFactory-bool)[]
@@ -82,6 +88,7 @@ library AerodromePoolMetadataRepo {
     function _initialize(IPoolFactory factory_, bool isStable_) internal {
         _initialize(_layoutStruct(), factory_, isStable_);
     }
+
     // end::_initialize(IPoolFactory-bool)[]
 
     // tag::_factory(Storage)[]
@@ -91,13 +98,10 @@ library AerodromePoolMetadataRepo {
      * @param layoutStruct The Storage struct to operate on.
      * @return factory_ The stored IPoolFactory (or zero if not initialized).
      */
-    function _factory(Storage storage layoutStruct)
-        internal
-        view
-        returns (IPoolFactory factory_)
-    {
+    function _factory(Storage storage layoutStruct) internal view returns (IPoolFactory factory_) {
         return layoutStruct.factory;
     }
+
     // end::_factory(Storage)[]
 
     // tag::_factory()[]
@@ -108,6 +112,7 @@ library AerodromePoolMetadataRepo {
     function _factory() internal view returns (IPoolFactory factory_) {
         return _factory(_layoutStruct());
     }
+
     // end::_factory()[]
 
     // tag::_isStable(Storage)[]
@@ -120,6 +125,7 @@ library AerodromePoolMetadataRepo {
     function _isStable(Storage storage layoutStruct) internal view returns (bool isStable_) {
         return layoutStruct.isStable;
     }
+
     // end::_isStable(Storage)[]
 
     // tag::_isStable()[]

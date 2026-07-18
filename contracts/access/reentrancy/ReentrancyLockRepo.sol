@@ -27,7 +27,8 @@ library ReentrancyLockRepo {
      *      Exact form: bytes32(uint256(keccak256(abi.encode("crane.access.reentrancy.lock"))) - 1).
      *      Follows LR-6 and gold standards (e.g. OperableRepo "crane.access.operable").
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("crane.access.reentrancy.lock"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("crane.access.reentrancy.lock"))) - 1);
 
     // end::STORAGE_SLOT[]
 

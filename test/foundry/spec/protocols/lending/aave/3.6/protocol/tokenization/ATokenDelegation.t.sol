@@ -566,8 +566,8 @@ abstract contract BaseATokenDelegationTest is TestnetProcedures {
 
         params.fromDownscaledVotingPowerChange =
             params.fromDownscaledVotingPowerBefore - params.fromDownscaledVotingPowerAfter;
-        params.toDownscaledVotingPowerChange = params.toDownscaledVotingPowerAfter
-            - params.toDownscaledVotingPowerBefore;
+        params.toDownscaledVotingPowerChange =
+            params.toDownscaledVotingPowerAfter - params.toDownscaledVotingPowerBefore;
 
         if (from != address(0)) {
             assertApproxEqAbs(params.fromBalanceAfter, params.fromBalanceBefore - amount, 1, "from");

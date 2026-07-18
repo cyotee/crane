@@ -21,7 +21,9 @@ library CamelotV2FactoryAwareRepo {
      *      This follows the canonical pattern used by OperableRepo, ERC2535Repo, MultiStepOwnableRepo, DeployedAddressesRepo, Create3FactoryAwareRepo, DiamondPackageFactoryAwareRepo, BalancerV3VaultAwareRepo and other
      *      gold-standard Repos for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("protocols.dexes.camelot.v2.factory.aware"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("protocols.dexes.camelot.v2.factory.aware"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -32,6 +34,7 @@ library CamelotV2FactoryAwareRepo {
     struct Storage {
         ICamelotFactory factory;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -45,6 +48,7 @@ library CamelotV2FactoryAwareRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -55,6 +59,7 @@ library CamelotV2FactoryAwareRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-ICamelotFactory)[]
@@ -67,6 +72,7 @@ library CamelotV2FactoryAwareRepo {
     function _initialize(Storage storage layoutStruct, ICamelotFactory factory_) internal {
         layoutStruct.factory = factory_;
     }
+
     // end::_initialize(Storage-ICamelotFactory)[]
 
     // tag::_initialize(ICamelotFactory)[]
@@ -77,6 +83,7 @@ library CamelotV2FactoryAwareRepo {
     function _initialize(ICamelotFactory factory_) internal {
         _initialize(_layoutStruct(), factory_);
     }
+
     // end::_initialize(ICamelotFactory)[]
 
     // tag::_camelotV2Factory(Storage)[]
@@ -86,13 +93,10 @@ library CamelotV2FactoryAwareRepo {
      * @param layoutStruct The Storage struct to operate on.
      * @return factory_ The stored ICamelotFactory (or zero if not initialized).
      */
-    function _camelotV2Factory(Storage storage layoutStruct)
-        internal
-        view
-        returns (ICamelotFactory factory_)
-    {
+    function _camelotV2Factory(Storage storage layoutStruct) internal view returns (ICamelotFactory factory_) {
         return layoutStruct.factory;
     }
+
     // end::_camelotV2Factory(Storage)[]
 
     // tag::_camelotV2Factory()[]

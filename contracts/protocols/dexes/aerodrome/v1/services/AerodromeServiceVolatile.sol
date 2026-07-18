@@ -56,6 +56,7 @@ library AerodromeServiceVolatile {
         address recipient;
         uint256 deadline;
     }
+
     // end::SwapVolatileParams[]
 
     // tag::SwapDepositVolatileParams[]
@@ -73,6 +74,7 @@ library AerodromeServiceVolatile {
         address recipient;
         uint256 deadline;
     }
+
     // end::SwapDepositVolatileParams[]
 
     // tag::WithdrawSwapVolatileParams[]
@@ -89,6 +91,7 @@ library AerodromeServiceVolatile {
         address recipient;
         uint256 deadline;
     }
+
     // end::WithdrawSwapVolatileParams[]
 
     /* -------------------------------------------------------------------------- */
@@ -133,6 +136,7 @@ library AerodromeServiceVolatile {
             );
         return amountsOut[amountsOut.length - 1];
     }
+
     // end::_swapVolatile(SwapVolatileParams)[]
 
     // tag::_swapDepositVolatile(SwapDepositVolatileParams)[]
@@ -179,6 +183,7 @@ library AerodromeServiceVolatile {
                 params.deadline
             );
     }
+
     // end::_swapDepositVolatile(SwapDepositVolatileParams)[]
 
     // tag::_quoteSwapDepositSaleAmtVolatile(SwapDepositVolatileParams)[]
@@ -200,6 +205,7 @@ library AerodromeServiceVolatile {
             params.amountIn, saleReserve, params.factory.getFee(address(params.pool), false), AERO_FEE_DENOM
         );
     }
+
     // end::_quoteSwapDepositSaleAmtVolatile(SwapDepositVolatileParams)[]
 
     // tag::_withdrawSwapVolatile(WithdrawSwapVolatileParams)[]
@@ -253,5 +259,5 @@ library AerodromeServiceVolatile {
     }
     // end::_withdrawSwapVolatile(WithdrawSwapVolatileParams)[]
 
-// end::AerodromeServiceVolatile[]
+    // end::AerodromeServiceVolatile[]
 }

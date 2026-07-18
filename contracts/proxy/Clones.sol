@@ -21,6 +21,7 @@ library Clones {
      * @custom:selector 0xc2f868f4
      */
     error ERC1167FailedCreateClone();
+
     // end::ERC1167FailedCreateClone[]
 
     // tag::clone(address)[]
@@ -34,6 +35,7 @@ library Clones {
         instance = LibClone.clone(implementation);
         if (instance == address(0)) revert ERC1167FailedCreateClone();
     }
+
     // end::clone(address)[]
 
     // tag::cloneDeterministic(address-bytes32)[]
@@ -49,6 +51,7 @@ library Clones {
         instance = LibClone.cloneDeterministic(implementation, salt);
         if (instance == address(0)) revert ERC1167FailedCreateClone();
     }
+
     // end::cloneDeterministic(address-bytes32)[]
 
     // tag::predictDeterministicAddress(address-bytes32-address)[]
@@ -67,6 +70,7 @@ library Clones {
     {
         return LibClone.predictDeterministicAddress(implementation, salt, deployer);
     }
+
     // end::predictDeterministicAddress(address-bytes32-address)[]
 
     // tag::predictDeterministicAddress(address-bytes32)[]

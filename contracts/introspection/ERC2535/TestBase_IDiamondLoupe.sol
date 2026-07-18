@@ -39,6 +39,7 @@ abstract contract TestBase_IDiamondLoupe is Test {
     // tag::diamondLoupeTestSubject[]
     /// @notice The IDiamondLoupe subject under test (diamond). Populated via virtual after full non-0 init.
     IDiamondLoupe _diamondLoupeSubject;
+
     // end::diamondLoupeTestSubject[]
 
     // tag::setUp[]
@@ -70,6 +71,7 @@ abstract contract TestBase_IDiamondLoupe is Test {
     /// @return expectedFacets_ The control facets data for validation.
     /// forge-lint: disable-next-line(mixed-case-function)
     function expected_IDiamondLoupe_facets() public virtual returns (IDiamondLoupe.Facet[] memory expectedFacets_);
+
     // end::expected_IDiamondLoupe_facets()[]
 
     // tag::test_IDiamondLoupe_facets()[]
@@ -83,6 +85,7 @@ abstract contract TestBase_IDiamondLoupe is Test {
             "IDiamondLoupe facets config must be valid via Behavior_IDiamondLoupe.hasValid_IDiamondLoupe_facets"
         );
     }
+
     // end::test_IDiamondLoupe_facets()[]
 
     // tag::test_IDiamondLoupe_facetAddresses()[]
@@ -92,6 +95,7 @@ abstract contract TestBase_IDiamondLoupe is Test {
             "IDiamondLoupe facetAddresses must be valid via Behavior_IDiamondLoupe"
         );
     }
+
     // end::test_IDiamondLoupe_facetAddresses()[]
 
     // tag::test_IDiamondLoupe_facetAddress()[]
@@ -101,6 +105,7 @@ abstract contract TestBase_IDiamondLoupe is Test {
             "IDiamondLoupe facetAddress mappings must be valid via Behavior_IDiamondLoupe"
         );
     }
+
     // end::test_IDiamondLoupe_facetAddress()[]
 
     // tag::test_IDiamondLoupe_facetFunctionSelectors()[]
@@ -115,6 +120,7 @@ abstract contract TestBase_IDiamondLoupe is Test {
             );
         }
     }
+
     // end::test_IDiamondLoupe_facetFunctionSelectors()[]
 
     // tag::erc165Funcs()[]
@@ -123,6 +129,7 @@ abstract contract TestBase_IDiamondLoupe is Test {
 
         funcs[0] = IERC165.supportsInterface.selector;
     }
+
     // end::erc165Funcs()[]
 
     // tag::diamondLoupeFuncs()[]

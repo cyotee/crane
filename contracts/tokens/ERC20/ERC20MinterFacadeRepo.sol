@@ -20,6 +20,7 @@ library ERC20MinterFacadeRepo {
      *      MultiStepOwnableRepo, DeployedAddressesRepo, and other gold-standard Repos for collision-resistant deterministic storage binding.
      */
     bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("eip.erc.20.minter.facade"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -34,6 +35,7 @@ library ERC20MinterFacadeRepo {
         uint256 minMintInterval;
         mapping(address account => uint256 lastMintTimestamp) lastMintTimestamps;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -47,6 +49,7 @@ library ERC20MinterFacadeRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -57,6 +60,7 @@ library ERC20MinterFacadeRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-uint256-uint256)[]
@@ -71,6 +75,7 @@ library ERC20MinterFacadeRepo {
         _setMaxMintAmount(layoutStruct, maxMintAmount_);
         _setMinMintInterval(layoutStruct, minMintInterval_);
     }
+
     // end::_initialize(Storage-uint256-uint256)[]
 
     // tag::_initialize(uint256-uint256)[]
@@ -82,6 +87,7 @@ library ERC20MinterFacadeRepo {
     function _initialize(uint256 maxMintAmount_, uint256 minMintInterval_) internal {
         _initialize(_layoutStruct(), maxMintAmount_, minMintInterval_);
     }
+
     // end::_initialize(uint256-uint256)[]
 
     // tag::_setMaxMintAmount(Storage-uint256)[]
@@ -94,6 +100,7 @@ library ERC20MinterFacadeRepo {
     function _setMaxMintAmount(Storage storage layoutStruct, uint256 maxMintAmount_) internal {
         layoutStruct.maxMintAmount = maxMintAmount_;
     }
+
     // end::_setMaxMintAmount(Storage-uint256)[]
 
     // tag::_setMaxMintAmount(uint256)[]
@@ -104,6 +111,7 @@ library ERC20MinterFacadeRepo {
     function _setMaxMintAmount(uint256 maxMintAmount_) internal {
         _setMaxMintAmount(_layoutStruct(), maxMintAmount_);
     }
+
     // end::_setMaxMintAmount(uint256)[]
 
     // tag::_maxMintAmount(Storage)[]
@@ -116,6 +124,7 @@ library ERC20MinterFacadeRepo {
     function _maxMintAmount(Storage storage layoutStruct) internal view returns (uint256) {
         return layoutStruct.maxMintAmount;
     }
+
     // end::_maxMintAmount(Storage)[]
 
     // tag::_maxMintAmount()[]
@@ -126,6 +135,7 @@ library ERC20MinterFacadeRepo {
     function _maxMintAmount() internal view returns (uint256) {
         return _maxMintAmount(_layoutStruct());
     }
+
     // end::_maxMintAmount()[]
 
     // tag::_setMinMintInterval(Storage-uint256)[]
@@ -138,6 +148,7 @@ library ERC20MinterFacadeRepo {
     function _setMinMintInterval(Storage storage layoutStruct, uint256 minMintInterval_) internal {
         layoutStruct.minMintInterval = minMintInterval_;
     }
+
     // end::_setMinMintInterval(Storage-uint256)[]
 
     // tag::_setMinMintInterval(uint256)[]
@@ -148,6 +159,7 @@ library ERC20MinterFacadeRepo {
     function _setMinMintInterval(uint256 minMintInterval_) internal {
         _setMinMintInterval(_layoutStruct(), minMintInterval_);
     }
+
     // end::_setMinMintInterval(uint256)[]
 
     // tag::_minMintInterval(Storage)[]
@@ -160,6 +172,7 @@ library ERC20MinterFacadeRepo {
     function _minMintInterval(Storage storage layoutStruct) internal view returns (uint256) {
         return layoutStruct.minMintInterval;
     }
+
     // end::_minMintInterval(Storage)[]
 
     // tag::_minMintInterval()[]
@@ -170,6 +183,7 @@ library ERC20MinterFacadeRepo {
     function _minMintInterval() internal view returns (uint256) {
         return _minMintInterval(_layoutStruct());
     }
+
     // end::_minMintInterval()[]
 
     // tag::_lastMintTimestamp(Storage-address)[]
@@ -183,6 +197,7 @@ library ERC20MinterFacadeRepo {
     function _lastMintTimestamp(Storage storage layoutStruct, address account) internal view returns (uint256) {
         return layoutStruct.lastMintTimestamps[account];
     }
+
     // end::_lastMintTimestamp(Storage-address)[]
 
     // tag::_lastMintTimestamp(address)[]
@@ -194,6 +209,7 @@ library ERC20MinterFacadeRepo {
     function _lastMintTimestamp(address account) internal view returns (uint256) {
         return _lastMintTimestamp(_layoutStruct(), account);
     }
+
     // end::_lastMintTimestamp(address)[]
 
     // tag::_setLastMintTimestamp(Storage-address-uint256)[]
@@ -207,6 +223,7 @@ library ERC20MinterFacadeRepo {
     function _setLastMintTimestamp(Storage storage layoutStruct, address account, uint256 timestamp) internal {
         layoutStruct.lastMintTimestamps[account] = timestamp;
     }
+
     // end::_setLastMintTimestamp(Storage-address-uint256)[]
 
     // tag::_setLastMintTimestamp(address-uint256)[]

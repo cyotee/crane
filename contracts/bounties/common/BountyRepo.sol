@@ -21,9 +21,21 @@ library BountyRepo {
 
     // end::STORAGE_SLOT[]
 
-    enum BountyType { Single, Milestone, Contest, Continuous }
-    enum BountyStatus { Open, Closed, Canceled }
-    enum BountyAccess { Open, Closed }
+    enum BountyType {
+        Single,
+        Milestone,
+        Contest,
+        Continuous
+    }
+    enum BountyStatus {
+        Open,
+        Closed,
+        Canceled
+    }
+    enum BountyAccess {
+        Open,
+        Closed
+    }
 
     struct Bounty {
         uint256 id;
@@ -349,7 +361,9 @@ library BountyRepo {
         uint256 deadline,
         BountyAccess access
     ) internal returns (Bounty storage b) {
-        return _initializeBounty(_layoutStruct(), id, bType, issuer, funder, specUri, encryptionPubKeyUri, deadline, access);
+        return _initializeBounty(
+            _layoutStruct(), id, bType, issuer, funder, specUri, encryptionPubKeyUri, deadline, access
+        );
     }
 
     // end::_initializeBounty(uint256-BountyType-address-address-string-string-uint256-BountyAccess)[]
@@ -363,7 +377,13 @@ library BountyRepo {
      * @param token The token address.
      * @param amount The contribution amount.
      */
-    function _addContribution(Storage storage layoutStruct, uint256 id, address contributor, address token, uint256 amount) internal {
+    function _addContribution(
+        Storage storage layoutStruct,
+        uint256 id,
+        address contributor,
+        address token,
+        uint256 amount
+    ) internal {
         layoutStruct.contributions[id][contributor][token] += amount;
         layoutStruct.totalContributed[id][token] += amount;
     }
@@ -393,7 +413,11 @@ library BountyRepo {
      * @param token The token address.
      * @return The contributed amount.
      */
-    function _getContribution(Storage storage layoutStruct, uint256 id, address contributor, address token) internal view returns (uint256) {
+    function _getContribution(Storage storage layoutStruct, uint256 id, address contributor, address token)
+        internal
+        view
+        returns (uint256)
+    {
         return layoutStruct.contributions[id][contributor][token];
     }
 
@@ -421,7 +445,11 @@ library BountyRepo {
      * @param token The token address.
      * @return The total contributed amount.
      */
-    function _getTotalContributed(Storage storage layoutStruct, uint256 id, address token) internal view returns (uint256) {
+    function _getTotalContributed(Storage storage layoutStruct, uint256 id, address token)
+        internal
+        view
+        returns (uint256)
+    {
         return layoutStruct.totalContributed[id][token];
     }
 
@@ -532,7 +560,13 @@ library BountyRepo {
      * @param token The token address.
      * @param amount The amount to subtract.
      */
-    function _subtractContribution(Storage storage layoutStruct, uint256 id, address contributor, address token, uint256 amount) internal {
+    function _subtractContribution(
+        Storage storage layoutStruct,
+        uint256 id,
+        address contributor,
+        address token,
+        uint256 amount
+    ) internal {
         layoutStruct.contributions[id][contributor][token] -= amount;
         layoutStruct.totalContributed[id][token] -= amount;
     }
@@ -611,7 +645,11 @@ library BountyRepo {
      * @param submitter The submitter address.
      * @return True if allowed.
      */
-    function _isAllowedSubmitter(Storage storage layoutStruct, uint256 id, address submitter) internal view returns (bool) {
+    function _isAllowedSubmitter(Storage storage layoutStruct, uint256 id, address submitter)
+        internal
+        view
+        returns (bool)
+    {
         return layoutStruct.allowedSubmitters[id][submitter];
     }
 
@@ -662,7 +700,11 @@ library BountyRepo {
      * @param disputeId The dispute ID.
      * @return info The dispute info.
      */
-    function _getDisputeInfo(Storage storage layoutStruct, uint256 disputeId) internal view returns (DisputeInfo memory info) {
+    function _getDisputeInfo(Storage storage layoutStruct, uint256 disputeId)
+        internal
+        view
+        returns (DisputeInfo memory info)
+    {
         info = layoutStruct.disputes[disputeId];
     }
 
@@ -764,7 +806,11 @@ library BountyRepo {
      * @param submitter The submitter address.
      * @return True if submitter is allowed.
      */
-    function _isSubmitterAllowed(Storage storage layoutStruct, uint256 id, address submitter) internal view returns (bool) {
+    function _isSubmitterAllowed(Storage storage layoutStruct, uint256 id, address submitter)
+        internal
+        view
+        returns (bool)
+    {
         Bounty storage b = layoutStruct.bounties[id];
         if (b.access == BountyAccess.Open) return true;
         if (submitter == b.issuer) return true;

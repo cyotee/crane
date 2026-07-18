@@ -18,6 +18,7 @@ import {BetterIERC20Permit} from "@crane/contracts/interfaces/BetterIERC20Permit
 import {ERC20Target} from "@crane/contracts/tokens/ERC20/ERC20Target.sol";
 import {ERC20PermitTarget} from "@crane/contracts/tokens/ERC20/ERC20PermitTarget.sol";
 import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
+
 // import {Create3AwareContract} from "@crane/contracts/factories/create2/aware/Create3AwareContract.sol";
 // import {ICreate3Aware} from "@crane/contracts/interfaces/ICreate3Aware.sol";
 
@@ -42,6 +43,7 @@ contract ERC20Facet is ERC20Target, IFacet {
     function facetName() public pure returns (string memory name) {
         return type(ERC20Facet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -55,6 +57,7 @@ contract ERC20Facet is ERC20Target, IFacet {
         interfaces[1] = type(IERC20Metadata).interfaceId;
         interfaces[2] = type(IERC20Metadata).interfaceId ^ type(IERC20).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -82,6 +85,7 @@ contract ERC20Facet is ERC20Target, IFacet {
         funcs[7] = IERC20.transfer.selector;
         funcs[8] = IERC20.transferFrom.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]

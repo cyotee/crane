@@ -36,6 +36,7 @@ interface IBountyBoardDFPkg is IDiamondFactoryPackage {
         IFacet continuousBountyFacet;
         IDiamondPackageCallBackFactory diamondFactory;
     }
+
     // end::PkgInit[]
 
     // tag::PkgArgs[]
@@ -54,9 +55,12 @@ interface IBountyBoardDFPkg is IDiamondFactoryPackage {
     /// @param arbitratorOverride Optional arbitrator override (pass 0 to use the configOracle).
     /// @return The deployed IDiamond (BountyBoard proxy).
     /// @custom:signature deployBountyBoard(address,address,address)
-    function deployBountyBoard(address owner, address configOracle, address arbitratorOverride) external returns (IDiamond);
+    function deployBountyBoard(address owner, address configOracle, address arbitratorOverride)
+        external
+        returns (IDiamond);
     // end::deployBountyBoard(address,address,address)[]
 }
+
 // end::IBountyBoardDFPkg[]
 
 // tag::BountyBoardDFPkg[]
@@ -88,6 +92,7 @@ contract BountyBoardDFPkg is IBountyBoardDFPkg {
         CONTINUOUS_BOUNTY_FACET = pkgInit.continuousBountyFacet;
         DIAMOND_FACTORY = pkgInit.diamondFactory;
     }
+
     // end::constructor(IBountyBoardDFPkg.PkgInit)[]
 
     // tag::deployBountyBoard-impl[]
@@ -98,7 +103,10 @@ contract BountyBoardDFPkg is IBountyBoardDFPkg {
     /// @return The deployed IDiamond (BountyBoard proxy).
     /// @custom:signature deployBountyBoard(address,address,address)
     /// @inheritdoc IBountyBoardDFPkg
-    function deployBountyBoard(address owner, address configOracle, address arbitratorOverride) external returns (IDiamond) {
+    function deployBountyBoard(address owner, address configOracle, address arbitratorOverride)
+        external
+        returns (IDiamond)
+    {
         return IDiamond(
             DIAMOND_FACTORY.deploy(
                 SELF,
@@ -106,6 +114,7 @@ contract BountyBoardDFPkg is IBountyBoardDFPkg {
             )
         );
     }
+
     // end::deployBountyBoard-impl[]
 
     /* -------------------------------------------------------------------------- */
@@ -121,6 +130,7 @@ contract BountyBoardDFPkg is IBountyBoardDFPkg {
     function packageName() public pure returns (string memory name_) {
         return type(BountyBoardDFPkg).name;
     }
+
     // end::packageName-bountyboard[]
 
     // tag::packageMetadata-bountyboard[]
@@ -138,6 +148,7 @@ contract BountyBoardDFPkg is IBountyBoardDFPkg {
     {
         return (packageName(), facetInterfaces(), facetAddresses());
     }
+
     // end::packageMetadata-bountyboard[]
 
     // tag::facetAddresses-bountyboard[]
@@ -156,6 +167,7 @@ contract BountyBoardDFPkg is IBountyBoardDFPkg {
         facetAddresses_[5] = address(CONTEST_BOUNTY_FACET);
         facetAddresses_[6] = address(CONTINUOUS_BOUNTY_FACET);
     }
+
     // end::facetAddresses-bountyboard[]
 
     // tag::facetInterfaces-bountyboard[]
@@ -174,6 +186,7 @@ contract BountyBoardDFPkg is IBountyBoardDFPkg {
         interfaces[5] = type(IContestBounty).interfaceId;
         interfaces[6] = type(IContinuousBounty).interfaceId;
     }
+
     // end::facetInterfaces-bountyboard[]
 
     // tag::facetCuts-bountyboard[]
@@ -220,6 +233,7 @@ contract BountyBoardDFPkg is IBountyBoardDFPkg {
             functionSelectors: CONTINUOUS_BOUNTY_FACET.facetFuncs()
         });
     }
+
     // end::facetCuts-bountyboard[]
 
     // tag::diamondConfig-bountyboard[]
@@ -231,6 +245,7 @@ contract BountyBoardDFPkg is IBountyBoardDFPkg {
     function diamondConfig() public view returns (DiamondConfig memory config) {
         config = IDiamondFactoryPackage.DiamondConfig({facetCuts: facetCuts(), interfaces: facetInterfaces()});
     }
+
     // end::diamondConfig-bountyboard[]
 
     // tag::calcSalt-bountyboard[]
@@ -243,6 +258,7 @@ contract BountyBoardDFPkg is IBountyBoardDFPkg {
     function calcSalt(bytes memory pkgArgs) public pure returns (bytes32 salt) {
         return pkgArgs._hash();
     }
+
     // end::calcSalt-bountyboard[]
 
     // tag::processArgs-bountyboard[]
@@ -255,6 +271,7 @@ contract BountyBoardDFPkg is IBountyBoardDFPkg {
     function processArgs(bytes memory pkgArgs) public pure returns (bytes memory processedPkgArgs) {
         return pkgArgs;
     }
+
     // end::processArgs-bountyboard[]
 
     // tag::updatePkg-bountyboard[]
@@ -274,6 +291,7 @@ contract BountyBoardDFPkg is IBountyBoardDFPkg {
     {
         return true;
     }
+
     // end::updatePkg-bountyboard[]
 
     // tag::initAccount-bountyboard[]
@@ -287,6 +305,7 @@ contract BountyBoardDFPkg is IBountyBoardDFPkg {
         MultiStepOwnableRepo._initialize(accountInit.owner, 1 days);
         BountyBoardConfigRepo._setConfig(accountInit.configOracle, accountInit.arbitratorOverride);
     }
+
     // end::initAccount-bountyboard[]
 
     // tag::postDeploy-bountyboard[]
@@ -295,7 +314,9 @@ contract BountyBoardDFPkg is IBountyBoardDFPkg {
     /// @custom:signature postDeploy(address)
     /// @custom:selector 0x70068fcf
     /// @inheritdoc IDiamondFactoryPackage
-    function postDeploy(address /*account*/)
+    function postDeploy(
+        address /*account*/
+    )
         public
         pure
         returns (bool)

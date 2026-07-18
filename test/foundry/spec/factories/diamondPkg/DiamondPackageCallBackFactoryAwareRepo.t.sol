@@ -3,7 +3,9 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 
-import {DiamondPackageCallBackFactoryAwareRepo} from "@crane/contracts/factories/diamondPkg/DiamondPackageCallBackFactoryAwareRepo.sol";
+import {
+    DiamondPackageCallBackFactoryAwareRepo
+} from "@crane/contracts/factories/diamondPkg/DiamondPackageCallBackFactoryAwareRepo.sol";
 import {IDiamondPackageCallBackFactory} from "@crane/contracts/interfaces/IDiamondPackageCallBackFactory.sol";
 
 /**

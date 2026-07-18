@@ -9,18 +9,21 @@ import {IArbitrable} from "@crane/contracts/interfaces/IArbitrable.sol";
  */
 interface IBountyCommon is IArbitrable {
     // --- Views ---
-    function getBounty(uint256 bountyId) external view returns (
-        uint256 id,
-        uint8 bType,
-        uint8 access,
-        address issuer,
-        address funder,
-        uint8 status,
-        string memory specUri,
-        string memory encryptionPubKeyUri,
-        uint256 createdAt,
-        uint256 deadline
-    );
+    function getBounty(uint256 bountyId)
+        external
+        view
+        returns (
+            uint256 id,
+            uint8 bType,
+            uint8 access,
+            address issuer,
+            address funder,
+            uint8 status,
+            string memory specUri,
+            string memory encryptionPubKeyUri,
+            uint256 createdAt,
+            uint256 deadline
+        );
 
     function getTotalContributed(uint256 bountyId, address token) external view returns (uint256);
     function getDisbursed(uint256 bountyId, address token) external view returns (uint256);

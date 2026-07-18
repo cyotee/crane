@@ -52,6 +52,7 @@ library Behavior_IFacet {
     function _Behavior_IFacetName() internal pure returns (string memory) {
         return type(Behavior_IFacet).name;
     }
+
     // end::_Behavior_IFacetName()[]
 
     // tag::_ifacet_errPrefixFunc(string)[]
@@ -64,6 +65,7 @@ library Behavior_IFacet {
     function _ifacet_errPrefixFunc(string memory testedFuncSig) internal pure returns (string memory) {
         return BehaviorUtils._errPrefixFunc(_Behavior_IFacetName(), testedFuncSig);
     }
+
     // end::_ifacet_errPrefixFunc(string)[]
 
     // tag::_ifacet_errPrefix(string-string)[]
@@ -81,6 +83,7 @@ library Behavior_IFacet {
     {
         return string.concat(_ifacet_errPrefixFunc(testedFuncSig), subjectLabel);
     }
+
     // end::_ifacet_errPrefix(string-string)[]
 
     // tag::_ifacet_errPrefix(string-address)[]
@@ -94,6 +97,7 @@ library Behavior_IFacet {
     function _ifacet_errPrefix(string memory testedFuncSig, address subject) internal view returns (string memory) {
         return _ifacet_errPrefix(testedFuncSig, vm.getLabel(subject));
     }
+
     // end::_ifacet_errPrefix(string-address)[]
 
     // tag::expect_IFacet(IFacet-string-bytes4[]-bytes4[])[]
@@ -129,6 +133,7 @@ library Behavior_IFacet {
 
         console.logBehaviorExit(_Behavior_IFacetName(), "expect_IFacet");
     }
+
     // end::expect_IFacet(IFacet-string-bytes4[]-bytes4[])[]
 
     /* ------------------------------- facetName() ------------------------------ */
@@ -143,6 +148,7 @@ library Behavior_IFacet {
     function funcSig_IFacet_facetName() public pure returns (string memory) {
         return "facetName()";
     }
+
     // end::funcSig_IFacet_facetName()[]
 
     // tag::errSuffix_IFacet_facetName()[]
@@ -153,6 +159,7 @@ library Behavior_IFacet {
     function errSuffix_IFacet_facetName() public pure returns (string memory) {
         return "facet name";
     }
+
     // end::errSuffix_IFacet_facetName()[]
 
     // tag::areValid_IFacet_facetName(string-string-string)[]
@@ -179,6 +186,7 @@ library Behavior_IFacet {
         console.logBehaviorExit(_Behavior_IFacetName(), "areValid_IFacet_facetName");
         return valid;
     }
+
     // end::areValid_IFacet_facetName(string-string-string)[]
 
     // tag::areValid_IFacet_facetName(IFacet-string-string)[]
@@ -196,6 +204,7 @@ library Behavior_IFacet {
     {
         return areValid_IFacet_facetName(vm.getLabel(address(subject)), expected, actual);
     }
+
     // end::areValid_IFacet_facetName(IFacet-string-string)[]
 
     // tag::expect_IFacet_facetName(IFacet-string)[]
@@ -213,6 +222,7 @@ library Behavior_IFacet {
 
         console.logBehaviorExit(_Behavior_IFacetName(), "expect_IFacet_facetName");
     }
+
     // end::expect_IFacet_facetName(IFacet-string)[]
 
     // tag::hasValid_IFacet_facetName(IFacet)[]
@@ -234,6 +244,7 @@ library Behavior_IFacet {
 
         console.logBehaviorExit(_Behavior_IFacetName(), "hasValid_IFacet_facetName");
     }
+
     // end::hasValid_IFacet_facetName(IFacet)[]
 
     /* -------------------------- facetInterfaces() ------------------------- */
@@ -249,6 +260,7 @@ library Behavior_IFacet {
     function funcSig_IFacet_facetInterfaces() public pure returns (string memory) {
         return "facetInterfaces()";
     }
+
     // end::funcSig_IFacet_facetInterfaces()[]
 
     // tag::errSuffix_IFacet_facetInterfaces()[]
@@ -260,6 +272,7 @@ library Behavior_IFacet {
     function errSuffix_IFacet_facetInterfaces() public pure returns (string memory) {
         return "interface IDs";
     }
+
     // end::errSuffix_IFacet_facetInterfaces()[]
 
     // tag::areValid_IFacet_facetInterfaces(string-bytes4[]-bytes4[])[]
@@ -291,6 +304,7 @@ library Behavior_IFacet {
         console.logBehaviorExit(_Behavior_IFacetName(), "areValid_IFacet_facetInterfaces");
         return valid;
     }
+
     // end::areValid_IFacet_facetInterfaces(string-bytes4[]-bytes4[])[]
 
     // tag::areValid_IFacet_facetInterfaces(IFacet-bytes4[]-bytes4[])[]
@@ -302,6 +316,7 @@ library Behavior_IFacet {
     {
         return areValid_IFacet_facetInterfaces(vm.getLabel(address(subject)), expected, actual);
     }
+
     // end::areValid_IFacet_facetInterfaces(IFacet-bytes4[]-bytes4[])[]
 
     // tag::expect_IFacet_facetInterfaces(IFacet-bytes4[])[]
@@ -328,6 +343,7 @@ library Behavior_IFacet {
 
         console.logBehaviorExit(_Behavior_IFacetName(), "expect_IFacet_facetInterfaces");
     }
+
     // end::expect_IFacet_facetInterfaces(IFacet-bytes4[])[]
 
     // tag::hasValid_IFacet_facetInterfaces(IFacet)[]
@@ -353,6 +369,7 @@ library Behavior_IFacet {
 
         console.logBehaviorExit(_Behavior_IFacetName(), "hasValid_IFacet_facetInterfaces");
     }
+
     // end::hasValid_IFacet_facetInterfaces(IFacet)[]
 
     /* ---------------------------- facetFuncs() ---------------------------- */
@@ -368,6 +385,7 @@ library Behavior_IFacet {
     function funcSig_IFacet_facetFuncs() public pure returns (string memory) {
         return "facetFuncs()";
     }
+
     // end::funcSig_IFacet_facetFuncs()[]
 
     // tag::errSuffix_IFacet_facetFuncs()[]
@@ -379,6 +397,7 @@ library Behavior_IFacet {
     function errSuffix_IFacet_facetFuncs() public pure returns (string memory) {
         return "function selectors";
     }
+
     // end::errSuffix_IFacet_facetFuncs()[]
 
     // tag::areValid_IFacet_facetFuncs(string-bytes4[]-bytes4[])[]
@@ -406,6 +425,7 @@ library Behavior_IFacet {
         console.logBehaviorExit(_Behavior_IFacetName(), "areValid_IFacet_facetFuncs");
         return valid;
     }
+
     // end::areValid_IFacet_facetFuncs(string-bytes4[]-bytes4[])[]
 
     // tag::areValid_IFacet_facetFuncs(IFacet-bytes4[]-bytes4[])[]
@@ -417,6 +437,7 @@ library Behavior_IFacet {
     {
         return areValid_IFacet_facetFuncs(vm.getLabel(address(subject)), expected, actual);
     }
+
     // end::areValid_IFacet_facetFuncs(IFacet-bytes4[]-bytes4[])[]
 
     // tag::expect_IFacet_facetFuncs(IFacet-bytes4[])[]
@@ -438,6 +459,7 @@ library Behavior_IFacet {
 
         console.logBehaviorExit(_Behavior_IFacetName(), "expect_IFacet_facetFuncs");
     }
+
     // end::expect_IFacet_facetFuncs(IFacet-bytes4[])[]
 
     // tag::hasValid_IFacet_facetFuncs(IFacet)[]
@@ -463,6 +485,7 @@ library Behavior_IFacet {
 
         console.logBehaviorExit(_Behavior_IFacetName(), "hasValid_IFacet_facetFuncs");
     }
+
     // end::hasValid_IFacet_facetFuncs(IFacet)[]
 
     /* -------------------------- facetMetadata() -------------------------- */
@@ -478,6 +501,7 @@ library Behavior_IFacet {
     function funcSig_IFacet_facetMetadata() public pure returns (string memory) {
         return "facetMetadata()";
     }
+
     // end::funcSig_IFacet_facetMetadata()[]
 
     // tag::isValid_IFacet_facetMetadata_consistency(IFacet)[]
@@ -546,6 +570,7 @@ library Behavior_IFacet {
         console.logBehaviorExit(_Behavior_IFacetName(), "isValid_IFacet_facetMetadata_consistency");
         return valid;
     }
+
     // end::isValid_IFacet_facetMetadata_consistency(IFacet)[]
 
     // tag::areValid_IFacet_facetMetadata(IFacet-string-bytes4[]-bytes4[])[]
@@ -584,5 +609,5 @@ library Behavior_IFacet {
     }
     // end::areValid_IFacet_facetMetadata(IFacet-string-bytes4[]-bytes4[])[]
 
-// end::Behavior_IFacet[]
+    // end::Behavior_IFacet[]
 }

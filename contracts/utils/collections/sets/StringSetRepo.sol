@@ -11,6 +11,7 @@ struct StringSet {
     // Values in set.
     string[] values;
 }
+
 // end::StringSet[]
 
 // tag::StringSetRepo[]
@@ -38,6 +39,7 @@ library StringSetRepo {
         set.values.length._isValidIndex(index);
         return set.values[index];
     }
+
     // end::_index(StringSet-uint256)[]
 
     // tag::_indexOf(StringSet-string)[]
@@ -54,6 +56,7 @@ library StringSetRepo {
             return set.indexes[value] - 1;
         }
     }
+
     // end::_indexOf(StringSet-string)[]
 
     // tag::_contains(StringSet-string)[]
@@ -66,6 +69,7 @@ library StringSetRepo {
     function _contains(StringSet storage set, string memory value) internal view returns (bool isPresent) {
         return set.indexes[value] != 0;
     }
+
     // end::_contains(StringSet-string)[]
 
     // tag::_length(StringSet)[]
@@ -77,6 +81,7 @@ library StringSetRepo {
     function _length(StringSet storage set) internal view returns (uint256 length_) {
         return set.values.length;
     }
+
     // end::_length(StringSet)[]
 
     // tag::_add(StringSet-string)[]
@@ -98,6 +103,7 @@ library StringSetRepo {
         }
         return true;
     }
+
     // end::_add(StringSet-string)[]
 
     // tag::_add(StringSet-string[])[]
@@ -113,6 +119,7 @@ library StringSetRepo {
         }
         return true;
     }
+
     // end::_add(StringSet-string[])[]
 
     // tag::_remove(StringSet-string)[]
@@ -146,6 +153,7 @@ library StringSetRepo {
 
         return true;
     }
+
     // end::_remove(StringSet-string)[]
 
     // tag::_remove(StringSet-string[])[]
@@ -159,6 +167,7 @@ library StringSetRepo {
             _remove(set, values[iteration]);
         }
     }
+
     // end::_remove(StringSet-string[])[]
 
     // tag::_asArray(StringSet)[]
@@ -170,6 +179,7 @@ library StringSetRepo {
     function _asArray(StringSet storage set) internal view returns (string[] memory array) {
         array = set.values;
     }
+
     // end::_asArray(StringSet)[]
 
     // tag::_values(StringSet)[]
@@ -184,6 +194,7 @@ library StringSetRepo {
     function _values(StringSet storage set) internal view returns (string[] storage values) {
         values = set.values;
     }
+
     // end::_values(StringSet)[]
 
     // tag::_range(StringSet-uint256-uint256)[]

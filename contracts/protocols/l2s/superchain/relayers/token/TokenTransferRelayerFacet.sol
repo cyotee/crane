@@ -37,6 +37,7 @@ contract TokenTransferRelayerFacet is TokenTransferRelayerTarget, FacetBase {
     function facetName() public pure override returns (string memory name) {
         return "TokenTransferRelayerFacet";
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -53,6 +54,7 @@ contract TokenTransferRelayerFacet is TokenTransferRelayerTarget, FacetBase {
         interfaces[1] = type(IMultiStepOwnable).interfaceId;
         return interfaces;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -70,6 +72,7 @@ contract TokenTransferRelayerFacet is TokenTransferRelayerTarget, FacetBase {
         funcs[2] = ITokenTransferRelayer.recoverToken.selector;
         return funcs;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]

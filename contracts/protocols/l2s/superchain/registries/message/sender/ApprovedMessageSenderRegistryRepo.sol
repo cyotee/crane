@@ -29,7 +29,9 @@ library ApprovedMessageSenderRegistryRepo {
      *      This follows the canonical pattern used by OperableRepo, ERC20Repo, MultiStepOwnableRepo, ERC2535Repo,
      *      FacetRegistryRepo, CallTargetRegistryRepo and other gold-standard Repos for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("crane.registries.message.sender.approved"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("crane.registries.message.sender.approved"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -42,6 +44,7 @@ library ApprovedMessageSenderRegistryRepo {
         mapping(address recipient => AddressSet approvedSenders) approvedSendersForRecipient;
         mapping(address recipient => mapping(address sender => bool)) isApprovedSenderForRecipient;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -55,6 +58,7 @@ library ApprovedMessageSenderRegistryRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -65,6 +69,7 @@ library ApprovedMessageSenderRegistryRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_isApprovedSender(Storage-address-address)[]
@@ -83,6 +88,7 @@ library ApprovedMessageSenderRegistryRepo {
     {
         return layoutStruct.isApprovedSenderForRecipient[recipient][sender];
     }
+
     // end::_isApprovedSender(Storage-address-address)[]
 
     // tag::_isApprovedSender(address-address)[]
@@ -95,6 +101,7 @@ library ApprovedMessageSenderRegistryRepo {
     function _isApprovedSender(address recipient, address sender) internal view returns (bool) {
         return _isApprovedSender(_layoutStruct(), recipient, sender);
     }
+
     // end::_isApprovedSender(address-address)[]
 
     // tag::_allApprovedSenders(Storage-address)[]
@@ -113,6 +120,7 @@ library ApprovedMessageSenderRegistryRepo {
     {
         return layoutStruct.approvedSendersForRecipient[recipient]._values();
     }
+
     // end::_allApprovedSenders(Storage-address)[]
 
     // tag::_allApprovedSenders(address)[]
@@ -124,6 +132,7 @@ library ApprovedMessageSenderRegistryRepo {
     function _allApprovedSenders(address recipient) internal view returns (address[] memory) {
         return _allApprovedSenders(_layoutStruct(), recipient);
     }
+
     // end::_allApprovedSenders(address)[]
 
     // tag::_approveSender(Storage-address-address)[]
@@ -139,6 +148,7 @@ library ApprovedMessageSenderRegistryRepo {
         layoutStruct.isApprovedSenderForRecipient[recipient][sender] = true;
         layoutStruct.approvedSendersForRecipient[recipient]._add(sender);
     }
+
     // end::_approveSender(Storage-address-address)[]
 
     // tag::_approveSender(address-address)[]

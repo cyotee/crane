@@ -30,9 +30,8 @@ contract TestDriftingReserves {
         ) = getVirtualReserves();
 
         // Calc reserve updates
-        uint256 total_frax_mint = getAmountOut(
-            fxs_amount, current_fxs_virtual_reserves, current_collat_virtual_reserves
-        );
+        uint256 total_frax_mint =
+            getAmountOut(fxs_amount, current_fxs_virtual_reserves, current_collat_virtual_reserves);
 
         // Call _update with new reserves and average over last period
         _update(

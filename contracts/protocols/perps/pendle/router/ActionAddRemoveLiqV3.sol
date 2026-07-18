@@ -282,8 +282,8 @@ contract ActionAddRemoveLiqV3 is IPActionAddRemoveLiqV3, ActionBase {
 
         PYIndex pyIndex = YT.newIndex();
 
-        netSyMintPy = (netSyIn * state.totalPt.Uint())
-            / (state.totalPt.Uint() + pyIndex.syToAsset(state.totalSy.Uint()));
+        netSyMintPy =
+            (netSyIn * state.totalPt.Uint()) / (state.totalPt.Uint() + pyIndex.syToAsset(state.totalSy.Uint()));
 
         uint256 netSyAddLiquidity = netSyIn - netSyMintPy;
 

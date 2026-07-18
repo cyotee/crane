@@ -16,6 +16,7 @@ contract Counter {
      * @return The stored number.
      */
     uint256 public number;
+
     // end::number()[]
 
     // tag::setNumber(uint256)[]
@@ -26,6 +27,7 @@ contract Counter {
     function setNumber(uint256 newNumber) public {
         number = newNumber;
     }
+
     // end::setNumber(uint256)[]
 
     // tag::increment()[]

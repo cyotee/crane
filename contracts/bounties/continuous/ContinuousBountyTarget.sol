@@ -45,6 +45,7 @@ contract ContinuousBountyTarget is BountyCommonTarget, IContinuousBounty {
         );
         _addInitialFunding(bountyId, tokens, amounts);
     }
+
     // end::createContinuousBounty(string-uint256-uint256-address-uint256-uint8-address[]-uint256[])[]
 
     // tag::submitDelivery(uint256-string[])[]
@@ -58,6 +59,7 @@ contract ContinuousBountyTarget is BountyCommonTarget, IContinuousBounty {
         require(BountyRepo._isSubmitterAllowed(rs, bountyId, msg.sender), "not allowed");
         emit DeliverableSubmitted(bountyId, msg.sender, deliverableUris);
     }
+
     // end::submitDelivery(uint256-string[])[]
 
     // tag::approveDelivery(uint256)[]

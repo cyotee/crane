@@ -34,7 +34,8 @@ library BalancerV3StablePoolRepo {
      *      ERC20Repo (eip.erc.20), ERC2535Repo (eip.erc.2535), MultiStepOwnableRepo and other gold-standard Repos
      *      for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("protocols.dexes.balancer.v3.pool.stable"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("protocols.dexes.balancer.v3.pool.stable"))) - 1);
     // end::STORAGE_SLOT[]
 
     /// @notice The amplification factor is below the minimum of the range (1 - 50000).
@@ -73,6 +74,7 @@ library BalancerV3StablePoolRepo {
         uint32 startTime;
         uint32 endTime;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -86,6 +88,7 @@ library BalancerV3StablePoolRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -96,6 +99,7 @@ library BalancerV3StablePoolRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-uint256)[]
@@ -121,6 +125,7 @@ library BalancerV3StablePoolRepo {
         layoutStruct.startTime = uint32(block.timestamp);
         layoutStruct.endTime = uint32(block.timestamp);
     }
+
     // end::_initialize(Storage-uint256)[]
 
     // tag::_initialize(uint256)[]
@@ -133,6 +138,7 @@ library BalancerV3StablePoolRepo {
     function _initialize(uint256 amplificationParameter_) internal {
         _initialize(_layoutStruct(), amplificationParameter_);
     }
+
     // end::_initialize(uint256)[]
 
     // tag::_startAmplificationParameterUpdate(Storage-uint256-uint256)[]
@@ -175,6 +181,7 @@ library BalancerV3StablePoolRepo {
         layoutStruct.startTime = uint32(block.timestamp);
         layoutStruct.endTime = uint32(endTime);
     }
+
     // end::_startAmplificationParameterUpdate(Storage-uint256-uint256)[]
 
     // tag::_startAmplificationParameterUpdate(uint256-uint256)[]
@@ -191,6 +198,7 @@ library BalancerV3StablePoolRepo {
     function _startAmplificationParameterUpdate(uint256 rawEndValue, uint256 endTime) internal {
         _startAmplificationParameterUpdate(_layoutStruct(), rawEndValue, endTime);
     }
+
     // end::_startAmplificationParameterUpdate(uint256-uint256)[]
 
     // tag::_stopAmplificationParameterUpdate(Storage)[]
@@ -206,6 +214,7 @@ library BalancerV3StablePoolRepo {
 
         _stopAmplification(layoutStruct, currentValue);
     }
+
     // end::_stopAmplificationParameterUpdate(Storage)[]
 
     // tag::_stopAmplificationParameterUpdate()[]
@@ -216,6 +225,7 @@ library BalancerV3StablePoolRepo {
     function _stopAmplificationParameterUpdate() internal {
         _stopAmplificationParameterUpdate(_layoutStruct());
     }
+
     // end::_stopAmplificationParameterUpdate()[]
 
     // tag::_getAmplificationParameter(Storage)[]
@@ -254,6 +264,7 @@ library BalancerV3StablePoolRepo {
             value = endValue;
         }
     }
+
     // end::_getAmplificationParameter(Storage)[]
 
     // tag::_getAmplificationParameter()[]
@@ -265,6 +276,7 @@ library BalancerV3StablePoolRepo {
     function _getAmplificationParameter() internal view returns (uint256 value, bool isUpdating) {
         return _getAmplificationParameter(_layoutStruct());
     }
+
     // end::_getAmplificationParameter()[]
 
     // tag::_getAmplificationState(Storage)[]
@@ -287,6 +299,7 @@ library BalancerV3StablePoolRepo {
         startTime = layoutStruct.startTime;
         endTime = layoutStruct.endTime;
     }
+
     // end::_getAmplificationState(Storage)[]
 
     // tag::_getAmplificationState()[]
@@ -304,6 +317,7 @@ library BalancerV3StablePoolRepo {
     {
         return _getAmplificationState(_layoutStruct());
     }
+
     // end::_getAmplificationState()[]
 
     // (internal non-dual helper _stopAmplification remains without tag; called only from dual wrappers)

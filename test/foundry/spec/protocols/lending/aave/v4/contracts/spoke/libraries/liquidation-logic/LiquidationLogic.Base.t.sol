@@ -157,8 +157,8 @@ contract LiquidationLogicBaseTest is Base {
         );
         params.debtAssetUnit =
             10 ** bound(params.debtAssetUnit, MIN_ALLOWED_UNDERLYING_DECIMALS, MAX_ALLOWED_UNDERLYING_DECIMALS);
-        uint256 debtRayToLiquidate = params.drawnSharesToLiquidate * params.drawnIndex
-            + params.premiumDebtRayToLiquidate;
+        uint256 debtRayToLiquidate =
+            params.drawnSharesToLiquidate * params.drawnIndex + params.premiumDebtRayToLiquidate;
         params.debtAssetPrice = bound(
             params.debtAssetPrice,
             1,

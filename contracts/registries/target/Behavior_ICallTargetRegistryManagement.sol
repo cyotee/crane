@@ -36,6 +36,7 @@ library Behavior_ICallTargetRegistryManagement {
     function _name() internal pure returns (string memory) {
         return type(Behavior_ICallTargetRegistryManagement).name;
     }
+
     // end::_name()[]
 
     // tag::_errPrefixFunc(string)[]
@@ -43,6 +44,7 @@ library Behavior_ICallTargetRegistryManagement {
     function _errPrefixFunc(string memory testedFuncSig) internal pure returns (string memory) {
         return BehaviorUtils._errPrefixFunc(_name(), testedFuncSig);
     }
+
     // end::_errPrefixFunc(string)[]
 
     // tag::_errPrefix(string-string)[]
@@ -50,6 +52,7 @@ library Behavior_ICallTargetRegistryManagement {
     function _errPrefix(string memory testedFuncSig, string memory subjectLabel) internal pure returns (string memory) {
         return string.concat(_errPrefixFunc(testedFuncSig), subjectLabel);
     }
+
     // end::_errPrefix(string-string)[]
 
     // tag::_errPrefix(string-address)[]
@@ -57,6 +60,7 @@ library Behavior_ICallTargetRegistryManagement {
     function _errPrefix(string memory testedFuncSig, address subject) internal view returns (string memory) {
         return _errPrefix(testedFuncSig, vm.getLabel(subject));
     }
+
     // end::_errPrefix(string-address)[]
 
     /* -------------------------------------------------------------------------- */
@@ -84,6 +88,7 @@ library Behavior_ICallTargetRegistryManagement {
     ) internal {
         // For recording
     }
+
     // end::expect_setDefaultCallTargetForID(ICallTargetRegistryManagement-bytes4-address-bool)[]
 
     // tag::hasValid_setDefaultCallTargetForID(ICallTargetRegistryManagement-bytes4-address-bool)[]
@@ -102,6 +107,7 @@ library Behavior_ICallTargetRegistryManagement {
         }
         return true;
     }
+
     // end::hasValid_setDefaultCallTargetForID(ICallTargetRegistryManagement-bytes4-address-bool)[]
 
     /* -------------------------------------------------------------------------- */
@@ -130,6 +136,7 @@ library Behavior_ICallTargetRegistryManagement {
     ) internal {
         // For recording
     }
+
     // end::expect_setCallTargetForIDForCaller(ICallTargetRegistryManagement-bytes4-address-address-bool)[]
 
     // tag::hasValid_setCallTargetForIDForCaller(ICallTargetRegistryManagement-bytes4-address-address-bool)[]
@@ -149,6 +156,7 @@ library Behavior_ICallTargetRegistryManagement {
         }
         return true;
     }
+
     // end::hasValid_setCallTargetForIDForCaller(ICallTargetRegistryManagement-bytes4-address-address-bool)[]
 
     /* -------------------------------------------------------------------------- */
@@ -164,6 +172,7 @@ library Behavior_ICallTargetRegistryManagement {
     ) internal {
         expect_setDefaultCallTargetForID(subject, interfaceId, callTarget, expectedSuccess);
     }
+
     // end::recInvariant_setDefaultCallTargetForID(ICallTargetRegistryManagement-bytes4-address-bool)[]
 
     // tag::recInvariant_setCallTargetForIDForCaller(ICallTargetRegistryManagement-bytes4-address-address-bool)[]
@@ -178,5 +187,5 @@ library Behavior_ICallTargetRegistryManagement {
     }
     // end::recInvariant_setCallTargetForIDForCaller(ICallTargetRegistryManagement-bytes4-address-address-bool)[]
 
-// end::Behavior_ICallTargetRegistryManagement[]
+    // end::Behavior_ICallTargetRegistryManagement[]
 }

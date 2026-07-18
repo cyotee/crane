@@ -70,14 +70,9 @@ contract MultiTroveGetter is IMultiTroveGetter {
         _out.lastInterestRateAdjTime = troveData.lastInterestRateAdjTime;
 
         (
-            , // debt
-            , // coll
-            _out.stake, // stake
-            , // status
-            , // arrayIndex
-            _out.lastDebtUpdateTime, // lastDebtUpdateTime
-            , // lastInterestRateAdjTime
-            , // annualInterestRate
+            , // debt, // coll
+            _out.stake, // stake, // status, // arrayIndex
+            _out.lastDebtUpdateTime, // lastDebtUpdateTime, // lastInterestRateAdjTime, // annualInterestRate
             _out.interestBatchManager,
             _out.batchDebtShares
         ) = _troveManager.Troves(_id);

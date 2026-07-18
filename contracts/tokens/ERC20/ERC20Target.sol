@@ -14,6 +14,7 @@ import {IERC20Metadata} from "@crane/contracts/interfaces/IERC20Metadata.sol";
 
 import {ERC20Repo} from "@crane/contracts/tokens/ERC20/ERC20Repo.sol";
 import {BetterIERC20} from "@crane/contracts/interfaces/BetterIERC20.sol";
+
 // import {IFacet} from "@crane/contracts/interfaces/IFacet.sol";
 
 // tag::ERC20Target[]
@@ -38,6 +39,7 @@ contract ERC20Target is BetterIERC20 {
         ERC20Repo._approve(msg.sender, spender, amount);
         return true;
     }
+
     // end::approve(address,uint256)[]
 
     // tag::transfer(address,uint256)[]
@@ -51,6 +53,7 @@ contract ERC20Target is BetterIERC20 {
         ERC20Repo._transfer(msg.sender, recipient, amount);
         return true;
     }
+
     // end::transfer(address,uint256)[]
 
     // tag::transferFrom(address,address,uint256)[]
@@ -64,6 +67,7 @@ contract ERC20Target is BetterIERC20 {
         ERC20Repo._transferFrom(owner, recipient, amount);
         return true;
     }
+
     // end::transferFrom(address,address,uint256)[]
 
     // tag::totalSupply()[]
@@ -75,6 +79,7 @@ contract ERC20Target is BetterIERC20 {
     function totalSupply() external view returns (uint256) {
         return ERC20Repo._totalSupply();
     }
+
     // end::totalSupply()[]
 
     // tag::balanceOf(address)[]
@@ -86,6 +91,7 @@ contract ERC20Target is BetterIERC20 {
     function balanceOf(address account) external view returns (uint256) {
         return ERC20Repo._balanceOf(account);
     }
+
     // end::balanceOf(address)[]
 
     // tag::allowance(address,address)[]
@@ -97,6 +103,7 @@ contract ERC20Target is BetterIERC20 {
     function allowance(address owner, address spender) external view returns (uint256) {
         return ERC20Repo._allowance(owner, spender);
     }
+
     // end::allowance(address,address)[]
 
     /* -------------------------------------------------------------------------- */
@@ -112,6 +119,7 @@ contract ERC20Target is BetterIERC20 {
     function name() external view returns (string memory) {
         return ERC20Repo._name();
     }
+
     // end::name()[]
 
     // tag::symbol()[]
@@ -123,6 +131,7 @@ contract ERC20Target is BetterIERC20 {
     function symbol() external view returns (string memory) {
         return ERC20Repo._symbol();
     }
+
     // end::symbol()[]
 
     // tag::decimals()[]

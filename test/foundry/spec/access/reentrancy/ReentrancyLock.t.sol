@@ -43,6 +43,7 @@ contract ReentrancyLockRepoHarness {
         ReentrancyLockRepo._onlyUnlocked();
     }
 }
+
 // end::ReentrancyLockRepoHarness[]
 
 /**
@@ -76,6 +77,7 @@ contract ReentrancyLockModifiersHarness is ReentrancyLockModifiers {
         return ReentrancyLockRepo._isLocked();
     }
 }
+
 // end::ReentrancyLockModifiersHarness[]
 
 /**
@@ -103,6 +105,7 @@ contract ReentrancyAttacker {
         }
     }
 }
+
 // end::ReentrancyAttacker[]
 
 /**
@@ -126,6 +129,7 @@ contract ReentrancyLockRepo_Test is Test {
     function test_isLocked_initiallyFalse() public view {
         assertEq(harness.isLocked(), false, "isLocked must be exact false initially");
     }
+
     // end::test_isLocked_initiallyFalse()[]
 
     // tag::test_lock_setsLockedTrue()[]
@@ -167,6 +171,7 @@ contract ReentrancyLockRepo_Test is Test {
         assertEq(harness.isLocked(), false, "must be exact false at end");
     }
 }
+
 // end::ReentrancyLockRepo_Test[]
 
 /**
@@ -228,6 +233,7 @@ contract ReentrancyLockModifiers_Test is Test {
         assertEq(revertingHarness.isLockedView(), false, "isLockedView must be exact false after revert");
     }
 }
+
 // end::ReentrancyLockModifiers_Test[]
 
 /**
@@ -244,6 +250,7 @@ contract RevertingHarness is ReentrancyLockModifiers {
         return ReentrancyLockRepo._isLocked();
     }
 }
+
 // end::RevertingHarness[]
 
 /**
@@ -274,13 +281,21 @@ contract ReentrancyLockFacet_Test is CraneTest {
     function test_facetInterfaces_returnsIsLockedSelector() public view {
         bytes4[] memory interfaces = facet.facetInterfaces();
         assertEq(interfaces.length, 1, "interfaces length must be exact 1");
-        assertEq(interfaces[0], IReentrancyLock.isLocked.selector, "interfaces[0] must be exact IReentrancyLock.isLocked.selector");
+        assertEq(
+            interfaces[0],
+            IReentrancyLock.isLocked.selector,
+            "interfaces[0] must be exact IReentrancyLock.isLocked.selector"
+        );
     }
 
     function test_facetFuncs_returnsIsLockedSelector() public view {
         bytes4[] memory funcs = facet.facetFuncs();
         assertEq(funcs.length, 1, "funcs length must be exact 1");
-        assertEq(funcs[0], ReentrancyLockTarget.isLocked.selector, "funcs[0] must be exact ReentrancyLockTarget.isLocked.selector");
+        assertEq(
+            funcs[0],
+            ReentrancyLockTarget.isLocked.selector,
+            "funcs[0] must be exact ReentrancyLockTarget.isLocked.selector"
+        );
     }
 
     function test_facetMetadata_returnsAllData() public view {
@@ -327,7 +342,9 @@ contract ReentrancyLockFacet_Test is CraneTest {
         Behavior_IFacet.expect_IFacet_facetFuncs(facetAsIFacet, expectedFuncs);
 
         assertTrue(Behavior_IFacet.hasValid_IFacet_facetName(facetAsIFacet), "facetName exact via Behavior_IFacet");
-        assertTrue(Behavior_IFacet.hasValid_IFacet_facetInterfaces(facetAsIFacet), "facetInterfaces exact via Behavior_IFacet");
+        assertTrue(
+            Behavior_IFacet.hasValid_IFacet_facetInterfaces(facetAsIFacet), "facetInterfaces exact via Behavior_IFacet"
+        );
         assertTrue(Behavior_IFacet.hasValid_IFacet_facetFuncs(facetAsIFacet), "facetFuncs exact via Behavior_IFacet");
         assertTrue(
             Behavior_IFacet.isValid_IFacet_facetMetadata_consistency(facetAsIFacet),
@@ -336,6 +353,7 @@ contract ReentrancyLockFacet_Test is CraneTest {
     }
     // end::test_LR7_ReentrancyLockFacet_declaration_viaBehavior()[]
 }
+
 // end::ReentrancyLockFacet_Test[]
 
 /**

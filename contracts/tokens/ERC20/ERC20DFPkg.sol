@@ -33,6 +33,7 @@ interface IERC20DFPkg is IDiamondFactoryPackage {
     struct PkgInit {
         IFacet erc20Facet;
     }
+
     // end::PkgInit[]
 
     // tag::PkgArgs[]
@@ -104,6 +105,7 @@ interface IERC20DFPkg is IDiamondFactoryPackage {
     function deploy(IDiamondPackageCallBackFactory factory, PkgArgs memory pkgArgs) external returns (IERC20 token);
     // end::deploy(IDiamondPackageCallBackFactory-PkgArgs)[]
 }
+
 // end::IERC20DFPkg[]
 
 // tag::ERC20DFPkg[]
@@ -130,6 +132,7 @@ contract ERC20DFPkg is IERC20DFPkg {
         /// forge-lint: disable-next-line(mixed-case-variable)
         ERC20_FACET = pkgInit.erc20Facet;
     }
+
     // end::constructor(IERC20DFPkg.PkgInit)[]
 
     // tag::deploy-convenience(IDiamondPackageCallBackFactory-string-string-uint8-uint256-address-bytes32)[]
@@ -155,6 +158,7 @@ contract ERC20DFPkg is IERC20DFPkg {
             })
         );
     }
+
     // end::deploy-convenience(IDiamondPackageCallBackFactory-string-string-uint8-uint256-address-bytes32)[]
 
     // tag::deploy-pkgargs-impl[]
@@ -162,6 +166,7 @@ contract ERC20DFPkg is IERC20DFPkg {
     function deploy(IDiamondPackageCallBackFactory factory, PkgArgs memory pkgArgs) public returns (IERC20 token) {
         return IERC20(factory.deploy(this, abi.encode(pkgArgs)));
     }
+
     // end::deploy-pkgargs-impl[]
 
     /* -------------------------------------------------------------------------- */
@@ -177,6 +182,7 @@ contract ERC20DFPkg is IERC20DFPkg {
     function packageName() public pure returns (string memory name_) {
         return type(ERC20DFPkg).name;
     }
+
     // end::packageName-erc20[]
 
     // tag::facetInterfaces-erc20[]
@@ -189,6 +195,7 @@ contract ERC20DFPkg is IERC20DFPkg {
     function facetInterfaces() public view returns (bytes4[] memory interfaces) {
         return ERC20_FACET.facetInterfaces();
     }
+
     // end::facetInterfaces-erc20[]
 
     // tag::facetAddresses-erc20[]
@@ -201,6 +208,7 @@ contract ERC20DFPkg is IERC20DFPkg {
         facetAddresses_ = new address[](1);
         facetAddresses_[0] = address(ERC20_FACET);
     }
+
     // end::facetAddresses-erc20[]
 
     // tag::packageMetadata-erc20[]
@@ -220,6 +228,7 @@ contract ERC20DFPkg is IERC20DFPkg {
         interfaces = facetInterfaces();
         facets = facetAddresses();
     }
+
     // end::packageMetadata-erc20[]
 
     // tag::facetCuts-erc20[]
@@ -237,6 +246,7 @@ contract ERC20DFPkg is IERC20DFPkg {
             functionSelectors: ERC20_FACET.facetFuncs()
         });
     }
+
     // end::facetCuts-erc20[]
 
     // tag::diamondConfig-erc20[]
@@ -248,6 +258,7 @@ contract ERC20DFPkg is IERC20DFPkg {
     function diamondConfig() public view returns (DiamondConfig memory config) {
         config = IDiamondFactoryPackage.DiamondConfig({facetCuts: facetCuts(), interfaces: facetInterfaces()});
     }
+
     // end::diamondConfig-erc20[]
 
     // tag::calcSalt-erc20[]
@@ -285,6 +296,7 @@ contract ERC20DFPkg is IERC20DFPkg {
 
         return abi.encode(decodedArgs)._hash();
     }
+
     // end::calcSalt-erc20[]
 
     // tag::processArgs-erc20[]
@@ -322,6 +334,7 @@ contract ERC20DFPkg is IERC20DFPkg {
 
         return abi.encode(decodedArgs);
     }
+
     // end::processArgs-erc20[]
 
     // tag::updatePkg-erc20[]
@@ -333,13 +346,10 @@ contract ERC20DFPkg is IERC20DFPkg {
     /// @custom:signature updatePkg(address,bytes)
     /// @custom:selector 0xa9089235
     /// @inheritdoc IDiamondFactoryPackage
-    function updatePkg(address expectedProxy, bytes memory pkgArgs)
-        public
-        virtual
-        returns (bool)
-    {
+    function updatePkg(address expectedProxy, bytes memory pkgArgs) public virtual returns (bool) {
         return true;
     }
+
     // end::updatePkg-erc20[]
 
     // tag::initAccount-erc20[]
@@ -356,6 +366,7 @@ contract ERC20DFPkg is IERC20DFPkg {
             ERC20Repo._mint(decodedArgs.recipient, decodedArgs.totalSupply);
         }
     }
+
     // end::initAccount-erc20[]
 
     // tag::postDeploy-erc20[]

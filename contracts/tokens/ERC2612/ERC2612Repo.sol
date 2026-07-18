@@ -22,6 +22,7 @@ library ERC2612Repo {
      *      OperableRepo, MultiStepOwnableRepo, DeployedAddressesRepo, and other gold-standard Repos for collision-resistant deterministic storage binding.
      */
     bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("eip.erc.2612"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -34,6 +35,7 @@ library ERC2612Repo {
         // Stores signature nonces per account.
         mapping(address account => uint256) nonces;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -47,6 +49,7 @@ library ERC2612Repo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -57,6 +60,7 @@ library ERC2612Repo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_useNonce(Storage-address)[]
@@ -75,6 +79,7 @@ library ERC2612Repo {
             return layoutStruct.nonces[owner]++;
         }
     }
+
     // end::_useNonce(Storage-address)[]
 
     // tag::_useNonce(address)[]
@@ -86,6 +91,7 @@ library ERC2612Repo {
     function _useNonce(address owner) internal returns (uint256) {
         return _useNonce(_layoutStruct(), owner);
     }
+
     // end::_useNonce(address)[]
 
     // tag::_useCheckedNonce(Storage-address-uint256)[]
@@ -103,6 +109,7 @@ library ERC2612Repo {
             revert IERC2612.InvalidAccountNonce(owner, current);
         }
     }
+
     // end::_useCheckedNonce(Storage-address-uint256)[]
 
     // tag::_useCheckedNonce(address-uint256)[]
@@ -115,6 +122,7 @@ library ERC2612Repo {
     function _useCheckedNonce(address owner, uint256 nonce) internal {
         _useCheckedNonce(_layoutStruct(), owner, nonce);
     }
+
     // end::_useCheckedNonce(address-uint256)[]
 
     // tag::_nonces(Storage-address)[]
@@ -128,6 +136,7 @@ library ERC2612Repo {
     function _nonces(Storage storage layoutStruct, address owner) internal view returns (uint256) {
         return layoutStruct.nonces[owner];
     }
+
     // end::_nonces(Storage-address)[]
 
     // tag::_nonces(address)[]
@@ -141,5 +150,5 @@ library ERC2612Repo {
     }
     // end::_nonces(address)[]
 
-// end::ERC2612Repo[]
+    // end::ERC2612Repo[]
 }

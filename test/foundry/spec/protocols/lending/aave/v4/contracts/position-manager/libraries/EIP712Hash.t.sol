@@ -56,13 +56,17 @@ contract EIP712HashTest is Test {
             EIP712Hash.UPDATE_USER_RISK_PREMIUM_TYPEHASH,
             keccak256("UpdateUserRiskPremium(address spoke,address onBehalfOf,uint256 nonce,uint256 deadline)")
         );
-        assertEq(EIP712Hash.UPDATE_USER_RISK_PREMIUM_TYPEHASH, vm.eip712HashType(EIP712Types.TYPE_UpdateUserRiskPremium));
+        assertEq(
+            EIP712Hash.UPDATE_USER_RISK_PREMIUM_TYPEHASH, vm.eip712HashType(EIP712Types.TYPE_UpdateUserRiskPremium)
+        );
 
         assertEq(
             EIP712Hash.UPDATE_USER_DYNAMIC_CONFIG_TYPEHASH,
             keccak256("UpdateUserDynamicConfig(address spoke,address onBehalfOf,uint256 nonce,uint256 deadline)")
         );
-        assertEq(EIP712Hash.UPDATE_USER_DYNAMIC_CONFIG_TYPEHASH, vm.eip712HashType(EIP712Types.TYPE_UpdateUserDynamicConfig));
+        assertEq(
+            EIP712Hash.UPDATE_USER_DYNAMIC_CONFIG_TYPEHASH, vm.eip712HashType(EIP712Types.TYPE_UpdateUserDynamicConfig)
+        );
     }
 
     // @dev all struct params should be hashed & placed in the same order as the typehash

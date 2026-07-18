@@ -204,7 +204,12 @@ abstract contract MultiFeedAdapterWithoutRounds is RedstoneConsumerNumericBase, 
         /* lastDataTimestamp */
         uint256 lastBlockTimestamp,
         uint256 lastValue
-    ) internal view virtual returns (bool) {
+    )
+        internal
+        view
+        virtual
+        returns (bool)
+    {
         return lastValue > 0 && lastBlockTimestamp + MAX_DATA_STALENESS > block.timestamp;
     }
 

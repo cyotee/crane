@@ -70,6 +70,7 @@ abstract contract TestBase_IERC165 is Test {
     /// @return expectedInterfaces_ Array of bytes4 IDs the subject must report support for.
     /// forge-lint: disable-next-line(mixed-case-function)
     function expected_IERC165_interfaces() public virtual returns (bytes4[] memory expectedInterfaces_);
+
     // end::expected_IERC165_interfaces()[]
 
     // tag::test_IERC165_supportsInterface()[]

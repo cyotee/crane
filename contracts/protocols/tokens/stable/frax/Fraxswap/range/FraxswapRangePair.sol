@@ -113,24 +113,24 @@ contract FraxswapRangePair is FraxswapERC20 {
                 || K < lastVirtualReserveUpdateK
         ) {
             // Max 0.01% K change, means max 0.01% price change after update of virtual reserves
-        /* Update virtual reserves in case K has changed
-             ** Definitions:
-            ** V0 = virtualReserve0
-            ** V1 = virtualReserve1
-            ** A0 = actualBalance0
-            ** A1 = actualBalance1
-            ** We are solving the following equations
-            ** K = Q*V0^2             // There is a fixed ratio between V0^2 and K, meaning we have a fixed upper price boundary.
-            ** V1/V0 = centerPrice    // The ratio between virtualReserve0 and virtualReserve1 is fixed, so we also have a fixed lower boundary as well
-            ** K = (V0*A0)*(V1*A1)    // K is the product of the two full reserves
-            ** ==>
-            ** (centerPrice-Q)*V0^2 + (A1+A0*centerPrice)*V0 + A0*A1 = 0
-            ** ==>
-            ** a = (centerPrice-Q), b = (A1+A0*centerPrice), c = A0*A1
-            ** a*V0^2+b*V0+c = 0
-            ** ==>
-            ** V0 = (-b(+/-)sqrt(b^2-4ac))/(2*a) // Famous abc-formula
-            */
+            /* Update virtual reserves in case K has changed
+                 ** Definitions:
+                ** V0 = virtualReserve0
+                ** V1 = virtualReserve1
+                ** A0 = actualBalance0
+                ** A1 = actualBalance1
+                ** We are solving the following equations
+                ** K = Q*V0^2             // There is a fixed ratio between V0^2 and K, meaning we have a fixed upper price boundary.
+                ** V1/V0 = centerPrice    // The ratio between virtualReserve0 and virtualReserve1 is fixed, so we also have a fixed lower boundary as well
+                ** K = (V0*A0)*(V1*A1)    // K is the product of the two full reserves
+                ** ==>
+                ** (centerPrice-Q)*V0^2 + (A1+A0*centerPrice)*V0 + A0*A1 = 0
+                ** ==>
+                ** a = (centerPrice-Q), b = (A1+A0*centerPrice), c = A0*A1
+                ** a*V0^2+b*V0+c = 0
+                ** ==>
+                ** V0 = (-b(+/-)sqrt(b^2-4ac))/(2*a) // Famous abc-formula
+                */
             uint256 actualBalance0 = balance0 - virtualReserve0;
             uint256 actualBalance1 = balance1 - virtualReserve1;
             uint256 minus_a = Q - centerPrice;

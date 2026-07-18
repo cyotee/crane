@@ -696,6 +696,8 @@ contract Create3Factory_Test is Test {
 
         // Registry count must not have increased (AddressSetRepo._add is idempotent)
         address[] memory allFacetsAfterSecond = factory.allFacets();
-        assertEq(allFacetsAfterSecond.length, countAfterFirst, "Facet should NOT be re-registered - AddressSet is idempotent");
+        assertEq(
+            allFacetsAfterSecond.length, countAfterFirst, "Facet should NOT be re-registered - AddressSet is idempotent"
+        );
     }
 }

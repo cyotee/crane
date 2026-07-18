@@ -31,7 +31,8 @@ library DeployedAddressesRepo {
      *      Used by canonical examples (FacetRegistryRepo, DiamondFactoryPackageRegistryRepo) and aliased for
      *      STORAGE_SLOT compatibility with OperableRepo, ERC2535Repo, EIP712Repo, ERC4626Repo, MultiStepOwnableRepo.
      */
-    bytes32 internal constant DEFAULT_SLOT = bytes32(uint256(keccak256(abi.encode("crane.script.deployed.addresses"))) - 1);
+    bytes32 internal constant DEFAULT_SLOT =
+        bytes32(uint256(keccak256(abi.encode("crane.script.deployed.addresses"))) - 1);
 
     // end::DEFAULT_SLOT[]
 
@@ -41,6 +42,7 @@ library DeployedAddressesRepo {
      *      Preserves compatibility for all dual _layoutStruct and internal references while using canonical ERC1967 derivation.
      */
     bytes32 internal constant STORAGE_SLOT = DEFAULT_SLOT;
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -53,6 +55,7 @@ library DeployedAddressesRepo {
         AddressSet deployedAddresses;
         mapping(uint256 chainId => mapping(bytes32 instanceId => address deployedAddress)) deployedAddressOfInstanceId;
     }
+
     // end::Storage[]
 
     // tag::_layoutStruct(bytes32)[]
@@ -66,6 +69,7 @@ library DeployedAddressesRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -76,6 +80,7 @@ library DeployedAddressesRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_registerDeployedAddress(Storage-address-uint256-bytes32)[]
@@ -96,6 +101,7 @@ library DeployedAddressesRepo {
         layoutStruct.deployedAddresses._add(deployedAddress_);
         layoutStruct.deployedAddressOfInstanceId[chainId_][instanceId_] = deployedAddress_;
     }
+
     // end::_registerDeployedAddress(Storage-address-uint256-bytes32)[]
 
     // tag::_registerDeployedAddress(address-uint256-bytes32)[]
@@ -108,6 +114,7 @@ library DeployedAddressesRepo {
     function _registerDeployedAddress(address deployedAddress_, uint256 chainId_, bytes32 instanceId_) internal {
         _registerDeployedAddress(_layoutStruct(), deployedAddress_, chainId_, instanceId_);
     }
+
     // end::_registerDeployedAddress(address-uint256-bytes32)[]
 
     // tag::_registerDeployedAddress(Storage-address-bytes32)[]
@@ -123,6 +130,7 @@ library DeployedAddressesRepo {
     {
         _registerDeployedAddress(layoutStruct, deployedAddress_, block.chainid, instanceId_);
     }
+
     // end::_registerDeployedAddress(Storage-address-bytes32)[]
 
     // tag::_registerDeployedAddress(address-bytes32)[]
@@ -134,6 +142,7 @@ library DeployedAddressesRepo {
     function _registerDeployedAddress(address deployedAddress_, bytes32 instanceId_) internal {
         _registerDeployedAddress(_layoutStruct(), deployedAddress_, instanceId_);
     }
+
     // end::_registerDeployedAddress(address-bytes32)[]
 
     // tag::_deployedAddress(Storage-uint256-bytes32)[]
@@ -152,6 +161,7 @@ library DeployedAddressesRepo {
     {
         return layoutStruct.deployedAddressOfInstanceId[chainId][instanceId_];
     }
+
     // end::_deployedAddress(Storage-uint256-bytes32)[]
 
     // tag::_deployedAddress(uint256-bytes32)[]
@@ -164,6 +174,7 @@ library DeployedAddressesRepo {
     function _deployedAddress(uint256 chainId, bytes32 instanceId_) internal view returns (address) {
         return _deployedAddress(_layoutStruct(), chainId, instanceId_);
     }
+
     // end::_deployedAddress(uint256-bytes32)[]
 
     // tag::_deployedAddress(Storage-bytes32)[]
@@ -177,6 +188,7 @@ library DeployedAddressesRepo {
     function _deployedAddress(Storage storage layoutStruct, bytes32 instanceId_) internal view returns (address) {
         return _deployedAddress(layoutStruct, block.chainid, instanceId_);
     }
+
     // end::_deployedAddress(Storage-bytes32)[]
 
     // tag::_deployedAddress(bytes32)[]

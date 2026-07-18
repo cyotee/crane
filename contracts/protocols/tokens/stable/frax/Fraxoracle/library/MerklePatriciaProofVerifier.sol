@@ -110,7 +110,7 @@ library MerklePatriciaProofVerifier {
                     return rlpValue.toBytes();
                 } else {
                     // extension
-                // Sanity check
+                    // Sanity check
                     if (i == stack.length - 1) {
                         // shouldn't be at last level
                         revert();

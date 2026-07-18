@@ -41,6 +41,7 @@ contract CallTargetRegistryManagementFacet is CallTargetRegistryManagementTarget
     function facetName() public pure override returns (string memory name) {
         return type(CallTargetRegistryManagementFacet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -55,6 +56,7 @@ contract CallTargetRegistryManagementFacet is CallTargetRegistryManagementTarget
         interfaces = new bytes4[](1);
         interfaces[0] = type(ICallTargetRegistryManagement).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -70,6 +72,7 @@ contract CallTargetRegistryManagementFacet is CallTargetRegistryManagementTarget
         funcs[0] = ICallTargetRegistryManagement.setDefaultCallTargetForID.selector;
         funcs[1] = ICallTargetRegistryManagement.setCallTargetForIDForCaller.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]

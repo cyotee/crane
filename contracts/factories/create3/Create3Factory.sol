@@ -140,6 +140,7 @@ contract Create3Factory is MinimalDiamondCallBackProxyResolution, Create3Factory
     constructor(address owner_) {
         MultiStepOwnableRepo._initialize(owner_, 3 days);
     }
+
     // end::constructor(address)[]
 
     // tag::diamondPackageFactory()[]
@@ -150,6 +151,7 @@ contract Create3Factory is MinimalDiamondCallBackProxyResolution, Create3Factory
     function diamondPackageFactory() external view returns (IDiamondPackageCallBackFactory factory) {
         return DiamondPackageFactoryAwareRepo._diamondPackageFactory();
     }
+
     // end::diamondPackageFactory()[]
 
     // tag::create3(bytes,bytes32)[]
@@ -163,6 +165,7 @@ contract Create3Factory is MinimalDiamondCallBackProxyResolution, Create3Factory
     function create3(bytes memory initCode, bytes32 salt) external onlyOwnerOrOperator returns (address proxy) {
         return _create3(initCode, salt);
     }
+
     // end::create3(bytes,bytes32)[]
 
     // tag::_create3(bytes,bytes32)[]
@@ -178,6 +181,7 @@ contract Create3Factory is MinimalDiamondCallBackProxyResolution, Create3Factory
         }
         return Creation.create3(initCode, salt);
     }
+
     // end::_create3(bytes,bytes32)[]
 
     // tag::_create3WithArgs(bytes,bytes,bytes32)[]
@@ -192,6 +196,7 @@ contract Create3Factory is MinimalDiamondCallBackProxyResolution, Create3Factory
     {
         return Creation.create3WithArgs(initCode, initData_, salt);
     }
+
     // end::_create3WithArgs(bytes,bytes,bytes32)[]
 
     // tag::_deployFacet(bytes,bytes,bytes32)[]
@@ -205,6 +210,7 @@ contract Create3Factory is MinimalDiamondCallBackProxyResolution, Create3Factory
         _registerFacet(facet);
         return facet;
     }
+
     // end::_deployFacet(bytes,bytes,bytes32)[]
 
     // tag::_deployFacet(bytes,bytes32)[]
@@ -217,6 +223,7 @@ contract Create3Factory is MinimalDiamondCallBackProxyResolution, Create3Factory
         _registerFacet(facet);
         return facet;
     }
+
     // end::_deployFacet(bytes,bytes32)[]
 
     // tag::_deployPackage(bytes,bytes,bytes32)[]
@@ -233,6 +240,7 @@ contract Create3Factory is MinimalDiamondCallBackProxyResolution, Create3Factory
         _registerPackage(package);
         return package;
     }
+
     // end::_deployPackage(bytes,bytes,bytes32)[]
 
     // tag::_deployPackage(bytes,bytes32)[]
@@ -245,6 +253,7 @@ contract Create3Factory is MinimalDiamondCallBackProxyResolution, Create3Factory
         _registerPackage(package);
         return package;
     }
+
     // end::_deployPackage(bytes,bytes32)[]
 
     // tag::_registerFacet(IFacet)[]
@@ -254,6 +263,7 @@ contract Create3Factory is MinimalDiamondCallBackProxyResolution, Create3Factory
         (string memory name, bytes4[] memory interfaces, bytes4[] memory functions) = facet.facetMetadata();
         _registerFacet(facet, name, interfaces, functions);
     }
+
     // end::_registerFacet(IFacet)[]
 
     // tag::_registerFacet(IFacet,string,bytes4[],bytes4[])[]
@@ -267,6 +277,7 @@ contract Create3Factory is MinimalDiamondCallBackProxyResolution, Create3Factory
     {
         FacetRegistryRepo._registerFacet(facet, name, interfaces, functions);
     }
+
     // end::_registerFacet(IFacet,string,bytes4[],bytes4[])[]
 
     // tag::_registerPackage(IDiamondFactoryPackage)[]
@@ -276,6 +287,7 @@ contract Create3Factory is MinimalDiamondCallBackProxyResolution, Create3Factory
         (string memory name, bytes4[] memory interfaces, address[] memory facets) = package.packageMetadata();
         _registerPackage(package, name, interfaces, facets);
     }
+
     // end::_registerPackage(IDiamondFactoryPackage)[]
 
     // tag::_registerPackage(IDiamondFactoryPackage,string,bytes4[],address[])[]

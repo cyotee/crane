@@ -24,6 +24,7 @@ struct StringComparatorRequest {
     string[] actual;
     ErrorMsg errorMsg;
 }
+
 // end::StringComparatorRequest[]
 
 // tag::StringSetComparatorLayout[]
@@ -39,6 +40,7 @@ struct StringSetComparatorLayout {
     StringSet tempExpected;
     StringSet actual;
 }
+
 // end::StringSetComparatorLayout[]
 
 // tag::StringSetComparatorRepo[]
@@ -69,6 +71,7 @@ library StringSetComparatorRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_stringSetCompare(bytes32)[]
@@ -81,6 +84,7 @@ library StringSetComparatorRepo {
     function _stringSetCompare(bytes32 actualHash) internal pure returns (StringSetComparatorLayout storage) {
         return _layoutStruct((actualHash ^ STORAGE_RANGE_OFFSET));
     }
+
     // end::_stringSetCompare(bytes32)[]
 
     // tag::_recExpected(address-bytes32-string)[]
@@ -94,6 +98,7 @@ library StringSetComparatorRepo {
     function _recExpected(address subject, bytes32 func, string memory expected) internal {
         _stringSetCompare(subject._toBytes32()).recordedExpected[subject][func]._add(expected);
     }
+
     // end::_recExpected(address-bytes32-string)[]
 
     // tag::_recExpected(address-bytes32-string[])[]
@@ -107,6 +112,7 @@ library StringSetComparatorRepo {
     function _recExpected(address subject, bytes32 func, string[] memory expected) internal {
         _stringSetCompare(subject._toBytes32()).recordedExpected[subject][func]._add(expected);
     }
+
     // end::_recExpected(address-bytes32-string[])[]
 
     // tag::_recedExpected(address-bytes32)[]
@@ -120,6 +126,7 @@ library StringSetComparatorRepo {
     function _recedExpected(address subject, bytes32 func) internal view returns (StringSet storage) {
         return _stringSetCompare(subject._toBytes32()).recordedExpected[subject][func];
     }
+
     // end::_recedExpected(address-bytes32)[]
 
     // tag::_tempExpected(bytes32)[]
@@ -132,6 +139,7 @@ library StringSetComparatorRepo {
     function _tempExpected(bytes32 actualHash) internal view returns (StringSet storage) {
         return _stringSetCompare(actualHash).tempExpected;
     }
+
     // end::_tempExpected(bytes32)[]
 
     // tag::_actual(bytes32)[]
@@ -146,6 +154,7 @@ library StringSetComparatorRepo {
     }
     // end::_actual(bytes32)[]
 }
+
 // end::StringSetComparatorRepo[]
 
 // tag::StringSetComparator[]
@@ -197,6 +206,7 @@ library StringSetComparator {
             })
         );
     }
+
     // end::_compare(string[]-string[]-string-string)[]
 
     // tag::_logCompare(StringComparatorRequest)[]
@@ -211,6 +221,7 @@ library StringSetComparator {
         SetComparatorResults memory result = _compare(request.expected, request.actual);
         matches = SetComparatorLogger._logResult(result, request.errorMsg);
     }
+
     // end::_logCompare(StringComparatorRequest)[]
 
     // tag::_compare(string[]-string[])[]

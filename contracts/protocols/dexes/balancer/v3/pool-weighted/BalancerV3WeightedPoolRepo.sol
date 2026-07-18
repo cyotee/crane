@@ -23,7 +23,9 @@ library BalancerV3WeightedPoolRepo {
      *      ERC20Repo (eip.erc.20), ERC2535Repo (eip.erc.2535), MultiStepOwnableRepo and other gold-standard Repos
      *      for collision-resistant deterministic storage binding.
      */
-    bytes32 internal constant STORAGE_SLOT = bytes32(uint256(keccak256(abi.encode("protocols.dexes.balancer.v3.pool.weighted"))) - 1);
+    bytes32 internal constant STORAGE_SLOT =
+        bytes32(uint256(keccak256(abi.encode("protocols.dexes.balancer.v3.pool.weighted"))) - 1);
+
     // end::STORAGE_SLOT[]
 
     // tag::Storage[]
@@ -56,6 +58,7 @@ library BalancerV3WeightedPoolRepo {
             layoutStruct.slot := slot_
         }
     }
+
     // end::_layoutStruct(bytes32)[]
 
     // tag::_layoutStruct()[]
@@ -66,6 +69,7 @@ library BalancerV3WeightedPoolRepo {
     function _layoutStruct() internal pure returns (Storage storage layoutStruct) {
         return _layoutStruct(STORAGE_SLOT);
     }
+
     // end::_layoutStruct()[]
 
     // tag::_initialize(Storage-uint256[]-memory)[]
@@ -93,6 +97,7 @@ library BalancerV3WeightedPoolRepo {
 
         layoutStruct.normalizedWeights = normalizedWeights_;
     }
+
     // end::_initialize(Storage-uint256[]-memory)[]
 
     // tag::_initialize(uint256[]-memory)[]
@@ -106,6 +111,7 @@ library BalancerV3WeightedPoolRepo {
     function _initialize(uint256[] memory normalizedWeights_) internal {
         _initialize(_layoutStruct(), normalizedWeights_);
     }
+
     // end::_initialize(uint256[]-memory)[]
 
     // tag::_getNormalizedWeights(Storage)[]
@@ -118,6 +124,7 @@ library BalancerV3WeightedPoolRepo {
     function _getNormalizedWeights(Storage storage layoutStruct) internal view returns (uint256[] memory weights) {
         weights = layoutStruct.normalizedWeights;
     }
+
     // end::_getNormalizedWeights(Storage)[]
 
     // tag::_getNormalizedWeights()[]
@@ -128,6 +135,7 @@ library BalancerV3WeightedPoolRepo {
     function _getNormalizedWeights() internal view returns (uint256[] memory weights) {
         return _getNormalizedWeights(_layoutStruct());
     }
+
     // end::_getNormalizedWeights()[]
 
     // tag::_getNormalizedWeight(Storage-uint256)[]
@@ -145,6 +153,7 @@ library BalancerV3WeightedPoolRepo {
     {
         return layoutStruct.normalizedWeights[tokenIndex];
     }
+
     // end::_getNormalizedWeight(Storage-uint256)[]
 
     // tag::_getNormalizedWeight(uint256)[]
@@ -156,6 +165,7 @@ library BalancerV3WeightedPoolRepo {
     function _getNormalizedWeight(uint256 tokenIndex) internal view returns (uint256 weight) {
         return _getNormalizedWeight(_layoutStruct(), tokenIndex);
     }
+
     // end::_getNormalizedWeight(uint256)[]
 
     // tag::_getNumTokens(Storage)[]
@@ -168,6 +178,7 @@ library BalancerV3WeightedPoolRepo {
     function _getNumTokens(Storage storage layoutStruct) internal view returns (uint256 count) {
         return layoutStruct.normalizedWeights.length;
     }
+
     // end::_getNumTokens(Storage)[]
 
     // tag::_getNumTokens()[]

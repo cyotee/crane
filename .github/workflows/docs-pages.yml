@@ -6,6 +6,8 @@ on:
     paths:
       - "docs/**"
       - "book.toml"
+      - "theme/**"
+      - "scripts/build_docs_pages.sh"
       - ".github/workflows/docs-pages.yml"
   workflow_dispatch:
 

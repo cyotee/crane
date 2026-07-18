@@ -25,6 +25,7 @@ interface IDiamond {
         Replace,
         Remove
     }
+
     // end::FacetCutAction[]
 
     // tag::FacetCut[]

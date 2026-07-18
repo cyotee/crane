@@ -36,6 +36,7 @@ contract SuperChainBridgeTokenRegistryFacet is SuperChainBridgeTokenRegistryTarg
     function facetName() public view virtual override returns (string memory name) {
         return type(SuperChainBridgeTokenRegistryFacet).name;
     }
+
     // end::facetName()[]
 
     // tag::facetInterfaces()[]
@@ -50,6 +51,7 @@ contract SuperChainBridgeTokenRegistryFacet is SuperChainBridgeTokenRegistryTarg
         interfaces = new bytes4[](1);
         interfaces[0] = type(ISuperChainBridgeTokenRegistry).interfaceId;
     }
+
     // end::facetInterfaces()[]
 
     // tag::facetFuncs()[]
@@ -68,6 +70,7 @@ contract SuperChainBridgeTokenRegistryFacet is SuperChainBridgeTokenRegistryTarg
         funcs[3] = ISuperChainBridgeTokenRegistry.setRemoteToken.selector;
         funcs[4] = ISuperChainBridgeTokenRegistry.setRemoteTokenMinGasLimit.selector;
     }
+
     // end::facetFuncs()[]
 
     // tag::facetMetadata()[]
