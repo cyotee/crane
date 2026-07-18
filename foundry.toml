@@ -100,7 +100,12 @@ depth = 5
 # corpus_gzip = true
 
 [profile.default.fmt]
-skip = ["lib/"]
+# Vendored / protocol-port trees: do not require forge-fmt churn across huge imports.
+# lib/ is git submodules; contracts/external is vendored third-party code.
+skip = [
+    "lib/**",
+    "contracts/external/**",
+]
 
 [lint]
 exclude_lints = [

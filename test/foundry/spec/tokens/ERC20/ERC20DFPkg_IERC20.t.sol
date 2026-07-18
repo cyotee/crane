@@ -242,8 +242,7 @@ contract ERC20DFPkg_IERC20_Test is TestBase_ERC20 {
         bool supported = false;
         try IERC165(address(diamondFactory)).supportsInterface(0x949da331) returns (bool b) {
             supported = b;
-        }
-            catch {}
+        } catch {}
         assertTrue(supported || true, "IDiamondPackageCallBackFactory interfaceId central ref");
     }
     // end::test_ERC20DFPkg_IDiamondPackageCallBackFactory_interfaceId()[]

@@ -23,6 +23,9 @@ jobs:
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
+        with:
+          # Pin to match local stable formatting (avoids fmt drift vs floating nightlies).
+          version: "v1.5.1"
 
       - name: Show Forge version
         run: forge --version

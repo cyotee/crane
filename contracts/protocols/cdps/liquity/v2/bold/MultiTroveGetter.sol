@@ -69,8 +69,7 @@ contract MultiTroveGetter is IMultiTroveGetter {
         _out.accruedBatchManagementFee = troveData.accruedBatchManagementFee;
         _out.lastInterestRateAdjTime = troveData.lastInterestRateAdjTime;
 
-        (
-            , // debt, // coll
+        (, // debt, // coll
             _out.stake, // stake, // status, // arrayIndex
             _out.lastDebtUpdateTime, // lastDebtUpdateTime, // lastInterestRateAdjTime, // annualInterestRate
             _out.interestBatchManager,
