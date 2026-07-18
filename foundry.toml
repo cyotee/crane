@@ -107,6 +107,21 @@ skip = [
     "contracts/external/**",
 ]
 
+# GitHub Actions free runners OOM when compiling the entire monorepo (~5k units).
+# CI profile builds/tests framework core only; full protocol ports are local/nightly.
+[profile.ci]
+inherits = "default"
+sizes = false
+skip = [
+    "lib/**",
+    "contracts/external/**",
+    "contracts/protocols/**",
+    "test/foundry/spec/protocols/**",
+    "test/foundry/fork/**",
+    # Upstream formal verification / certora trees under Aave ports (if not covered above)
+    "contracts/protocols/lending/**/certora/**",
+]
+
 [lint]
 exclude_lints = [
     "erc20-unchecked-transfer",

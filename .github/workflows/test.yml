@@ -9,8 +9,8 @@ on:
   workflow_dispatch:
 
 env:
-  FOUNDRY_PROFILE: default
-  # Prefer sequential solc to reduce peak RAM on 7GB GHA runners.
+  # Core framework only (see [profile.ci] in foundry.toml) — full monorepo OOMs GHA.
+  FOUNDRY_PROFILE: ci
   FOUNDRY_THREADS: "1"
 
 jobs:
