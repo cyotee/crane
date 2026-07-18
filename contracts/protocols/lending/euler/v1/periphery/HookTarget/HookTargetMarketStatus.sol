@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import {DataStreamsVerifier} from "../Chainlink/DatastreamsVerifier.sol";
+import {DataStreamsVerifier} from "../Chainlink/DataStreamsVerifier.sol";
 import {IHookTarget} from "@crane/contracts/protocols/lending/euler/v1/vault/interfaces/IHookTarget.sol";
 
 /// @title HookTargetMarketStatus

@@ -69,12 +69,9 @@ contract MultiTroveGetter is IMultiTroveGetter {
         _out.accruedBatchManagementFee = troveData.accruedBatchManagementFee;
         _out.lastInterestRateAdjTime = troveData.lastInterestRateAdjTime;
 
-        (, // debt, // coll
-            _out.stake, // stake, // status, // arrayIndex
-            _out.lastDebtUpdateTime, // lastDebtUpdateTime, // lastInterestRateAdjTime, // annualInterestRate
-            _out.interestBatchManager,
-            _out.batchDebtShares
-        ) = _troveManager.Troves(_id);
+        // Troves() returns 10 fields; empty slots must stay separate (forge fmt may collapse if commented poorly).
+        (,, _out.stake,,, _out.lastDebtUpdateTime,,, _out.interestBatchManager, _out.batchDebtShares) =
+            _troveManager.Troves(_id);
 
         (_out.snapshotETH, _out.snapshotBoldDebt) = _troveManager.rewardSnapshots(_id);
     }
