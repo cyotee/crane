@@ -9,12 +9,14 @@ on:
   workflow_dispatch:
 
 env:
-  FOUNDRY_PROFILE: ci
+  FOUNDRY_PROFILE: default
 
 jobs:
   check:
     name: Foundry project
     runs-on: ubuntu-latest
+    # Full monorepo compile is large; avoid SIGTERM ~15m kills on cold builds.
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v5
         with:
@@ -27,6 +29,17 @@ jobs:
           # Pin to match local stable formatting (avoids fmt drift vs floating nightlies).
           version: "v1.5.1"
 
+      - name: Cache Foundry artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.svm
+            cache_forge
+            out
+          key: foundry-${{ runner.os }}-1.5.1-${{ hashFiles('foundry.toml', 'foundry.lock', 'remappings.txt') }}
+          restore-keys: |
+            foundry-${{ runner.os }}-1.5.1-
+
       - name: Show Forge version
         run: forge --version
 
@@ -34,7 +47,8 @@ jobs:
         run: forge fmt --check
 
       - name: Run Forge build
-        run: forge build --sizes
+        # Omit --sizes in CI: it adds wall-clock and memory on 5k+ unit builds.
+        run: forge build
 
       - name: Run Forge tests
         run: forge test -vvv
