@@ -88,11 +88,13 @@ For BattleChain deploys use the parallel `InitBcService.initEnvBc(...)`.
 
 ## Documentation & Skills
 
+- **Published docs (GitHub Pages)**: https://cyotee.github.io/crane/
+- **Source (Markdown)**: [docs/](docs/) · nav: [docs/SUMMARY.md](docs/SUMMARY.md)
+- **Local preview**: `bash scripts/build_docs_pages.sh && mdbook serve --open` (after `mdbook` is installed)
 - **Getting Started (incl. For AI Agents)**: [docs/getting-started.md](docs/getting-started.md)
 - **Building Custom Modules**: [docs/concepts/building-with-crane.md](docs/concepts/building-with-crane.md)
 - NatSpec + include-tag standard: [AGENTS.md](AGENTS.md) and [docs/development/natspec.md](docs/development/natspec.md)
 - **AI Agent Skills**: `.claude/skills/` (crane-* core + 50+ protocol deep-dives for Aave, Balancer, Uniswap, Aerodrome/Slipstream, Euler, etc.). See [docs/reference/agent-skills.md](docs/reference/agent-skills.md).
-- GitBook docs: `docs/SUMMARY.md` + organized guides under concepts/, deployment/, protocols/.
 
 ## Build & Test Commands
 

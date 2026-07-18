@@ -1,0 +1,23 @@
+[book]
+title = "Crane"
+authors = ["Crane contributors"]
+description = "Diamond-first (ERC2535) Solidity development framework"
+language = "en"
+# Populated by scripts/build_docs_pages.sh (public docs only; no archive/)
+src = ".mdbook-src"
+
+[build]
+build-dir = "book"
+create-missing = false
+
+[output.html]
+default-theme = "navy"
+preferred-dark-theme = "navy"
+git-repository-url = "https://github.com/cyotee/crane"
+git-repository-icon = "fa-github"
+edit-url-template = "https://github.com/cyotee/crane/edit/main/{path}"
+site-url = "/crane/"
+no-section-label = true
+
+[output.html.search]
+enable = true

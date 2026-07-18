@@ -73,3 +73,7 @@ PLUGIN_PRD.md
 .claude/homunculus/observations.jsonl
 out/
 cache_forge/
+
+# mdBook / GitHub Pages build artifacts
+book/
+.mdbook-src/
