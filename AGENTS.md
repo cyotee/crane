@@ -10,9 +10,11 @@ If PROGRESS.md exists in the project root, read it for cross-session context bef
   - `crane-deployment` for CREATE3, DFPkgs, FactoryService, and Diamond proxy instantiation.
   - `crane-architecture` for Facet-Target-Repo, DFPkg structure, storage slots, etc.
   - `crane-testing` for `CraneTest`, TestBase inheritance, factory bootstrap, Behavior libraries, handlers, and **production-first testing**.
+  - `crane-adversarial-testing` for abuse/attack catalogs, reentrancy harnesses, donation/manipulation suites, and production-first adversarial Foundry tests (vaults, diamonds, ERC-4626-like products).
 - See `docs/` (especially `docs/deployment/` and `docs/development/testing.md`) for additional reference material.
 - See `docs/CODEBASE_MAP.md` for architecture overview.
 - Generic Foundry primers (`forge-testing`) are subordinate to `crane-testing` for protocol and Diamond work.
+- Adversarial / security abuse tests: use `crane-adversarial-testing` (not happy-path-only coverage).
 
 Consumers of Crane may layer additional rules (e.g. registries for certain packages). Those details belong in the consumer's documentation.
 
