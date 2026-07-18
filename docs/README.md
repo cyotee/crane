@@ -40,7 +40,8 @@ flowchart TB
         F3 --> P4
     end
 
-    classDef facet fill:#1b5e20,stroke:#81c784,color:#e8f5e9,stroke-width:2px
+    %% Dark-theme safe: deep slate fill + light text (never bright green + white)
+    classDef facet fill:#2c3e50,stroke:#80cbc4,color:#ecf0f1,stroke-width:2px
 ```
 
 On a given chain, deployment cost for facet bytecode is paid once; later proxies mainly pay for storage init and minimal proxy deploy. Cross-chain, you pay to deploy the facet (and factories/packages) on each chain you support—CREATE3 keeps addresses predictable, not shared across chains.

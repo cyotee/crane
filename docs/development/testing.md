@@ -99,7 +99,7 @@ flowchart TB
     Camelot --> Pools["TestBase_CamelotV2_Pools"]
     Pools --> Your["YourIntegrationTest"]
 
-    classDef base fill:#0d47a1,stroke:#90caf9,color:#e3f2fd
+    classDef base fill:#2c3e50,stroke:#80cbc4,color:#ecf0f1
     class CraneTest,Weth,Camelot,Pools base
 ```
 

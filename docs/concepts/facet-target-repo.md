@@ -21,8 +21,8 @@ flowchart TB
     Target --> Repo["Repo Library<br/>(storage access + guards)"]
     Repo -->|assembly slot binding| Storage
 
-    classDef deployed fill:#1b5e20,stroke:#81c784,color:#e8f5e9
-    classDef proxy fill:#0d47a1,stroke:#90caf9,color:#e3f2fd
+    classDef deployed fill:#2c3e50,stroke:#80cbc4,color:#ecf0f1
+    classDef proxy fill:#34495e,stroke:#90a4ae,color:#ecf0f1
     class Facet deployed
     class Proxy proxy
 ```

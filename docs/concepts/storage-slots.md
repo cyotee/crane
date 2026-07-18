@@ -107,7 +107,7 @@ flowchart LR
     ProxyStorage -->|namespaced| Registries["Registries (facets/packages)"]
     ProxyStorage -->|namespaced| FeatureB["Protocol state (AwareRepos)"]
 
-    classDef repo fill:#1b5e20,stroke:#81c784,color:#e8f5e9
+    classDef repo fill:#2c3e50,stroke:#80cbc4,color:#ecf0f1
     class Repo repo
 ```
 
