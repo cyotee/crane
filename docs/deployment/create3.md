@@ -15,7 +15,7 @@ flowchart TB
     DPCF -->|uses| Packages
     DPCF -->|deploys many| Proxies["Diamond Proxies<br/>(one per instance)"]
 
-    classDef core fill:#e3f2fd,stroke:#1565c0
+    classDef core fill:#0d47a1,stroke:#90caf9,color:#e3f2fd
     class C3,DPCF core
 ```
 

@@ -38,7 +38,7 @@ flowchart LR
     Facet --> P3
     Facet --> P4
 
-    classDef facet fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    classDef facet fill:#1b5e20,stroke:#81c784,color:#e8f5e9,stroke-width:2px
 ```
 
 Deployment cost for logic and bytecode is incurred once. Subsequent proxies pay only for storage initialization and minimal proxy deployment.
