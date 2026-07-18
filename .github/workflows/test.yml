@@ -10,12 +10,13 @@ on:
 
 env:
   FOUNDRY_PROFILE: default
+  # Prefer sequential solc to reduce peak RAM on 7GB GHA runners.
+  FOUNDRY_THREADS: "1"
 
 jobs:
   check:
     name: Foundry project
     runs-on: ubuntu-latest
-    # Full monorepo compile is large; avoid SIGTERM ~15m kills on cold builds.
     timeout-minutes: 180
     steps:
       - uses: actions/checkout@v5
@@ -23,10 +24,17 @@ jobs:
           persist-credentials: false
           submodules: recursive
 
+      - name: Enable swap (compile is memory-heavy)
+        run: |
+          sudo fallocate -l 8G /swapfile || sudo dd if=/dev/zero of=/swapfile bs=1M count=8192
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
+          free -h
+
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
-          # Pin to match local stable formatting (avoids fmt drift vs floating nightlies).
           version: "v1.5.1"
 
       - name: Cache Foundry artifacts
@@ -47,8 +55,8 @@ jobs:
         run: forge fmt --check
 
       - name: Run Forge build
-        # Omit --sizes in CI: it adds wall-clock and memory on 5k+ unit builds.
-        run: forge build
+        # -j 1 keeps peak memory lower; omit --sizes (extra work).
+        run: forge build -j 1
 
       - name: Run Forge tests
-        run: forge test -vvv
+        run: forge test -j 1 -vvv
