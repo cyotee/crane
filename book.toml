@@ -18,6 +18,8 @@ git-repository-icon = "fa-github"
 edit-url-template = "https://github.com/cyotee/crane/edit/main/{path}"
 site-url = "/crane/"
 no-section-label = true
+# Client-side Mermaid for ```mermaid fences (landing page + architecture diagrams)
+additional-js = ["theme/mermaid-init.js"]
 
 [output.html.search]
 enable = true
