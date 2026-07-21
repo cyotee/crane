@@ -77,3 +77,4 @@ cache_forge/
 # mdBook / GitHub Pages build artifacts
 book/
 .mdbook-src/
+out_staking_eth/
