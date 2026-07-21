@@ -67,7 +67,7 @@ contract RocketPoolServiceFork is TestBase_EthereumStakingFork {
         if (maxDep == 0) {
             // Do not soft-pass the suite: assert preconditions that prove we're on live RP,
             // then require domain suite for deposit (documented in test name + forge domain log).
-            assertGt(rateProvider.getRate(), 0, "rate>0; deposit capacity 0 — domain suite is deposit gate");
+            assertGt(rateProvider.getRate(), 0, "rate>0; capacity 0 - domain suite is deposit gate");
             // Force explicit acknowledgment: capacity-empty is allowed only with domain proof in CI
             // (RocketTokenRETH_DomainFullTest.test_Domain_DepositMintsRETH_ViaOnlyLatestContract).
             return;
