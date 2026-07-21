@@ -1,0 +1,187 @@
+// SPDX-License-Identifier: BUSL-1.1
+pragma solidity ^0.8.27;
+
+import "forge-std/Test.sol";
+
+import "src/contracts/interfaces/IDelegationManager.sol";
+import "src/contracts/interfaces/IStrategyManager.sol";
+import "src/contracts/libraries/SlashingLib.sol";
+
+contract DelegationManagerMock is Test {
+    receive() external payable {}
+    fallback() external payable {}
+
+    mapping(address => bool) public isOperator;
+    mapping(address => address) public delegatedTo;
+    mapping(address => mapping(IStrategy => uint)) public operatorShares;
+
+    uint32 internal _minWithdrawalDelayBlocks;
+
+    struct RegisterAsOperatorCall {
+        address operator;
+        address delegationApprover;
+        uint32 allocationDelay;
+        string metadataURI;
+    }
+
+    RegisterAsOperatorCall internal _lastRegisterAsOperatorCall;
+    uint public registerAsOperatorCallCount;
+
+    struct ModifyOperatorDetailsCall {
+        address operator;
+        address newDelegationApprover;
+    }
+
+    struct UpdateOperatorMetadataURICall {
+        address operator;
+        string metadataURI;
+    }
+
+    ModifyOperatorDetailsCall internal _lastModifyOperatorDetailsCall;
+    UpdateOperatorMetadataURICall internal _lastUpdateOperatorMetadataURICall;
+    uint public modifyOperatorDetailsCallCount;
+    uint public updateOperatorMetadataURICallCount;
+
+    function getDelegatableShares(address staker) external view returns (IStrategy[] memory, uint[] memory) {}
+
+    function setMinWithdrawalDelayBlocks(uint32 newMinWithdrawalDelayBlocks) external {
+        _minWithdrawalDelayBlocks = newMinWithdrawalDelayBlocks;
+    }
+
+    function minWithdrawalDelayBlocks() external view returns (uint32) {
+        return _minWithdrawalDelayBlocks;
+    }
+
+    function setStrategyWithdrawalDelayBlocks(IStrategy[] calldata strategies, uint[] calldata withdrawalDelayBlocks) external {}
+
+    function setIsOperator(address operator, bool _isOperatorReturnValue) external {
+        isOperator[operator] = _isOperatorReturnValue;
+    }
+
+    function slashOperatorShares(
+        address operator,
+        OperatorSet memory,
+        /// operatorSet
+        uint, /*slashId*/
+        IStrategy strategy,
+        uint64 prevMaxMagnitude,
+        uint64 newMaxMagnitude
+    ) external returns (uint totalDepositSharesToBurn) {
+        uint amountSlashed = SlashingLib.calcSlashedAmount({
+            operatorShares: operatorShares[operator][strategy],
+            prevMaxMagnitude: prevMaxMagnitude,
+            newMaxMagnitude: newMaxMagnitude
+        });
+
+        operatorShares[operator][strategy] -= amountSlashed;
+
+        return amountSlashed;
+    }
+
+    /// @notice returns the total number of shares in `strategy` that are delegated to `operator`.
+    function setOperatorShares(address operator, IStrategy strategy, uint shares) external {
+        operatorShares[operator][strategy] = shares;
+    }
+
+    /// @notice returns the total number of shares in `strategy` that are delegated to `operator`.
+    function setOperatorsShares(address operator, IStrategy[] memory strategies, uint shares) external {
+        for (uint i = 0; i < strategies.length; i++) {
+            operatorShares[operator][strategies[i]] = shares;
+        }
+    }
+
+    function delegateTo(
+        address operator,
+        ISignatureUtilsMixinTypes.SignatureWithExpiry memory, /*approverSignatureAndExpiry*/
+        bytes32 /*approverSalt*/
+    )
+        external
+    {
+        delegatedTo[msg.sender] = operator;
+    }
+
+    function registerAsOperator(address delegationApprover, uint32 allocationDelay, string calldata metadataURI) external {
+        registerAsOperatorCallCount++;
+        isOperator[msg.sender] = true;
+        _lastRegisterAsOperatorCall = RegisterAsOperatorCall({
+            operator: msg.sender,
+            delegationApprover: delegationApprover,
+            allocationDelay: allocationDelay,
+            metadataURI: metadataURI
+        });
+    }
+
+    function modifyOperatorDetails(address operator, address newDelegationApprover) external {
+        modifyOperatorDetailsCallCount++;
+        _lastModifyOperatorDetailsCall = ModifyOperatorDetailsCall({operator: operator, newDelegationApprover: newDelegationApprover});
+    }
+
+    function updateOperatorMetadataURI(address operator, string calldata metadataURI) external {
+        updateOperatorMetadataURICallCount++;
+        _lastUpdateOperatorMetadataURICall = UpdateOperatorMetadataURICall({operator: operator, metadataURI: metadataURI});
+    }
+
+    function lastRegisterAsOperatorCall() external view returns (RegisterAsOperatorCall memory) {
+        return _lastRegisterAsOperatorCall;
+    }
+
+    function lastModifyOperatorDetailsCall() external view returns (ModifyOperatorDetailsCall memory) {
+        return _lastModifyOperatorDetailsCall;
+    }
+
+    function lastUpdateOperatorMetadataURICall() external view returns (UpdateOperatorMetadataURICall memory) {
+        return _lastUpdateOperatorMetadataURICall;
+    }
+
+    function undelegate(address staker) external returns (bytes32[] memory withdrawalRoot) {
+        delegatedTo[staker] = address(0);
+        return withdrawalRoot;
+    }
+
+    function getOperatorShares(address operator, IStrategy[] memory strategies) external view returns (uint[] memory) {
+        uint[] memory shares = new uint[](strategies.length);
+        for (uint i = 0; i < strategies.length; i++) {
+            shares[i] = operatorShares[operator][strategies[i]];
+        }
+        return shares;
+    }
+
+    function getOperatorsShares(address[] memory operators, IStrategy[] memory strategies) external view returns (uint[][] memory) {
+        uint[][] memory operatorSharesArray = new uint[][](operators.length);
+        for (uint i = 0; i < operators.length; i++) {
+            operatorSharesArray[i] = new uint[](strategies.length);
+            for (uint j = 0; j < strategies.length; j++) {
+                operatorSharesArray[i][j] = operatorShares[operators[i]][strategies[j]];
+            }
+        }
+        return operatorSharesArray;
+    }
+
+    function operatorDetails(address operator) external pure returns (IDelegationManagerTypes.OperatorDetails memory) {
+        IDelegationManagerTypes.OperatorDetails memory returnValue = IDelegationManagerTypes.OperatorDetails({
+            __deprecated_earningsReceiver: operator,
+            delegationApprover: operator,
+            __deprecated_stakerOptOutWindowBlocks: 0
+        });
+        return returnValue;
+    }
+
+    function isDelegated(address staker) external view returns (bool) {
+        return (delegatedTo[staker] != address(0));
+    }
+
+    // onlyDelegationManager functions in StrategyManager
+    function addShares(IStrategyManager strategyManager, address staker, IStrategy strategy, uint shares) external {
+        strategyManager.addShares(staker, strategy, shares);
+    }
+
+    function removeDepositShares(IStrategyManager strategyManager, address staker, IStrategy strategy, uint shares) external {
+        strategyManager.removeDepositShares(staker, strategy, shares);
+    }
+
+    function withdrawSharesAsTokens(IStrategyManager strategyManager, address recipient, IStrategy strategy, uint shares, IERC20 token)
+        external
+    {
+        strategyManager.withdrawSharesAsTokens(recipient, strategy, token, shares);
+    }
+}

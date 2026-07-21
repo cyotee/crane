@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import "@crane/contracts/external/openzeppelin-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/token/ERC20/IERC20Upgradeable.sol";
 import "@crane/contracts/external/etherfi/core/interfaces/ILiquidityPool.sol";
 import "@crane/contracts/external/etherfi/core/interfaces/IeETH.sol";
 

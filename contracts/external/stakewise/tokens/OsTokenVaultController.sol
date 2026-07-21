@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.22;
 
-import {Ownable2Step, Ownable} from "@crane/contracts/external/openzeppelin-contracts/access/Ownable2Step.sol";
-import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts/utils/math/SafeCast.sol";
-import {Math} from "@crane/contracts/external/openzeppelin-contracts/utils/math/Math.sol";
+import {Ownable2Step, Ownable} from "@crane/contracts/external/openzeppelin-contracts-v5/access/Ownable2Step.sol";
+import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts-v5/utils/math/SafeCast.sol";
+import {Math} from "@crane/contracts/external/openzeppelin-contracts-v5/utils/math/Math.sol";
 import {Errors} from "../libraries/Errors.sol";
 import {IVaultsRegistry} from "../interfaces/IVaultsRegistry.sol";
 import {IOsToken} from "../interfaces/IOsToken.sol";

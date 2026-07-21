@@ -16,3 +16,6 @@
 
 ## Deferred
 Full EthVault module tree, private vault operators, Gnosis vaults.
+
+## D2-FULL vendor
+Full upstream Solidity tree under `contracts/external/` — see `VENDOR.md` there. Prior mint/wrap slice superseded.

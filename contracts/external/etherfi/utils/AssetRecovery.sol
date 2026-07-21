@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {IERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/IERC20.sol";
-import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
-import {IERC721} from "@crane/contracts/interfaces/IERC721.sol";
-import {ReentrancyGuardTransient} from "@crane/contracts/external/solady/utils/ReentrancyGuardTransient.sol";
+import "@crane/contracts/external/openzeppelin-contracts-v4/token/ERC20/utils/SafeERC20.sol";
+import "@crane/contracts/external/openzeppelin-contracts-v4/token/ERC721/IERC721.sol";
+import "@crane/contracts/external/solady/utils/ReentrancyGuardTransient.sol";
 
 
 /**

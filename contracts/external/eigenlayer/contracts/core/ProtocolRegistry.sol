@@ -1,0 +1,185 @@
+// SPDX-License-Identifier: BUSL-1.1
+pragma solidity ^0.8.27;
+
+import "@openzeppelin-upgrades/contracts/proxy/utils/Initializable.sol";
+import "@openzeppelin-upgrades/contracts/access/AccessControlEnumerableUpgradeable.sol";
+import "../interfaces/IPausable.sol";
+import "./storage/ProtocolRegistryStorage.sol";
+
+contract ProtocolRegistry is Initializable, AccessControlEnumerableUpgradeable, ProtocolRegistryStorage {
+    using ShortStringsUpgradeable for *;
+    using EnumerableMap for EnumerableMap.UintToAddressMap;
+
+    ///
+    ///                         INITIALIZING FUNCTIONS
+    ///
+    constructor() ProtocolRegistryStorage() {
+        _disableInitializers();
+    }
+
+    /// @inheritdoc IProtocolRegistry
+    function initialize(
+        address initialAdmin,
+        address pauserMultisig
+    ) external initializer {
+        _grantRole(DEFAULT_ADMIN_ROLE, initialAdmin);
+        _grantRole(PAUSER_ROLE, pauserMultisig);
+    }
+
+    ///
+    ///                         INITIALIZING FUNCTIONS
+    ///
+
+    /// @inheritdoc IProtocolRegistry
+    function ship(
+        address[] calldata addresses,
+        DeploymentConfig[] calldata configs,
+        string[] calldata names,
+        string calldata semanticVersion
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        // Validate array lengths match
+        require(addresses.length == configs.length && configs.length == names.length, ArrayLengthMismatch());
+
+        // Update the semantic version.
+        _updateSemanticVersion(semanticVersion);
+        for (uint256 i = 0; i < addresses.length; ++i) {
+            // Validate no zero addresses
+            require(addresses[i] != address(0), InputAddressZero());
+            // Validate no empty names
+            require(bytes(names[i]).length > 0, InputNameEmpty());
+            // Append each provided
+            _appendDeployment(addresses[i], configs[i], names[i]);
+        }
+    }
+
+    /// @inheritdoc IProtocolRegistry
+    function configure(
+        string calldata name,
+        DeploymentConfig calldata config
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        // Verify name is a shipped deployment and get its address (O(1) lookup)
+        (bool exists, address addr) = _deployments.tryGet(_unwrap(name.toShortString()));
+        require(exists, DeploymentNotShipped());
+        // Update the config
+        _deploymentConfigs[addr] = config;
+        // Emit the event.
+        emit DeploymentConfigured(addr, config);
+    }
+
+    /// @inheritdoc IProtocolRegistry
+    /// @dev WARNING: This function will revert if ANY pausable deployment fails to pause.
+    ///      Ensure all deployments marked as pausable correctly implement IPausable.pauseAll().
+    ///      A single misconfigured deployment will block the entire protocol pause.
+    function pauseAll() external onlyRole(PAUSER_ROLE) {
+        uint256 length = totalDeployments();
+        // Iterate over all stored deployments.
+        for (uint256 i = 0; i < length; ++i) {
+            (, address addr) = _deployments.at(i);
+            DeploymentConfig memory config = _deploymentConfigs[addr];
+            // Only attempt to pause deployments marked as pausable.
+            if (config.pausable && !config.deprecated) {
+                IPausable(addr).pauseAll();
+            }
+        }
+    }
+
+    ///
+    ///                             HELPER FUNCTIONS
+    ///
+
+    /// @dev Updates the semantic version of the protocol.
+    function _updateSemanticVersion(
+        string calldata semanticVersion
+    ) internal {
+        string memory previousSemanticVersion = _semanticVersion.toString();
+        _semanticVersion = semanticVersion.toShortString();
+        emit SemanticVersionUpdated(previousSemanticVersion, semanticVersion);
+    }
+
+    /// @dev Appends a deployment.
+    function _appendDeployment(
+        address addr,
+        DeploymentConfig calldata config,
+        string calldata name
+    ) internal {
+        uint256 nameKey = _unwrap(name.toShortString());
+
+        // Clean up old config if name exists with different address
+        (bool exists, address oldAddr) = _deployments.tryGet(nameKey);
+        if (exists && oldAddr != addr) {
+            delete _deploymentConfigs[oldAddr];
+            emit DeploymentConfigDeleted(oldAddr);
+        }
+
+        // Store name => address mapping
+        _deployments.set({key: nameKey, value: addr});
+        // Store deployment config
+        _deploymentConfigs[addr] = config;
+        // Emit the events.
+        emit DeploymentShipped(addr, config);
+    }
+
+    /// @dev Unwraps a ShortString to a uint256.
+    function _unwrap(
+        ShortString shortString
+    ) internal pure returns (uint256) {
+        return uint256(ShortString.unwrap(shortString));
+    }
+
+    ///
+    ///                              VIEW FUNCTIONS
+    ///
+
+    /// @inheritdoc IProtocolRegistry
+    function version() external view virtual returns (string memory) {
+        return _semanticVersion.toString();
+    }
+
+    /// @inheritdoc IProtocolRegistry
+    function majorVersion() external view returns (string memory) {
+        bytes memory v = bytes(_semanticVersion.toString());
+        return string(abi.encodePacked(v[0]));
+    }
+
+    /// @inheritdoc IProtocolRegistry
+    function getAddress(
+        string calldata name
+    ) external view returns (address) {
+        return _deployments.get(_unwrap(name.toShortString()));
+    }
+
+    /// @inheritdoc IProtocolRegistry
+    function getDeployment(
+        string calldata name
+    ) external view returns (address addr, DeploymentConfig memory config) {
+        addr = _deployments.get(_unwrap(name.toShortString()));
+        config = _deploymentConfigs[addr];
+        return (addr, config);
+    }
+
+    /// @inheritdoc IProtocolRegistry
+    function getAllDeployments()
+        external
+        view
+        returns (string[] memory names, address[] memory addresses, DeploymentConfig[] memory configs)
+    {
+        uint256 length = totalDeployments();
+        names = new string[](length);
+        addresses = new address[](length);
+        configs = new DeploymentConfig[](length);
+
+        for (uint256 i = 0; i < length; ++i) {
+            (uint256 nameShortString, address addr) = _deployments.at(i);
+            names[i] = ShortString.wrap(bytes32(nameShortString)).toString();
+            addresses[i] = addr;
+            configs[i] = _deploymentConfigs[addr];
+        }
+
+        return (names, addresses, configs);
+    }
+
+    /// @inheritdoc IProtocolRegistry
+    function totalDeployments() public view returns (uint256) {
+        return _deployments.length();
+    }
+}

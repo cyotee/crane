@@ -16,3 +16,6 @@
 
 ## Surface
 - Interfaces + `EtherFiService` + `WeETHRateProvider`
+
+## D2-FULL vendor
+Full upstream Solidity tree under `contracts/external/` — see `VENDOR.md` there. Prior mint/wrap slice superseded.

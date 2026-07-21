@@ -2,10 +2,10 @@
 
 pragma solidity ^0.8.22;
 
-import {IERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/IERC20.sol";
-import {IERC20Permit} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/IERC20Permit.sol";
-import {IERC20Metadata} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import {IERC5267} from "@crane/contracts/external/openzeppelin-contracts/interfaces/IERC5267.sol";
+import {IERC20} from "@crane/contracts/external/openzeppelin-contracts-v5/token/ERC20/IERC20.sol";
+import {IERC20Permit} from "@crane/contracts/external/openzeppelin-contracts-v5/token/ERC20/extensions/IERC20Permit.sol";
+import {IERC20Metadata} from "@crane/contracts/external/openzeppelin-contracts-v5/token/ERC20/extensions/IERC20Metadata.sol";
+import {IERC5267} from "@crane/contracts/external/openzeppelin-contracts-v5/interfaces/IERC5267.sol";
 
 /**
  * @title IOsToken

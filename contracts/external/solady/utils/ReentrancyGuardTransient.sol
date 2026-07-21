@@ -32,7 +32,8 @@ abstract contract ReentrancyGuardTransient {
         if (_useTransientReentrancyGuardOnlyOnMainnet()) {
             uint256 s = _REENTRANCY_GUARD_SLOT;
             if (block.chainid == 1) {
-                assembly ("memory-safe") {
+                /// @solidity memory-safe-assembly
+                assembly {
                     if tload(s) {
                         mstore(0x00, s) // `Reentrancy()`.
                         revert(0x1c, 0x04)
@@ -40,7 +41,8 @@ abstract contract ReentrancyGuardTransient {
                     tstore(s, address())
                 }
             } else {
-                assembly ("memory-safe") {
+                /// @solidity memory-safe-assembly
+                assembly {
                     if eq(sload(s), address()) {
                         mstore(0x00, s) // `Reentrancy()`.
                         revert(0x1c, 0x04)
@@ -49,7 +51,8 @@ abstract contract ReentrancyGuardTransient {
                 }
             }
         } else {
-            assembly ("memory-safe") {
+            /// @solidity memory-safe-assembly
+            assembly {
                 if tload(_REENTRANCY_GUARD_SLOT) {
                     mstore(0x00, 0xab143c06) // `Reentrancy()`.
                     revert(0x1c, 0x04)
@@ -61,16 +64,19 @@ abstract contract ReentrancyGuardTransient {
         if (_useTransientReentrancyGuardOnlyOnMainnet()) {
             uint256 s = _REENTRANCY_GUARD_SLOT;
             if (block.chainid == 1) {
-                assembly ("memory-safe") {
+                /// @solidity memory-safe-assembly
+                assembly {
                     tstore(s, 0)
                 }
             } else {
-                assembly ("memory-safe") {
+                /// @solidity memory-safe-assembly
+                assembly {
                     sstore(s, s)
                 }
             }
         } else {
-            assembly ("memory-safe") {
+            /// @solidity memory-safe-assembly
+            assembly {
                 tstore(_REENTRANCY_GUARD_SLOT, 0)
             }
         }
@@ -81,14 +87,16 @@ abstract contract ReentrancyGuardTransient {
         if (_useTransientReentrancyGuardOnlyOnMainnet()) {
             uint256 s = _REENTRANCY_GUARD_SLOT;
             if (block.chainid == 1) {
-                assembly ("memory-safe") {
+                /// @solidity memory-safe-assembly
+                assembly {
                     if tload(s) {
                         mstore(0x00, s) // `Reentrancy()`.
                         revert(0x1c, 0x04)
                     }
                 }
             } else {
-                assembly ("memory-safe") {
+                /// @solidity memory-safe-assembly
+                assembly {
                     if eq(sload(s), address()) {
                         mstore(0x00, s) // `Reentrancy()`.
                         revert(0x1c, 0x04)
@@ -96,7 +104,8 @@ abstract contract ReentrancyGuardTransient {
                 }
             }
         } else {
-            assembly ("memory-safe") {
+            /// @solidity memory-safe-assembly
+            assembly {
                 if tload(_REENTRANCY_GUARD_SLOT) {
                     mstore(0x00, 0xab143c06) // `Reentrancy()`.
                     revert(0x1c, 0x04)

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.22;
 
-import {IERC1822Proxiable} from "@crane/contracts/external/openzeppelin-contracts/interfaces/draft-IERC1822.sol";
+import {IERC1822Proxiable} from "@crane/contracts/external/openzeppelin-contracts-v5/interfaces/draft-IERC1822.sol";
 import {IVaultAdmin} from "./IVaultAdmin.sol";
 
 /**

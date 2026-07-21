@@ -68,6 +68,18 @@ ignored_error_codes = [
 ]
 
 skip = [
+    # D2-FULL multi-version vendor packages (compile via profile.d2full_vendor)
+    "contracts/external/stakewise/**",
+    "contracts/external/etherfi/**",
+    "contracts/external/lido/**",
+    "contracts/external/rocketpool/**",
+    "contracts/external/eigenlayer/**",
+    "contracts/external/aragon/**",
+    "contracts/external/openzeppelin-contracts-v4/**",
+    "contracts/external/openzeppelin-upgradeable-v4/**",
+    "contracts/external/openzeppelin-contracts-v5/**",
+    "contracts/external/openzeppelin-upgradeable-v5/**",
+
     # Aave V3.6 upstream formal-verification trees that are not required for runtime compilation.
     "contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/certora/**",
     "contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts-upgradeable/certora/**",
@@ -277,3 +289,54 @@ remappings = [
 ethereum_mainnet_infura = "https://mainnet.infura.io/v3/${INFURA_KEY}"
 ethereum_mainnet_alchemy = "https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
 ethereum_mainnet_public = "https://ethereum-rpc.publicnode.com"
+
+
+# D2-FULL vendor trees: multi-version solc; excluded from default src scan
+# Compiled via FOUNDRY_PROFILE=d2full_vendor (auto_detect_solc, no forced solc pin).
+[profile.d2full_vendor]
+skip = [
+  "contracts/external/lido/**",
+  "contracts/external/rocketpool/**",
+  "contracts/external/etherfi/**",
+  "contracts/external/eigenlayer/**",
+  "contracts/external/aragon/**",
+  "contracts/external/openzeppelin-contracts-v4/**",
+  "contracts/external/openzeppelin-upgradeable-v4/**",
+]
+# Intentionally no `solc =` pin so multi-version auto_detect works (parent default solc is overridden by omitting via auto_detect + via_ir false).
+src = "contracts/external/stakewise"
+test = "test/foundry/unit/external/staking_d2full"
+out = "out_d2full_vendor"
+cache_path = "cache_d2full_vendor"
+libs = ["lib"]
+solc = "0.8.35"
+auto_detect_solc = false
+optimizer = true
+optimizer_runs = 1
+via_ir = false
+fs_permissions = [{ access = "read-write", path = "./"}]
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v5/",
+    "@crane/contracts/=contracts/",
+    "@crane/test/=test/",
+]
+
+
+[profile.d2full_etherfi]
+src = "contracts/external/etherfi"
+test = "test/foundry/unit/external/staking_d2full"
+out = "out_d2full_etherfi"
+cache_path = "cache_d2full_etherfi"
+libs = ["lib"]
+solc = "0.8.35"
+optimizer = true
+optimizer_runs = 1
+via_ir = false
+fs_permissions = [{ access = "read-write", path = "./"}]
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v4/",
+    "@crane/contracts/=contracts/",
+    "@crane/test/=test/",
+]

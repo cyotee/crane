@@ -1,36 +1,36 @@
-# Ethereum Staking Ports — Dependency Map
+# Ethereum Staking Ports — Dependency Map (D2-FULL)
 
-**Policy:** No new Foundry remappings. All imports use existing `@crane/...` paths only.  
-**OZ pin:** OpenZeppelin Contracts **4.9.6** under `@crane/contracts/external/openzeppelin-contracts`.  
-**OZ Upgradeable:** present under `@crane/contracts/external/openzeppelin-upgradeable` (gap-fill only if domain vendor needs missing symbols).  
-**Solady:** `@crane/contracts/external/solady` (ether.fi domain only if needed).
+**Policy:** No new Foundry remapping **aliases**. Imports use existing `@crane/...` paths (and already-configured paths).  
+**Mode:** Full project vendoring + transitive unique deps.
 
-## Upstream name → Crane import path
+## Shared (remap — already in Crane or dual-pin under external)
 
-| Upstream / need | Existing `@crane/` path |
-|-----------------|-------------------------|
-| IERC20 / SafeERC20 | `@crane/contracts/interfaces/IERC20.sol`, `@crane/contracts/tokens/ERC20/utils/BetterSafeERC20.sol` |
-| IERC20Metadata | `@crane/contracts/interfaces/IERC20Metadata.sol` |
-| IERC4626 | `@crane/contracts/interfaces/IERC4626.sol` |
-| IRateProvider (Balancer shape) | `@crane/contracts/protocols/dexes/balancer/common/interfaces/IRateProvider.sol` |
-| IWETH / WETH9 | `@crane/contracts/interfaces/protocols/tokens/wrappers/weth/v9/IWETH.sol` |
-| OZ Math / Address / Context | `@crane/contracts/external/openzeppelin-contracts/contracts/...` |
-| OZ Upgradeable Initializable etc. | `@crane/contracts/external/openzeppelin-upgradeable/...` |
-| Solady utils | `@crane/contracts/external/solady/src/...` |
-| FraxETH interfaces (existing) | `@crane/contracts/protocols/tokens/stable/frax/FraxETH/{IfrxETH,IfrxETHMinter,IsfrxETH}.sol` |
-| Deposit contract (this package) | `@crane/contracts/protocols/staking/ethereum/common/interfaces/IDepositContract.sol` |
-| forge-std (tests only) | Foundry / existing remaps — do not re-vendor |
+| Upstream | Crane path |
+|----------|------------|
+| OZ 4.8/4.9 | `@crane/contracts/external/openzeppelin-contracts/` or `openzeppelin-contracts-v4/` |
+| OZ 5.x | `@crane/contracts/external/openzeppelin-contracts-v5/` |
+| OZ Upgradeable 4.x | `@crane/contracts/external/openzeppelin-upgradeable-v4/` |
+| OZ Upgradeable 5.x | `@crane/contracts/external/openzeppelin-upgradeable-v5/` |
+| Solady | `@crane/contracts/external/solady/` |
+| forge-std | Foundry / existing remaps |
 
-## Service surface symbols (all present)
+## Unique transitive (vendored)
 
-- `IERC20`, `BetterSafeERC20` (`safeTransfer` / `safeApprove` / `forceApprove` patterns)
-- `IERC4626` for sfrxETH deposit/redeem previews
-- `IRateProvider.getRate()` for rate helpers
+| Dep | Location | Used by |
+|-----|----------|---------|
+| EigenLayer | `contracts/external/eigenlayer/` | ether.fi |
+| Aragon OS/apps | `contracts/external/aragon/` | Lido |
 
-## Explicitly deferred (not in this epic)
+## Protocol domain roots
 
-EigenLayer, Aragon OS, LayerZero weETH bridge, Uniswap V3 periphery for ether.fi, multi-version OZ 3.x/5.x trees, SSZ/BLS.
+| Protocol | Path | Pin |
+|----------|------|-----|
+| StakeWise | `contracts/external/stakewise/` | fc70cbe1… |
+| ether.fi | `contracts/external/etherfi/` | b4a0968… |
+| Lido | `contracts/external/lido/` | 372b02e… |
+| Rocket Pool | `contracts/external/rocketpool/` | fef41a4… |
+| Frax | thin only — `tokens/stable/frax` | existing |
 
-## Gap-fill rule
+## Explicitly not deferred
 
-If a protocol domain file fails to compile due to a missing OZ-upgradeable or Solady **file**, copy that single file into the matching `external/` tree and keep imports on existing `@crane/contracts/external/...` paths. Never add remappings.
+EigenLayer and Aragon **are in scope** when imported by the pin (D2-FULL).

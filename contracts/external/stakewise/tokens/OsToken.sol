@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.22;
 
-import {Ownable2Step, Ownable} from "@crane/contracts/external/openzeppelin-contracts/access/Ownable2Step.sol";
-import {ERC20Permit, IERC20Permit, ERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/extensions/ERC20Permit.sol";
+import {Ownable2Step, Ownable} from "@crane/contracts/external/openzeppelin-contracts-v5/access/Ownable2Step.sol";
+import {ERC20Permit, IERC20Permit, ERC20} from "@crane/contracts/external/openzeppelin-contracts-v5/token/ERC20/extensions/ERC20Permit.sol";
 import {IOsToken} from "../interfaces/IOsToken.sol";
 import {Errors} from "../libraries/Errors.sol";
 

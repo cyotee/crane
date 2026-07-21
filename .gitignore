@@ -79,3 +79,5 @@ book/
 .mdbook-src/
 out_staking_eth/
 cache_staking_eth/
+out_d2full*
+cache_d2full*

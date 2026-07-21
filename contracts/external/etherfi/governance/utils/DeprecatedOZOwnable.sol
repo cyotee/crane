@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.27;
 
-import "@crane/contracts/external/openzeppelin-upgradeable/proxy/utils/Initializable.sol";
-import "@crane/contracts/external/openzeppelin-upgradeable/utils/ContextUpgradeable.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/proxy/utils/Initializable.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/utils/ContextUpgradeable.sol";
 
 /**
  * @title DeprecatedOZOwnable

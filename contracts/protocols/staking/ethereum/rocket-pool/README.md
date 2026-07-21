@@ -25,3 +25,6 @@
 
 - Integration interfaces + `RocketPoolService` + `RETHRateProvider` (mainnet fork)
 - Domain unit tests under `RocketTokenRETH_Domain.t.sol`
+
+## D2-FULL vendor
+Full upstream Solidity tree under `contracts/external/` — see `VENDOR.md` there. Prior mint/wrap slice superseded.

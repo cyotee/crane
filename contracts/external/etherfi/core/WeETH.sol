@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import "@crane/contracts/external/openzeppelin-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import "@crane/contracts/external/openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-import "@crane/contracts/external/openzeppelin-upgradeable/token/ERC20/extensions/ERC20PermitUpgradeable.sol";
-import "@crane/contracts/external/openzeppelin-contracts/token/ERC20/utils/SafeERC20.sol";
-import {ERC1967Utils} from "@crane/contracts/external/openzeppelin-contracts/proxy/ERC1967/ERC1967Utils.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/token/ERC20/ERC20Upgradeable.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/proxy/utils/UUPSUpgradeable.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/token/ERC20/extensions/draft-ERC20PermitUpgradeable.sol";
+import "@crane/contracts/external/openzeppelin-contracts-v4/token/ERC20/utils/SafeERC20.sol";
 import "@crane/contracts/external/etherfi/core/interfaces/IeETH.sol";
 import "@crane/contracts/external/etherfi/core/interfaces/ILiquidityPool.sol";
 import "@crane/contracts/external/etherfi/governance/rate-limiting/interfaces/IRateProvider.sol";
@@ -192,14 +191,43 @@ contract WeETH is ERC20Upgradeable, UUPSUpgradeable, DeprecatedOZOwnable, Pausab
      * Only callable when the to is not blacklisted
      * Only callable when the sender is not blacklisted
      */
-    /// @dev OZ v5 replaced _before/_afterTokenTransfer with _update (upstream used OZ4 hooks).
-    function _update(address from, address to, uint256 value) internal virtual override whenNotPaused {
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 amount
+    ) internal virtual override whenNotPaused {
         blacklister.nonBlacklisted(from);
         blacklister.nonBlacklisted(to);
         blacklister.nonBlacklisted(msg.sender);
-        super._update(from, to, value);
-        // Invariant: weETH supply is at-least-fully-backed by eETH shares on mint/burn
-        if (from != address(0) && to != address(0)) return;
+    }
+
+    /**
+     * @notice Invariant — weETH supply is at-least-fully-backed by eETH shares
+     * @param from The address of the from
+     * @param to The address of the to
+     * @dev Invariant — weETH supply is at-least-fully-backed by eETH shares
+     * `weETH.totalSupply <= eETH.shares(address(this))`. Runs after
+     * every mint/burn (skipped on transfers — they don't change
+     * totalSupply). The `<=` form permits benign over-collateralization
+     * from accidental eETH transfers to the proxy.
+     *
+     * Why this holds today:
+     *           wrap(X eETH) → safeTransferFrom moves sharesForAmount(X)
+     *           eETH shares to the proxy AND _mint adds sharesForAmount(X)
+     *           weETH supply. Both sides increment by the same number.
+     *           unwrap is the symmetric decrement (_burn first, then
+     *           transfer eETH out — the invariant trivially holds at the
+     *           hook because supply just dropped and proxy balance is
+     *           still high).
+     *
+     * What it catches:
+     *           Any future code path that mints weETH without pulling in
+     *           proportional eETH shares (bridge integration, new mint
+     *           authority, exploited path) trips the revert.
+     *
+     */
+    function _afterTokenTransfer(address from, address to, uint256 /*amount*/) internal virtual override {
+        if (from != address(0) && to != address(0)) return;     // transfers don't change supply
         uint256 supply = totalSupply();
         uint256 proxyShares = eETH.shares(address(this));
         if (supply > proxyShares) revert WeETHUnderbacked(supply, proxyShares);
@@ -247,7 +275,6 @@ contract WeETH is ERC20Upgradeable, UUPSUpgradeable, DeprecatedOZOwnable, Pausab
      * @return The implementation address
      */
     function getImplementation() external view returns (address) {
-        // OZ v5 UUPS: implementation slot via ERC1967Utils (upstream used OZ4 _getImplementation)
-        return ERC1967Utils.getImplementation();
+        return _getImplementation();
     }
 }
