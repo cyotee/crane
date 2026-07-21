@@ -1,75 +1,107 @@
 // SPDX-License-Identifier: GPL-3.0-only
-// Domain vendor of rocket-pool/rocketpool contracts/contract/token/RocketTokenRETH.sol
-// Upstream pin documented in staking/ethereum/rocket-pool/README.md.
-// Adapted: pragma 0.7.6 → ^0.8.0; SafeMath → native 0.8; ERC20 from Crane OZ;
-// network balances injected via constructor for hermetic domain tests (mainnet uses RocketStorage).
-// Exchange-rate math (getEthValue/getRethValue/getExchangeRate) matches upstream formulas.
-
+// Domain: rocket-pool/rocketpool contracts/contract/token/RocketTokenRETH.sol
+// Pin: see staking/ethereum/rocket-pool/README.md
+// Adapted: pragma 0.7.6 → ^0.8.0; SafeMath → native; util ERC20 → Crane OZ ERC20;
+// RocketBase + RocketStorage address book preserved (onlyLatestContract mint gate).
 pragma solidity ^0.8.0;
 
 import {ERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC20/ERC20.sol";
+import {RocketBase} from "@crane/contracts/external/rocketpool/base/RocketBase.sol";
+import {RocketStorageInterface} from "@crane/contracts/external/rocketpool/interface/RocketStorageInterface.sol";
+import {RocketNetworkBalancesInterface} from
+    "@crane/contracts/external/rocketpool/interface/network/RocketNetworkBalancesInterface.sol";
+import {RocketDepositPoolInterface} from
+    "@crane/contracts/external/rocketpool/interface/deposit/RocketDepositPoolInterface.sol";
+import {RocketTokenRETHInterface} from
+    "@crane/contracts/external/rocketpool/interface/token/RocketTokenRETHInterface.sol";
 
-/**
- * @title RocketTokenRETH
- * @notice rETH domain with upstream exchange-rate formulas.
- */
-contract RocketTokenRETH is ERC20 {
+/// @notice rETH — tokenised stake; exchange rate from network balances (upstream formulas)
+contract RocketTokenRETH is RocketBase, ERC20, RocketTokenRETHInterface {
     event EtherDeposited(address indexed from, uint256 amount, uint256 time);
     event TokensMinted(address indexed to, uint256 amount, uint256 ethAmount, uint256 time);
     event TokensBurned(address indexed from, uint256 amount, uint256 ethAmount, uint256 time);
 
-    uint256 public totalEthBalance;
-    uint256 public totalRETHSupply;
-    address public depositPool;
-
-    constructor() ERC20("Rocket Pool ETH", "rETH") {}
+    constructor(RocketStorageInterface _rocketStorageAddress)
+        RocketBase(_rocketStorageAddress)
+        ERC20("Rocket Pool ETH", "rETH")
+    {
+        version = 1;
+    }
 
     receive() external payable {
         emit EtherDeposited(msg.sender, msg.value, block.timestamp);
     }
 
-    function setNetworkBalances(uint256 _totalEthBalance, uint256 _totalRETHSupply) external {
-        totalEthBalance = _totalEthBalance;
-        totalRETHSupply = _totalRETHSupply;
+    /// @inheritdoc RocketTokenRETHInterface
+    function getEthValue(uint256 _rethAmount) public view override returns (uint256) {
+        RocketNetworkBalancesInterface balances =
+            RocketNetworkBalancesInterface(getContractAddress("rocketNetworkBalances"));
+        uint256 totalEthBalance = balances.getTotalETHBalance();
+        uint256 rethSupply = balances.getTotalRETHSupply();
+        if (rethSupply == 0) return _rethAmount;
+        return (_rethAmount * totalEthBalance) / rethSupply;
     }
 
-    function setDepositPool(address _depositPool) external {
-        depositPool = _depositPool;
+    /// @inheritdoc RocketTokenRETHInterface
+    function getRethValue(uint256 _ethAmount) public view override returns (uint256) {
+        RocketNetworkBalancesInterface balances =
+            RocketNetworkBalancesInterface(getContractAddress("rocketNetworkBalances"));
+        uint256 totalEthBalance = balances.getTotalETHBalance();
+        uint256 rethSupply = balances.getTotalRETHSupply();
+        if (rethSupply == 0) return _ethAmount;
+        require(totalEthBalance > 0, "Cannot calculate rETH token amount while total network balance is zero");
+        return (_ethAmount * rethSupply) / totalEthBalance;
     }
 
-    /// @dev Upstream: _rethAmount * totalEth / rethSupply (1:1 if supply 0)
-    function getEthValue(uint256 _rethAmount) public view returns (uint256) {
-        if (totalRETHSupply == 0) return _rethAmount;
-        return (_rethAmount * totalEthBalance) / totalRETHSupply;
-    }
-
-    /// @dev Upstream: _ethAmount * rethSupply / totalEth (1:1 if eth 0)
-    function getRethValue(uint256 _ethAmount) public view returns (uint256) {
-        if (totalEthBalance == 0) return _ethAmount;
-        return (_ethAmount * totalRETHSupply) / totalEthBalance;
-    }
-
-    /// @dev Upstream: 1 ether of rETH in ETH terms * 1e18 scaling via getEthValue(1e18)
-    function getExchangeRate() public view returns (uint256) {
+    /// @inheritdoc RocketTokenRETHInterface
+    function getExchangeRate() external view override returns (uint256) {
         return getEthValue(1 ether);
     }
 
-    function mint(uint256 _ethAmount, address _to) external {
-        require(msg.sender == depositPool, "Invalid token minter");
+    /// @inheritdoc RocketTokenRETHInterface
+    function getTotalCollateral() public view override returns (uint256) {
+        RocketDepositPoolInterface depositPool =
+            RocketDepositPoolInterface(getContractAddress("rocketDepositPool"));
+        return depositPool.getExcessBalance() + address(this).balance;
+    }
+
+    /// @inheritdoc RocketTokenRETHInterface
+    function getCollateralRate() public view override returns (uint256) {
+        uint256 totalEthValue = getEthValue(totalSupply());
+        if (totalEthValue == 0) return calcBase;
+        return (calcBase * address(this).balance) / totalEthValue;
+    }
+
+    /// @inheritdoc RocketTokenRETHInterface
+    function depositExcess() external payable override onlyLatestContract("rocketDepositPool", msg.sender) {
+        emit EtherDeposited(msg.sender, msg.value, block.timestamp);
+    }
+
+    /// @inheritdoc RocketTokenRETHInterface
+    function mint(uint256 _ethAmount, address _to)
+        external
+        override
+        onlyLatestContract("rocketDepositPool", msg.sender)
+    {
         uint256 rethAmount = getRethValue(_ethAmount);
         require(rethAmount > 0, "Invalid token mint amount");
         _mint(_to, rethAmount);
-        totalRETHSupply = totalSupply();
-        totalEthBalance += _ethAmount;
         emit TokensMinted(_to, rethAmount, _ethAmount, block.timestamp);
     }
 
-    function burn(uint256 _rethAmount) external {
+    /// @inheritdoc RocketTokenRETHInterface
+    function burn(uint256 _rethAmount) external override {
         require(_rethAmount > 0, "Invalid token burn amount");
+        require(balanceOf(msg.sender) >= _rethAmount, "Insufficient rETH balance");
         uint256 ethAmount = getEthValue(_rethAmount);
+        uint256 ethBalance = getTotalCollateral();
+        require(ethBalance >= ethAmount, "Insufficient ETH balance for exchange");
         _burn(msg.sender, _rethAmount);
-        totalRETHSupply = totalSupply();
-        totalEthBalance -= ethAmount;
+        // Prefer contract balance; pull excess from deposit pool if short
+        if (address(this).balance < ethAmount) {
+            // recycle path omitted in narrow subgraph — require on-contract ETH
+            revert("Insufficient rETH contract ETH");
+        }
         (bool ok,) = msg.sender.call{value: ethAmount}("");
         require(ok, "ETH transfer failed");
         emit TokensBurned(msg.sender, _rethAmount, ethAmount, block.timestamp);

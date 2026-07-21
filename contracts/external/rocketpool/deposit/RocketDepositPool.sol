@@ -1,46 +1,84 @@
 // SPDX-License-Identifier: GPL-3.0-only
-// Domain vendor of rocket-pool deposit surface (RocketDepositPool.sol) — deposit→mint rETH path.
-// Upstream full file kept as RocketDepositPool.upstream.sol.txt; narrowed to mint/wrap user path.
-
+// Domain: rocket-pool/rocketpool contracts/contract/deposit/RocketDepositPool.sol
+// Pin: see staking/ethereum/rocket-pool/README.md
+// Narrowed: user deposit() → fee → rETH.mint; getBalance/getMaximumDepositAmount/getExcessBalance.
+// Megapool/minipool assignment, vault recycle, node credit queues deferred (documented cut).
 pragma solidity ^0.8.0;
 
-interface IRocketTokenRETHMint {
-    function mint(uint256 _ethAmount, address _to) external;
-    function getRethValue(uint256 _ethAmount) external view returns (uint256);
-}
+import {RocketBase} from "@crane/contracts/external/rocketpool/base/RocketBase.sol";
+import {RocketStorageInterface} from "@crane/contracts/external/rocketpool/interface/RocketStorageInterface.sol";
+import {RocketDepositPoolInterface} from
+    "@crane/contracts/external/rocketpool/interface/deposit/RocketDepositPoolInterface.sol";
+import {RocketTokenRETHInterface} from
+    "@crane/contracts/external/rocketpool/interface/token/RocketTokenRETHInterface.sol";
+import {RocketDAOProtocolSettingsDepositInterface} from
+    "@crane/contracts/external/rocketpool/interface/dao/RocketDAOProtocolSettingsDepositInterface.sol";
 
-/**
- * @title RocketDepositPool
- * @notice Minimal deposit pool: accepts ETH and mints rETH via RocketTokenRETH.mint.
- */
-contract RocketDepositPool {
-    IRocketTokenRETHMint public immutable reth;
-    uint256 public balance;
-    uint256 public maximumDepositAmount = type(uint256).max;
+/// @notice Accepts user deposits and mints rETH (upstream deposit path core)
+contract RocketDepositPool is RocketBase, RocketDepositPoolInterface {
+    event DepositReceived(address indexed from, uint256 amount, uint256 time);
 
-    constructor(address _reth) {
-        reth = IRocketTokenRETHMint(_reth);
+    RocketTokenRETHInterface public immutable rocketTokenRETH;
+
+    /// @dev ETH held as deposit pool user balance (upstream uses RocketVault; we keep balance here for narrow subgraph)
+    uint256 private depositBalance;
+
+    constructor(RocketStorageInterface _rocketStorageAddress, address _reth)
+        RocketBase(_rocketStorageAddress)
+    {
+        version = 4;
+        rocketTokenRETH = RocketTokenRETHInterface(_reth);
     }
 
-    function setMaximumDepositAmount(uint256 _max) external {
-        maximumDepositAmount = _max;
+    /// @inheritdoc RocketDepositPoolInterface
+    function getBalance() public view override returns (uint256) {
+        return depositBalance;
     }
 
-    function getBalance() external view returns (uint256) {
-        return balance;
+    /// @inheritdoc RocketDepositPoolInterface
+    function getExcessBalance() public view override returns (uint256) {
+        // No minipool queue in narrow subgraph → all balance is excess-eligible for collateral views
+        return depositBalance;
     }
 
-    function getMaximumDepositAmount() external view returns (uint256) {
-        return maximumDepositAmount;
+    /// @inheritdoc RocketDepositPoolInterface
+    function getMaximumDepositAmount() external view override returns (uint256) {
+        RocketDAOProtocolSettingsDepositInterface settings = RocketDAOProtocolSettingsDepositInterface(
+            getContractAddress("rocketDAOProtocolSettingsDeposit")
+        );
+        if (!settings.getDepositEnabled()) return 0;
+        uint256 depositPoolBalance = getBalance();
+        uint256 maxCapacity = settings.getMaximumDepositPoolSize();
+        if (depositPoolBalance >= maxCapacity) return 0;
+        return maxCapacity - depositPoolBalance;
     }
 
-    function deposit() external payable {
-        require(msg.value > 0, "Invalid deposit amount");
-        require(msg.value <= maximumDepositAmount, "The deposit pool size after depositing exceeds the maximum size");
-        balance += msg.value;
-        // Forward ETH backing to rETH contract for burn liquidity
-        (bool ok,) = address(reth).call{value: msg.value}("");
-        require(ok, "ETH to rETH failed");
-        reth.mint(msg.value, msg.sender);
+    /// @inheritdoc RocketDepositPoolInterface
+    function deposit() external payable override {
+        RocketDAOProtocolSettingsDepositInterface settings = RocketDAOProtocolSettingsDepositInterface(
+            getContractAddress("rocketDAOProtocolSettingsDeposit")
+        );
+        require(settings.getDepositEnabled(), "Deposits into Rocket Pool are currently disabled");
+        require(msg.value >= settings.getMinimumDeposit(), "The deposited amount is less than the minimum deposit size");
+
+        uint256 capacityNeeded = getBalance() + msg.value;
+        uint256 maxDepositPoolSize = settings.getMaximumDepositPoolSize();
+        require(capacityNeeded <= maxDepositPoolSize, "The deposit pool size after depositing exceeds the maximum size");
+
+        uint256 depositFee = (msg.value * settings.getDepositFee()) / calcBase;
+        uint256 depositNet = msg.value - depositFee;
+
+        depositBalance += msg.value;
+        // Forward net ETH as rETH collateral buffer (upstream: vault + processDeposit)
+        (bool ok,) = address(rocketTokenRETH).call{value: depositNet}("");
+        require(ok, "rETH ETH forward failed");
+
+        rocketTokenRETH.mint(depositNet, msg.sender);
+        emit DepositReceived(msg.sender, msg.value, block.timestamp);
+    }
+
+    /// @inheritdoc RocketDepositPoolInterface
+    function recycleExcessCollateral() external payable override {
+        depositBalance += msg.value;
     }
 }

@@ -5,14 +5,23 @@
 | Upstream | `rocket-pool/rocketpool` |
 | **Pinned commit** | `fef41a4f7cf99d7d66313c0ba04deb8ba2dabf88` |
 | Domain vendor path | `contracts/external/rocketpool/` |
-| Domain surface | `token/RocketTokenRETH.sol`, `deposit/RocketDepositPool.sol`; full upstream sources as `*.upstream.sol.txt` |
+| Domain surface | `RocketStorage` + `RocketBase` + `RocketTokenRETH` + `RocketDepositPool` (deposit→mint, exchange-rate formulas, `onlyLatestContract` mint gate) |
 | rETH mainnet | `0xae78736Cd615f374D3085123A210448E74Fc6393` |
-| RocketStorage | `0x1d8f8f00cfa6758d7bE78336684788Fb0ee0Fa46` |
+| RocketStorage mainnet | `0x1d8f8f00cfa6758d7bE78336684788Fb0ee0Fa46` |
+
+## Structure (upstream-aligned)
+
+- Address book via `keccak256(abi.encodePacked("contract.address", name))` (same key layout as upstream)
+- rETH mint only from registered `rocketDepositPool`
+- Rate: `getEthValue` / `getRethValue` / `getExchangeRate` read `rocketNetworkBalances` (upstream formulas)
+- Deposit path: settings gates (enabled, min, max pool size, fee) → mint net amount
 
 ## Cuts
-- Full minipool / RPL / network balances contracts **not** fully vendored (0.7.6 monorepo)
-- Exchange-rate formulas (`getEthValue`/`getRethValue`/`getExchangeRate`) and deposit→mint path preserved from upstream
-- Mainnet deposit pool capacity edge-case documented in fork tests
+
+- Full minipool/megapool assignment, RocketVault accounting, node credit queues, RPL auction recycle **not** vendored
+- Upstream `.sol` snapshots kept as `*.upstream.sol.txt` where useful
 
 ## Surface
-- Interfaces + `RocketPoolService` + `RETHRateProvider`
+
+- Integration interfaces + `RocketPoolService` + `RETHRateProvider` (mainnet fork)
+- Domain unit tests under `RocketTokenRETH_Domain.t.sol`
