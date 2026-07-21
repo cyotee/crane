@@ -218,7 +218,7 @@ contract RocketAuctionManager is RocketBase, RocketAuctionManagerInterface {
         // Transfer bid amount to deposit pool
         rocketDepositPool.recycleLiquidatedStake{value: bidAmount}();
         // Refund excess ETH to sender
-        if (msg.value > bidAmount) { msg.sender.transfer(msg.value.sub(bidAmount)); }
+        if (msg.value > bidAmount) { payable(msg.sender).transfer(msg.value.sub(bidAmount)); }
         // Emit bid placed event
         emit BidPlaced(_lotIndex, msg.sender, bidAmount, block.timestamp);
     }

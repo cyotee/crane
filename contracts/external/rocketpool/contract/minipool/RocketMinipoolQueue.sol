@@ -3,7 +3,7 @@ pragma solidity >=0.7.6 <0.9.0;
 
 import "@crane/contracts/external/openzeppelin-contracts-v4/utils/math/SafeMath.sol";
 import "@crane/contracts/external/openzeppelin-contracts-v5/math/SignedSafeMath.sol";
-import "@crane/contracts/external/openzeppelin-contracts-v5/utils/SafeCast.sol";
+import "@crane/contracts/external/openzeppelin-contracts-v4/utils/math/SafeCast.sol";
 
 import "../RocketBase.sol";
 import "../../interface/minipool/RocketMinipoolInterface.sol";

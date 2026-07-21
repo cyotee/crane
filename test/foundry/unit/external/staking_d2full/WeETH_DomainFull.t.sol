@@ -94,8 +94,8 @@ contract MockBlacklister {
     function nonBlacklisted(address) external pure {}
 }
 
-/// @notice Drives shipped WeETH.wrap/unwrap.
-contract WeETH_DomainTest is Test {
+/// @notice Domain wrap/unwrap against full vendored WeETH.
+contract WeETH_DomainFullTest is Test {
     MockEETH internal eeth;
     MockLiquidityPool internal pool;
     MockBlacklister internal blacklister;
@@ -105,13 +105,12 @@ contract WeETH_DomainTest is Test {
         eeth = new MockEETH();
         pool = new MockLiquidityPool();
         blacklister = new MockBlacklister();
-        // Upstream WeETH is UUPS: constructor disables initializers; init via proxy
         WeETH impl = new WeETH(address(eeth), address(pool), address(0xBEEF), address(blacklister));
         ERC1967Proxy proxy = new ERC1967Proxy(address(impl), abi.encodeCall(WeETH.initialize, ()));
         weeth = WeETH(address(proxy));
     }
 
-    function test_Domain_WeETH_BytecodePresent() public {
+    function test_Domain_WeETH_BytecodePresent() public view {
         assertEq(address(weeth.eETH()), address(eeth));
         assertEq(address(weeth.liquidityPool()), address(pool));
     }
@@ -132,7 +131,7 @@ contract WeETH_DomainTest is Test {
         assertEq(weeth.balanceOf(address(this)), 0);
     }
 
-    function test_Domain_GetRate() public {
+    function test_Domain_GetRate() public view {
         assertEq(weeth.getRate(), 1 ether);
     }
 }

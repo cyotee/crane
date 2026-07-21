@@ -117,7 +117,7 @@ contract RocketTokenRETH is RocketBase, ERC20, RocketTokenRETHInterface {
         // Withdraw ETH from deposit pool if required
         withdrawDepositCollateral(ethAmount);
         // Transfer ETH to sender
-        msg.sender.transfer(ethAmount);
+        payable(msg.sender).transfer(ethAmount);
         // Emit tokens burned event
         emit TokensBurned(msg.sender, _rethAmount, ethAmount, block.timestamp);
     }

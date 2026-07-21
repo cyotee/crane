@@ -294,23 +294,14 @@ ethereum_mainnet_public = "https://ethereum-rpc.publicnode.com"
 # D2-FULL vendor trees: multi-version solc; excluded from default src scan
 # Compiled via FOUNDRY_PROFILE=d2full_vendor (auto_detect_solc, no forced solc pin).
 [profile.d2full_vendor]
-skip = [
-  "contracts/external/lido/**",
-  "contracts/external/rocketpool/**",
-  "contracts/external/etherfi/**",
-  "contracts/external/eigenlayer/**",
-  "contracts/external/aragon/**",
-  "contracts/external/openzeppelin-contracts-v4/**",
-  "contracts/external/openzeppelin-upgradeable-v4/**",
-]
-# Intentionally no `solc =` pin so multi-version auto_detect works (parent default solc is overridden by omitting via auto_detect + via_ir false).
+# Domain + entrypoint tests import all four vendor graphs (S/E/L/R). No skip of those trees.
+# Default profile still skips heavy trees for monorepo compile speed.
 src = "contracts/external/stakewise"
 test = "test/foundry/unit/external/staking_d2full"
 out = "out_d2full_vendor"
 cache_path = "cache_d2full_vendor"
 libs = ["lib"]
 solc = "0.8.35"
-auto_detect_solc = false
 optimizer = true
 optimizer_runs = 1
 via_ir = false
@@ -318,6 +309,25 @@ fs_permissions = [{ access = "read-write", path = "./"}]
 remappings = [
     "forge-std/=lib/forge-std/src/",
     "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v5/",
+    "@crane/contracts/=contracts/",
+    "@crane/test/=test/",
+]
+
+[profile.d2full_all]
+# Domain suites only: import graphs pull S/E/L/R vendored entrypoints (no monorepo scan of full external).
+src = "test/foundry/unit/external/staking_d2full"
+test = "test/foundry/unit/external/staking_d2full"
+out = "out_d2full_all"
+cache_path = "cache_d2full_all"
+libs = ["lib"]
+solc = "0.8.35"
+optimizer = true
+optimizer_runs = 1
+via_ir = false
+fs_permissions = [{ access = "read-write", path = "./"}]
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v4/",
     "@crane/contracts/=contracts/",
     "@crane/test/=test/",
 ]

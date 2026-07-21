@@ -6,7 +6,7 @@ import {ERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC2
 import {WstETH} from "@crane/contracts/external/lido/WstETH.sol";
 import {IStETH} from "@crane/contracts/external/lido/IStETH.sol";
 
-/// @dev Minimal stETH mock for domain wrap/unwrap (share math 1:1 for hermetic domain proof).
+/// @dev Minimal stETH mock for domain wrap/unwrap (share math 1:1).
 contract MockStETH is ERC20, IStETH {
     constructor() ERC20("staked ETH", "stETH") {}
 
@@ -26,9 +26,29 @@ contract MockStETH is ERC20, IStETH {
     function mint(address to, uint256 amount) external {
         _mint(to, amount);
     }
+
+    function balanceOf(address account) public view override(ERC20, IStETH) returns (uint256) {
+        return super.balanceOf(account);
+    }
+
+    function transfer(address to, uint256 amount) public override(ERC20, IStETH) returns (bool) {
+        return super.transfer(to, amount);
+    }
+
+    function transferFrom(address from, address to, uint256 amount)
+        public
+        override(ERC20, IStETH)
+        returns (bool)
+    {
+        return super.transferFrom(from, to, amount);
+    }
+
+    function approve(address spender, uint256 amount) public override(ERC20, IStETH) returns (bool) {
+        return super.approve(spender, amount);
+    }
 }
 
-contract WstETH_DomainTest is Test {
+contract WstETH_DomainFullTest is Test {
     MockStETH internal steth;
     WstETH internal wsteth;
 
