@@ -23,7 +23,7 @@ abstract contract RocketMinipoolStorageLayout {
     }
 
 	// Main Rocket Pool storage contract
-    RocketStorageInterface internal rocketStorage = RocketStorageInterface(0);
+    RocketStorageInterface internal rocketStorage = RocketStorageInterface(address(0));
 
     // Status
     MinipoolStatus internal status;

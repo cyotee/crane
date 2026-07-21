@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.27;
 
-import "@openzeppelin-upgrades/contracts/proxy/utils/Initializable.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/proxy/utils/Initializable.sol";
 import "./PermissionControllerStorage.sol";
 
 contract PermissionController is Initializable, PermissionControllerStorage {

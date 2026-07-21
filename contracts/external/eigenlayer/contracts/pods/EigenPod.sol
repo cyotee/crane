@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.27;
+import {Address} from "@crane/contracts/external/openzeppelin-contracts-v4/utils/Address.sol";
 
-import "@openzeppelin-upgrades/contracts/proxy/utils/Initializable.sol";
-import "@openzeppelin-upgrades/contracts/security/ReentrancyGuardUpgradeable.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/proxy/utils/Initializable.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/security/ReentrancyGuardUpgradeable.sol";
 import "@crane/contracts/external/openzeppelin-contracts-v5/token/ERC20/utils/SafeERC20.sol";
 
 import "../libraries/BeaconChainProofs.sol";

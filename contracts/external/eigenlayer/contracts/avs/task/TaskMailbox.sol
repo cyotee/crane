@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.27;
 
-import {ReentrancyGuardUpgradeable} from "@openzeppelin-upgrades/contracts/security/ReentrancyGuardUpgradeable.sol";
-import {OwnableUpgradeable} from "@openzeppelin-upgrades/contracts/access/OwnableUpgradeable.sol";
-import {Initializable} from "@openzeppelin-upgrades/contracts/proxy/utils/Initializable.sol";
+import {ReentrancyGuardUpgradeable} from "@crane/contracts/external/openzeppelin-upgradeable-v4/security/ReentrancyGuardUpgradeable.sol";
+import {OwnableUpgradeable} from "@crane/contracts/external/openzeppelin-upgradeable-v4/access/OwnableUpgradeable.sol";
+import {Initializable} from "@crane/contracts/external/openzeppelin-upgradeable-v4/proxy/utils/Initializable.sol";
 import {IERC20} from "@crane/contracts/external/openzeppelin-contracts-v5/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@crane/contracts/external/openzeppelin-contracts-v5/token/ERC20/utils/SafeERC20.sol";
-import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts-v5/utils/math/SafeCast.sol";
+import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts-v4/utils/math/SafeCast.sol";
 
 import {IAVSTaskHook} from "../../interfaces/IAVSTaskHook.sol";
 import {

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >=0.8.30 <0.9.0;
 
-import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts-v4/utils/math/SafeCast.sol";
+import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts-v5/utils/math/SafeCast.sol";
 
 import {RocketBase} from "../RocketBase.sol";
 import {RocketNetworkRevenuesInterface} from "../../interface/network/RocketNetworkRevenuesInterface.sol";

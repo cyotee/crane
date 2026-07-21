@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.27;
 
-import {IBN254CertificateVerifierTypes} from "src/contracts/interfaces/IBN254CertificateVerifier.sol";
-import {OperatorSet} from "src/contracts/libraries/OperatorSetLib.sol";
-import {BN254} from "src/contracts/libraries/BN254.sol";
+import {IBN254CertificateVerifierTypes} from "@crane/contracts/external/eigenlayer/contracts/interfaces/IBN254CertificateVerifier.sol";
+import {OperatorSet} from "@crane/contracts/external/eigenlayer/contracts/libraries/OperatorSetLib.sol";
+import {BN254} from "@crane/contracts/external/eigenlayer/contracts/libraries/BN254.sol";
 
-import {TaskMailbox} from "src/contracts/avs/task/TaskMailbox.sol";
-import {ITaskMailboxTypes} from "src/contracts/interfaces/ITaskMailbox.sol";
-import {IAVSTaskHook} from "src/contracts/interfaces/IAVSTaskHook.sol";
+import {TaskMailbox} from "@crane/contracts/external/eigenlayer/contracts/avs/task/TaskMailbox.sol";
+import {ITaskMailboxTypes} from "@crane/contracts/external/eigenlayer/contracts/interfaces/ITaskMailbox.sol";
+import {IAVSTaskHook} from "@crane/contracts/external/eigenlayer/contracts/interfaces/IAVSTaskHook.sol";
 
 /// @title AVSTaskHookReentrantAttacker
 /// @notice Mock contract for testing reentrancy protection in AVSTaskHook

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.27;
 
-import {IAVSTaskHook} from "src/contracts/interfaces/IAVSTaskHook.sol";
-import {ITaskMailboxTypes} from "src/contracts/interfaces/ITaskMailbox.sol";
+import {IAVSTaskHook} from "@crane/contracts/external/eigenlayer/contracts/interfaces/IAVSTaskHook.sol";
+import {ITaskMailboxTypes} from "@crane/contracts/external/eigenlayer/contracts/interfaces/ITaskMailbox.sol";
 
 contract MockAVSTaskHook is IAVSTaskHook {
     uint96 public defaultFee = 1 ether;

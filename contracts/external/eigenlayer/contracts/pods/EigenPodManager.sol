@@ -2,10 +2,10 @@
 pragma solidity ^0.8.27;
 
 import "@crane/contracts/external/openzeppelin-contracts-v5/utils/Create2.sol";
-import "@crane/contracts/external/openzeppelin-contracts-v5/utils/math/SafeCast.sol";
-import "@openzeppelin-upgrades/contracts/proxy/utils/Initializable.sol";
-import "@openzeppelin-upgrades/contracts/access/OwnableUpgradeable.sol";
-import "@openzeppelin-upgrades/contracts/security/ReentrancyGuardUpgradeable.sol";
+import "@crane/contracts/external/openzeppelin-contracts-v4/utils/math/SafeCast.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/proxy/utils/Initializable.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/access/OwnableUpgradeable.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/security/ReentrancyGuardUpgradeable.sol";
 
 import "../libraries/SlashingLib.sol";
 import "../permissions/Pausable.sol";

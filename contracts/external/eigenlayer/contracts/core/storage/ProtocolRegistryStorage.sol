@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.27;
 
-import "@openzeppelin-upgrades/contracts/utils/ShortStringsUpgradeable.sol";
+import "@crane/contracts/external/openzeppelin-contracts-v5/utils/ShortStrings.sol";
 import "@crane/contracts/external/openzeppelin-contracts-v5/utils/structs/EnumerableMap.sol";
 import "../../interfaces/IProtocolRegistry.sol";
 

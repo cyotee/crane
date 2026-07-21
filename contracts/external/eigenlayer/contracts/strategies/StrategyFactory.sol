@@ -2,7 +2,7 @@
 pragma solidity ^0.8.27;
 
 import "@crane/contracts/external/openzeppelin-contracts-v5/proxy/beacon/BeaconProxy.sol";
-import "@openzeppelin-upgrades/contracts/access/OwnableUpgradeable.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/access/OwnableUpgradeable.sol";
 import "./StrategyFactoryStorage.sol";
 import "./StrategyBase.sol";
 import "./DurationVaultStrategy.sol";

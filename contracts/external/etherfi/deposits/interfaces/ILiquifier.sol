@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
+import "@crane/contracts/external/openzeppelin-contracts-v4/token/ERC20/IERC20.sol";
+
 import "@crane/contracts/external/etherfi/interfaces/eigenlayer-interfaces/IStrategyManager.sol";
 import "@crane/contracts/external/etherfi/interfaces/eigenlayer-interfaces/IStrategy.sol";
 import "@crane/contracts/external/etherfi/interfaces/eigenlayer-interfaces/IPauserRegistry.sol";

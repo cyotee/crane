@@ -7,23 +7,23 @@ import {TransparentUpgradeableProxy} from "@crane/contracts/external/openzeppeli
 import {ITransparentUpgradeableProxy} from "@crane/contracts/external/openzeppelin-contracts-v5/proxy/transparent/TransparentUpgradeableProxy.sol";
 import {IERC20} from "@crane/contracts/external/openzeppelin-contracts-v5/token/ERC20/IERC20.sol";
 
-import {IBN254CertificateVerifier, IBN254CertificateVerifierTypes} from "src/contracts/interfaces/IBN254CertificateVerifier.sol";
-import {IECDSACertificateVerifier, IECDSACertificateVerifierTypes} from "src/contracts/interfaces/IECDSACertificateVerifier.sol";
-import {IOperatorTableCalculatorTypes} from "src/contracts/interfaces/IOperatorTableCalculator.sol";
-import {OperatorSet, OperatorSetLib} from "src/contracts/libraries/OperatorSetLib.sol";
-import {BN254} from "src/contracts/libraries/BN254.sol";
-import {IKeyRegistrarTypes} from "src/contracts/interfaces/IKeyRegistrar.sol";
-import {TaskMailbox} from "src/contracts/avs/task/TaskMailbox.sol";
-import {ITaskMailboxTypes, ITaskMailboxErrors, ITaskMailboxEvents} from "src/contracts/interfaces/ITaskMailbox.sol";
-import {IAVSTaskHook} from "src/contracts/interfaces/IAVSTaskHook.sol";
+import {IBN254CertificateVerifier, IBN254CertificateVerifierTypes} from "@crane/contracts/external/eigenlayer/contracts/interfaces/IBN254CertificateVerifier.sol";
+import {IECDSACertificateVerifier, IECDSACertificateVerifierTypes} from "@crane/contracts/external/eigenlayer/contracts/interfaces/IECDSACertificateVerifier.sol";
+import {IOperatorTableCalculatorTypes} from "@crane/contracts/external/eigenlayer/contracts/interfaces/IOperatorTableCalculator.sol";
+import {OperatorSet, OperatorSetLib} from "@crane/contracts/external/eigenlayer/contracts/libraries/OperatorSetLib.sol";
+import {BN254} from "@crane/contracts/external/eigenlayer/contracts/libraries/BN254.sol";
+import {IKeyRegistrarTypes} from "@crane/contracts/external/eigenlayer/contracts/interfaces/IKeyRegistrar.sol";
+import {TaskMailbox} from "@crane/contracts/external/eigenlayer/contracts/avs/task/TaskMailbox.sol";
+import {ITaskMailboxTypes, ITaskMailboxErrors, ITaskMailboxEvents} from "@crane/contracts/external/eigenlayer/contracts/interfaces/ITaskMailbox.sol";
+import {IAVSTaskHook} from "@crane/contracts/external/eigenlayer/contracts/interfaces/IAVSTaskHook.sol";
 
-import {MockAVSTaskHook} from "src/test/mocks/MockAVSTaskHook.sol";
-import {MockBN254CertificateVerifier} from "src/test/mocks/MockBN254CertificateVerifier.sol";
-import {MockBN254CertificateVerifierFailure} from "src/test/mocks/MockBN254CertificateVerifierFailure.sol";
-import {MockECDSACertificateVerifier} from "src/test/mocks/MockECDSACertificateVerifier.sol";
-import {MockECDSACertificateVerifierFailure} from "src/test/mocks/MockECDSACertificateVerifierFailure.sol";
-import {MockSimpleERC20} from "src/test/mocks/MockSimpleERC20.sol";
-import {AVSTaskHookReentrantAttacker} from "src/test/mocks/AVSTaskHookReentrantAttacker.sol";
+import {MockAVSTaskHook} from "@crane/contracts/external/eigenlayer/test/mocks/MockAVSTaskHook.sol";
+import {MockBN254CertificateVerifier} from "@crane/contracts/external/eigenlayer/test/mocks/MockBN254CertificateVerifier.sol";
+import {MockBN254CertificateVerifierFailure} from "@crane/contracts/external/eigenlayer/test/mocks/MockBN254CertificateVerifierFailure.sol";
+import {MockECDSACertificateVerifier} from "@crane/contracts/external/eigenlayer/test/mocks/MockECDSACertificateVerifier.sol";
+import {MockECDSACertificateVerifierFailure} from "@crane/contracts/external/eigenlayer/test/mocks/MockECDSACertificateVerifierFailure.sol";
+import {MockSimpleERC20} from "@crane/contracts/external/eigenlayer/test/mocks/MockSimpleERC20.sol";
+import {AVSTaskHookReentrantAttacker} from "@crane/contracts/external/eigenlayer/test/mocks/AVSTaskHookReentrantAttacker.sol";
 
 contract TaskMailboxUnitTests is Test, ITaskMailboxTypes, ITaskMailboxErrors, ITaskMailboxEvents {
     using OperatorSetLib for OperatorSet;

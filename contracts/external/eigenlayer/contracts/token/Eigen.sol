@@ -2,8 +2,8 @@
 pragma solidity ^0.8.27;
 
 import "@crane/contracts/external/openzeppelin-contracts-v5/token/ERC20/IERC20.sol";
-import "@openzeppelin-upgrades/contracts/token/ERC20/extensions/ERC20VotesUpgradeable.sol";
-import "@openzeppelin-upgrades/contracts/access/OwnableUpgradeable.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/token/ERC20/extensions/ERC20VotesUpgradeable.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/access/OwnableUpgradeable.sol";
 
 import "../mixins/SemVerMixin.sol";
 
@@ -183,14 +183,14 @@ contract Eigen is OwnableUpgradeable, ERC20VotesUpgradeable, SemVerMixin {
 
     /// @dev Clock used for flagging checkpoints. Has been overridden to implement timestamp based
     /// checkpoints (and voting).
-    function clock() public view override returns (uint48) {
+    function clock() public view returns (uint48) {
         return SafeCastUpgradeable.toUint48(block.timestamp);
     }
 
     /// @dev Machine-readable description of the clock as specified in EIP-6372.
     /// Has been overridden to inform callers that this contract uses timestamps instead of block numbers, to match `clock()`
     // solhint-disable-next-line func-name-mixedcase
-    function CLOCK_MODE() public pure override returns (string memory) {
+    function CLOCK_MODE() public pure returns (string memory) {
         return "mode=timestamp";
     }
 }

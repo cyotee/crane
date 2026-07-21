@@ -3,7 +3,7 @@
 // Adapted from OpenZeppelin `Checkpoints` contract
 pragma solidity >=0.8.30 <0.9.0;
 
-import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts-v4/utils/math/SafeCast.sol";
+import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts-v5/utils/math/SafeCast.sol";
 
 import {RocketStorageInterface} from "../../interface/RocketStorageInterface.sol";
 import {RocketNetworkSnapshotsInterface} from "../../interface/network/RocketNetworkSnapshotsInterface.sol";

@@ -2,13 +2,13 @@
 pragma solidity ^0.8.0;
 
 import "../interfaces/ISemVerMixin.sol";
-import "@openzeppelin-upgrades/contracts/utils/ShortStringsUpgradeable.sol";
+import "@crane/contracts/external/openzeppelin-contracts-v5/utils/ShortStrings.sol";
 
 /// @title SemVerMixin
 /// @notice A mixin contract that provides semantic versioning functionality.
 /// @dev Follows SemVer 2.0.0 specification (https://semver.org/).
 abstract contract SemVerMixin is ISemVerMixin {
-    using ShortStringsUpgradeable for *;
+    using ShortStrings for *;
 
     /// @notice The semantic version string for this contract, stored as a ShortString for gas efficiency.
     /// @dev Follows SemVer 2.0.0 specification (https://semver.org/).

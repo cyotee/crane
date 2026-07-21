@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: BUSL-1.1
+import {ShortStrings} from "@crane/contracts/external/openzeppelin-contracts-v5/utils/ShortStrings.sol";
 pragma solidity ^0.8.27;
 
-import "@openzeppelin-upgrades/contracts/proxy/utils/Initializable.sol";
-import "@openzeppelin-upgrades/contracts/access/AccessControlEnumerableUpgradeable.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/proxy/utils/Initializable.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/access/AccessControlEnumerableUpgradeable.sol";
 import "../interfaces/IPausable.sol";
 import "./storage/ProtocolRegistryStorage.sol";
 
 contract ProtocolRegistry is Initializable, AccessControlEnumerableUpgradeable, ProtocolRegistryStorage {
-    using ShortStringsUpgradeable for *;
+    using ShortStrings for *;
     using EnumerableMap for EnumerableMap.UintToAddressMap;
 
     ///

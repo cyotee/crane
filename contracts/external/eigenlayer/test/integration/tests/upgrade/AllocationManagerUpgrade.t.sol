@@ -2,7 +2,7 @@
 pragma solidity ^0.8.27;
 
 import "src/test/integration/UpgradeTest.t.sol";
-import {OperatorSet} from "src/contracts/libraries/OperatorSetLib.sol";
+import {OperatorSet} from "@crane/contracts/external/eigenlayer/contracts/libraries/OperatorSetLib.sol";
 
 contract Integration_Upgrade_AllocationManager is UpgradeTest {
     using ArrayLib for *;

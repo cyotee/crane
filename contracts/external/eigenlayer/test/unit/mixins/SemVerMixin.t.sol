@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import {Test} from "forge-std/Test.sol";
-import {SemVerMixin} from "src/contracts/mixins/SemVerMixin.sol";
+import {SemVerMixin} from "@crane/contracts/external/eigenlayer/contracts/mixins/SemVerMixin.sol";
 
 // Helper contract to test the abstract SemVerMixin
 contract SemVerMixinMock is SemVerMixin {

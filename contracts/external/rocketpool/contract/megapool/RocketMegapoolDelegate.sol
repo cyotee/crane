@@ -12,7 +12,7 @@ import {RocketRewardsPoolInterface} from "../../interface/rewards/RocketRewardsP
 import {RocketTokenRETHInterface} from "../../interface/token/RocketTokenRETHInterface.sol";
 import {RocketMegapoolDelegateBase} from "./RocketMegapoolDelegateBase.sol";
 import {RocketMegapoolStorageLayout} from "./RocketMegapoolStorageLayout.sol";
-import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts-v4/utils/math/SafeCast.sol";
+import {SafeCast} from "@crane/contracts/external/openzeppelin-contracts-v5/utils/math/SafeCast.sol";
 
 /// @notice This contract manages multiple validators belonging to an individual node operator.
 ///         It serves as the withdrawal credentials for all Beacon Chain validators managed by it.

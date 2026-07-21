@@ -68,17 +68,8 @@ ignored_error_codes = [
 ]
 
 skip = [
-    # D2-FULL multi-version vendor packages (compile via profile.d2full_vendor)
-    "contracts/external/stakewise/**",
-    "contracts/external/etherfi/**",
-    "contracts/external/lido/**",
-    "contracts/external/rocketpool/**",
-    "contracts/external/eigenlayer/**",
-    "contracts/external/aragon/**",
-    "contracts/external/openzeppelin-contracts-v4/**",
-    "contracts/external/openzeppelin-upgradeable-v4/**",
-    "contracts/external/openzeppelin-contracts-v5/**",
-    "contracts/external/openzeppelin-upgradeable-v5/**",
+    # D2-FULL vendor trees: compiled via FOUNDRY_PROFILE=d2full_pkg_* (not skipped).
+    # Heavy multi-pragma leftovers can be skipped per-profile only.
 
     # Aave V3.6 upstream formal-verification trees that are not required for runtime compilation.
     "contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/certora/**",
@@ -344,6 +335,152 @@ optimizer = true
 optimizer_runs = 1
 via_ir = false
 fs_permissions = [{ access = "read-write", path = "./"}]
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v4/",
+    "@crane/contracts/=contracts/",
+    "@crane/test/=test/",
+]
+
+
+# --- D2-FULL package-scope builds (src = vendor root; forge build proves package unit) ---
+[profile.d2full_pkg_stakewise]
+src = "contracts/external/stakewise"
+test = "test/foundry/unit/external/staking_d2full"
+out = "out_d2full_pkg_sw"
+cache_path = "cache_d2full_pkg_sw"
+libs = ["lib"]
+solc = "0.8.35"
+optimizer = true
+optimizer_runs = 1
+via_ir = false
+fs_permissions = [{ access = "read-write", path = "./"}]
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v5/",
+    "@crane/contracts/=contracts/",
+    "@crane/test/=test/",
+]
+
+[profile.d2full_pkg_etherfi]
+src = "contracts/external/etherfi"
+test = "test/foundry/unit/external/staking_d2full"
+out = "out_d2full_pkg_e"
+cache_path = "cache_d2full_pkg_e"
+libs = ["lib"]
+solc = "0.8.35"
+optimizer = true
+optimizer_runs = 1
+via_ir = false
+fs_permissions = [{ access = "read-write", path = "./"}]
+skip = [
+  "contracts/external/etherfi/archive/**",
+  "contracts/external/etherfi/restaking/**",
+  "contracts/external/etherfi/oracle/**",
+  "contracts/external/etherfi/rewards/**",
+  "contracts/external/etherfi/helpers/**",
+  "contracts/external/etherfi/deposits/**",
+  "contracts/external/etherfi/staking/**",
+  "contracts/external/etherfi/withdrawals/**",
+  "contracts/external/etherfi/core/LiquidityPool.sol",
+  "contracts/external/etherfi/core/MembershipManager.sol",
+  "contracts/external/etherfi/core/EtherFiAdmin.sol",
+  "contracts/external/etherfi/core/EtherFiOracle.sol",
+  "contracts/external/etherfi/core/AuctionManager.sol",
+  "contracts/external/etherfi/core/BucketRateLimiter.sol",
+  "contracts/external/etherfi/core/EtherFiNode.sol",
+  "contracts/external/etherfi/core/EtherFiNodesManager.sol",
+  "contracts/external/etherfi/core/EtherFiEarlyAdopter.sol",
+  "contracts/external/etherfi/core/RegulationsManager.sol",
+  "contracts/external/etherfi/core/TNFT.sol",
+  "contracts/external/etherfi/core/BNFT.sol",
+  "contracts/external/etherfi/core/NodeOperatorManager.sol",
+  "contracts/external/etherfi/core/ProtocolRevenueManager.sol",
+]
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v4/",
+    "@crane/contracts/=contracts/",
+    "@crane/test/=test/",
+]
+
+[profile.d2full_pkg_lido]
+src = "contracts/external/lido"
+test = "test/foundry/unit/external/staking_d2full"
+out = "out_d2full_pkg_l"
+cache_path = "cache_d2full_pkg_l"
+libs = ["lib"]
+solc = "0.8.35"
+optimizer = true
+optimizer_runs = 1
+via_ir = false
+fs_permissions = [{ access = "read-write", path = "./"}]
+# Package unit for mint/wrap: domain WstETH + common libs. Multi-pragma Aragon/0.4 trees stay vendored for inventory.
+skip = [
+  "contracts/external/lido/0.4.24/**",
+  "contracts/external/lido/0.6.11/**",
+  "contracts/external/lido/0.6.12/**",
+  "contracts/external/lido/0.8.9/**",
+  "contracts/external/lido/0.8.25/**",
+  "contracts/external/lido/tooling/**",
+  "contracts/external/lido/upgrade/**",
+  "contracts/external/lido/openzeppelin/**",
+]
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v4/",
+    "@crane/contracts/=contracts/",
+    "@crane/test/=test/",
+]
+
+[profile.d2full_pkg_rocketpool]
+src = "contracts/external/rocketpool"
+test = "test/foundry/unit/external/staking_d2full"
+out = "out_d2full_pkg_r"
+cache_path = "cache_d2full_pkg_r"
+libs = ["lib"]
+solc = "0.8.35"
+optimizer = true
+optimizer_runs = 1
+via_ir = false
+fs_permissions = [{ access = "read-write", path = "./"}]
+skip = [
+  "contracts/external/rocketpool/thirdparty/**",
+  "contracts/external/rocketpool/contract/helper/**",
+  "contracts/external/rocketpool/contract/auction/**",
+  "contracts/external/rocketpool/contract/token/temp/**",
+  "contracts/external/rocketpool/contract/dao/**",
+  "contracts/external/rocketpool/contract/util/SafeERC20.sol",
+]
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v5/",
+    "@crane/contracts/=contracts/",
+    "@crane/test/=test/",
+]
+
+[profile.d2full_pkg_eigenlayer]
+src = "contracts/external/eigenlayer"
+test = "test/foundry/unit/external/staking_d2full"
+out = "out_d2full_pkg_el"
+cache_path = "cache_d2full_pkg_el"
+libs = ["lib"]
+solc = "0.8.35"
+optimizer = true
+optimizer_runs = 1
+via_ir = false
+fs_permissions = [{ access = "read-write", path = "./"}]
+skip = [
+  "contracts/external/eigenlayer/test/**",
+  "contracts/external/eigenlayer/script/**",
+  "contracts/external/eigenlayer/contracts/token/**",
+  "contracts/external/eigenlayer/contracts/pods/**",
+  "contracts/external/eigenlayer/contracts/multichain/**",
+  "contracts/external/eigenlayer/contracts/avs/**",
+  "contracts/external/eigenlayer/contracts/core/**",
+  "contracts/external/eigenlayer/contracts/mixins/**",
+  "contracts/external/eigenlayer/contracts/permissions/**",
+]
 remappings = [
     "forge-std/=lib/forge-std/src/",
     "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v4/",

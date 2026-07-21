@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.27;
 
-import {IECDSACertificateVerifier} from "src/contracts/interfaces/IECDSACertificateVerifier.sol";
-import {OperatorSet} from "src/contracts/libraries/OperatorSetLib.sol";
+import {IECDSACertificateVerifier} from "@crane/contracts/external/eigenlayer/contracts/interfaces/IECDSACertificateVerifier.sol";
+import {OperatorSet} from "@crane/contracts/external/eigenlayer/contracts/libraries/OperatorSetLib.sol";
 
 contract MockECDSACertificateVerifier is IECDSACertificateVerifier {
     // Mapping to store operator set owners for testing

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.0;
 
-import "@openzeppelin-upgrades/contracts/proxy/utils/Initializable.sol";
-import "@openzeppelin-upgrades/contracts/utils/ContextUpgradeable.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/proxy/utils/Initializable.sol";
+import "@crane/contracts/external/openzeppelin-upgradeable-v4/utils/ContextUpgradeable.sol";
 
 /// @title Deprecated_OwnableUpgradeable
 /// @dev This contract can be inherited in place of OpenZeppelin's OwnableUpgradeable
