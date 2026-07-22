@@ -56,3 +56,5 @@ demos/
 | Omni SDK | `contracts/external/reactive-omni/` |
 | Test harness | `contracts/external/reactive-test-lib/` |
 | Package tests | `test/foundry/spec/protocols/messaging/reactive/test-lib/` |
+
+| System contracts | `contracts/external/reactive-system/` |

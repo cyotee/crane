@@ -45,3 +45,5 @@ Example contracts that consume this SDK live at:
 | Omni (next-gen API) | `contracts/external/reactive-omni/` |
 | Foundry test harness | `contracts/external/reactive-test-lib/` |
 | Demos | `contracts/protocols/messaging/reactive/demos/` |
+
+| System contracts | `contracts/external/reactive-system/` |

@@ -42,3 +42,5 @@ test/foundry/spec/protocols/messaging/reactive/test-lib/
 - Classic SDK: `contracts/external/reactive/`
 - Omni SDK: `contracts/external/reactive-omni/`
 - Demos: `contracts/protocols/messaging/reactive/demos/`
+
+| System contracts | `contracts/external/reactive-system/` |

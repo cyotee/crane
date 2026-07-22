@@ -39,3 +39,5 @@ This is a **separate API** from `contracts/external/reactive/` (classic reactive
 - Imports rewritten from relative `../interfaces` / `./` to `@crane/contracts/external/reactive-omni/...`.
 - Layout: upstream `src/{base,interfaces}` → package root (no `src/` prefix).
 - No logic changes.
+
+| System contracts | `contracts/external/reactive-system/` |
