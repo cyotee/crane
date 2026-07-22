@@ -7,18 +7,18 @@ This directory holds **historical or non-product** material that should not appe
 | Path | Purpose |
 |------|---------|
 | `internal-plans/` | Small set of historical PRDs, porting notes, and funding/governance drafts moved off the repo root |
-| `audits/` (if present) | Third-party audit PDFs kept thin in-tree for convenience |
+| `audits/` | Third-party audit PDFs kept thin in-tree for convenience |
 
-## What lives elsewhere
+## Bulk history (external)
 
-Large generated bulk (gap-report mirrors, HTML research scrapes, and similar) is **not** kept on the default branch. Historical copies live in the separate archive repository:
+Large generated bulk (gap-report mirrors, HTML research scrapes) lives in a separate repository so clones of Crane stay product-focused:
 
-- **[cyotee/crane-archive](https://github.com/cyotee/crane-archive)** (created as part of the public release)
+**https://github.com/cyotee/crane-archive**
 
-If that repository is not yet published, treat bulk scrapes as intentionally removed from the public surface.
+Do not re-import those trees into this default branch.
 
 ## Rules
 
 1. Product documentation belongs under `docs/` with a `SUMMARY.md` entry — not under `archive/`.
-2. Do not re-import gap mirrors, coverage dumps, or HTML scrapes into this tree.
-3. Prefer short, curated notes over dumping agent session logs.
+2. Prefer short, curated notes over dumping agent session logs.
+3. Funding / token narratives are not part of the framework front door; historical drafts may remain under `internal-plans/`.
