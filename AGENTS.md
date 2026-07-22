@@ -11,12 +11,31 @@ If PROGRESS.md exists in the project root, read it for cross-session context bef
   - `crane-architecture` for Facet-Target-Repo, DFPkg structure, storage slots, etc.
   - `crane-testing` for `CraneTest`, TestBase inheritance, factory bootstrap, Behavior libraries, handlers, and **production-first testing**.
   - `crane-adversarial-testing` for abuse/attack catalogs, reentrancy harnesses, donation/manipulation suites, and production-first adversarial Foundry tests (vaults, diamonds, ERC-4626-like products).
+  - `crane-porting` for vendoring protocols into `contracts/external` + `contracts/protocols` with **shared** transitive deps (no new private OZ/Solady trees).
+  - `crane-porting-verification` for hermetic/fork/Behavior gates that prove a port works (required for DoD).
+  - `docs-to-skills` for scraping/crawling full documentation sites and emitting compartmentalized skill families (complete inventory required).
+  - `skill-authoring` for progressive-disclosure skill writing (lean SKILL.md, `references/`, discovery descriptions).
+- **Agent identities:**
+  - `.claude/agents/crane-porter.md` — end-to-end protocol port sessions.
+  - `.claude/agents/docs-skill-scribe.md` — docs-site crawl → skill family authoring.
 - See `docs/` (especially `docs/deployment/` and `docs/development/testing.md`) for additional reference material.
 - See `docs/CODEBASE_MAP.md` for architecture overview.
+- See `DEFI_PORTING_PRD.md`, `DEDUPLICATION.md`, and `Aave_Vendored_Dependencies_Dedup_Plan.md` for the porting/dedup program.
 - Generic Foundry primers (`forge-testing`) are subordinate to `crane-testing` for protocol and Diamond work.
 - Adversarial / security abuse tests: use `crane-adversarial-testing` (not happy-path-only coverage).
 
 Consumers of Crane may layer additional rules (e.g. registries for certain packages). Those details belong in the consumer's documentation.
+
+## Protocol porting (summary)
+
+Faithful domain contracts + remapped shared dependencies:
+
+| Tree | Role |
+|------|------|
+| `contracts/external/` | Vendored upstream + shared frameworks (OZ, Solady, unique transitives). Each package: `VENDOR.md`. |
+| `contracts/protocols/` | Crane wrappers (Service/Aware/FTR/DFPkg), stubs for hermetic deploy, protocol TestBases. |
+
+Rules: expand shared external first; remap imports to `@crane/contracts/external/...`; never route OZ-semantic domain code onto Crane-native Ownable/Context; no new git submodules; tests required (`crane-porting-verification`).
 
 ## Codebase Overview
 

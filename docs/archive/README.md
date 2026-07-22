@@ -1,15 +1,24 @@
-# Docs Archive
+# Archive policy
 
-Material moved out of the GitBook publish surface (`docs/` root used by `.gitbook.yaml`).
+This directory holds **historical or non-product** material that should not appear in the public docs navigation (`docs/SUMMARY.md`) or mdBook site.
 
-| Archived path | Former path | Reason |
-|---------------|-------------|--------|
-| `reports/` | `docs/reports/` | Gap reports / bulk generated markdown |
-| `audits/` | `docs/audits/` | Third-party audit PDFs |
-| `research-scrapes/` | Balancer Hack HTML dumps | Offline research, not framework docs |
-| `internal-plans/` | Various `docs/*_PLAN*.md` guides | Porting/status internal |
-| `code/` | `docs/code/` | AsciiDoc extracts, not product nav |
+## What stays in this repo
 
-These paths are **not** listed in `docs/SUMMARY.md` and should not be GitBook primary pages.
+| Path | Purpose |
+|------|---------|
+| `internal-plans/` | Small set of historical PRDs, porting notes, and funding/governance drafts moved off the repo root |
+| `audits/` (if present) | Third-party audit PDFs kept thin in-tree for convenience |
 
-**NatSpec central values** (if needed for regen): `docs/archive/reports/gap/CENTRALLY_COMPUTED_NATSPEC_VALUES.md` (former `docs/reports/gap/...`).
+## What lives elsewhere
+
+Large generated bulk (gap-report mirrors, HTML research scrapes, and similar) is **not** kept on the default branch. Historical copies live in the separate archive repository:
+
+- **[cyotee/crane-archive](https://github.com/cyotee/crane-archive)** (created as part of the public release)
+
+If that repository is not yet published, treat bulk scrapes as intentionally removed from the public surface.
+
+## Rules
+
+1. Product documentation belongs under `docs/` with a `SUMMARY.md` entry — not under `archive/`.
+2. Do not re-import gap mirrors, coverage dumps, or HTML scrapes into this tree.
+3. Prefer short, curated notes over dumping agent session logs.

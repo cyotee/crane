@@ -12,6 +12,15 @@ Crane ships with a rich library of skills under `.claude/skills/`. These enable 
 - `crane-access` — Operable, ERC8023 MultiStepOwnable, reentrancy.
 - `crane-tokens` — ERC20/2612/4626 native implementations + DFPkgs + Permit2 aware.
 - `crane-utilities` — Math (ConstProdUtils), sets, EIP712, cryptography, pagination.
+- `crane-porting` — How to vendor protocols into `contracts/external` + `contracts/protocols` with shared transitive deps (no private OZ clones).
+- `crane-porting-verification` — Hermetic/fork tests, Behaviors, and definition-of-done gates for ports.
+- `docs-to-skills` — Crawl full documentation sites/trees; inventory every page; emit multi-skill families with coverage reports.
+- `skill-authoring` — Progressive disclosure, description triggers, compartmentalized `references/`, quality checklists for SKILL.md.
+
+### Agent identities
+
+- `crane-porter` (`.claude/agents/crane-porter.md`) — end-to-end protocol porting sessions (vendor, remap, wrap, verify).
+- `docs-skill-scribe` (`.claude/agents/docs-skill-scribe.md`) — documentation scrape → progressive-disclosure skill families.
 
 ## Protocol Skills (Reusable Ports)
 
@@ -44,10 +53,18 @@ Skills live in this repo under `.claude/skills/<name>/SKILL.md`.
 
 See the root AGENTS.md for broader instructions.
 
-## Related Tools
+## Installable marketplaces
 
-- Bankr CLI + skills for token launch and fee-funded compute.
-- Forge skills (`forge-testing`, `forge-fuzz-testing`, `forge-deployment`).
-- External: tevm, voltaire-effect, wagmi (for TS/JS agent tooling).
+For agents that load skills via Claude Code / Codex / Grok / OpenCode marketplaces:
 
-Using these skills together gives agents a secure, cheap, reproducible way to build and ship production-grade on-chain software.
+| Marketplace | Audience | Install |
+|-------------|----------|---------|
+| [cyotee/cyotee-claude-plugins](https://github.com/cyotee/cyotee-claude-plugins) | Developers building on Crane and DeFi protocols | `/plugin marketplace add cyotee/cyotee-claude-plugins` then `/plugin install crane@cyotee` |
+| [cyotee/defi-agent-skills](https://github.com/cyotee/defi-agent-skills) | Agents operating on-chain (cast/Bankr runbooks) | `/plugin marketplace add cyotee/defi-agent-skills` |
+
+## Related tools
+
+- Forge skills (`forge-testing`, `forge-fuzz-testing`, `forge-deployment`)
+- Optional TS/JS agent tooling (tevm, voltaire-effect, wagmi) via the developer marketplace
+
+Using these skills together gives agents a structured way to build and ship modular on-chain software with Crane patterns.

@@ -1,78 +1,35 @@
 # Crane
 
-**Diamond-first (ERC2535) Solidity development framework for modular, upgradeable DeFi contracts.**
+**Diamond-first (ERC-2535) Solidity framework for modular, upgradeable smart contracts.**
 
-Crane separates storage (Repo), business logic (Target), and Diamond exposure (Facet) into distinct layers. Core factories and facets deploy once at deterministic CREATE3 addresses. Diamond proxies and packages compose instances cheaply and reproducibly across every EVM chain.
+Crane separates storage (**Repo**), business logic (**Target**), and Diamond exposure (**Facet**) into clear layers. CREATE3 factories and Diamond packages deploy once at deterministic addresses; proxies compose instances cheaply across EVM chains. The same structure is designed for **humans and AI agents**: reuse verified facets instead of redeploying risk.
 
-Production-grade implementation: 270+ tracked tasks, full factory system, extensive protocol integrations, and a native AI-agent skill library.
+- **Docs (GitHub Pages):** https://cyotee.github.io/crane/
+- **Repository:** https://github.com/cyotee/crane
+- **Agent marketplaces:** [cyotee-claude-plugins](https://github.com/cyotee/cyotee-claude-plugins) (build) · [defi-agent-skills](https://github.com/cyotee/defi-agent-skills) (operate)
 
-## Primary Value
+## Why Crane
 
-- **Deterministic factories** — CREATE3 + DiamondPackageCallBackFactory for cross-chain reproducible deployments.
-- **One-time logic cost** — Facets + packages deployed once; unlimited proxies reuse them (see "Reusability for Agents: Security and Cost (LR-4)" below for exact rationale and agent examples).
-- **Structured architecture** — Facet-Target-Repo + AwareRepo + Service patterns keep code maintainable and auditable.
-- **Battle-tested release process** — Every significant primitive **must** survive adversarial testing on BattleChain before Base/mainnet promotion.
-- **Agent-native** — Pre-built skills for Claude Code / Bankr / other agents covering Balancer V3 (all pool types), Uniswap V3/V4, Aerodrome + Slipstream, Camelot, Aave, Euler, Compound Comet, Resupply, and more.
+| Capability | What you get |
+|------------|----------------|
+| **Deterministic factories** | CREATE3 + Diamond package factory for reproducible cross-chain deploys |
+| **Deploy once, attach often** | Facets and packages reused via DFPkgs instead of redeploying bytecode every project |
+| **Facet-Target-Repo** | Storage slots, thin targets, metadata-rich facets — easier to audit and agent-generate |
+| **Foundry-native tests** | `TestBase_*`, `Behavior_*`, handlers, and fork patterns alongside the code |
+| **Agent-native** | Skills under `.claude/skills/` plus installable marketplaces |
 
-## Reusability for Agents: Security and Cost (LR-4)
+Primary security advantage for agent-driven work: **reuse already deployed and verified logic**. New Diamonds attach existing facets rather than regenerating large surfaces of unaudited bytecode.
 
-The primary security advantage of Crane is the ability to **reuse already deployed and verified code**. When code is known to be good, reusing it (via facets attached through DFPkgs) eliminates the risk of introducing new bugs through inadvertent changes. This risk is especially high when development or deployment work is delegated to an AI agent. Reusing battle-tested, already-audited deployed logic removes that class of error.
-
-Because you can reuse already deployed facets and packages, you do not need to deploy that code yourself on every project or chain instance. This directly saves gas by simply not needing to deploy as much bytecode.
-
-Crane enables **agent-proof reuse** and **"deploy once, attach everywhere"**:
-
-- Use the Create3FactoryDFPkg (via `packageName()` selector `0xabc8b346` and related from central values) to bootstrap your own Create3Factory once per new chain for deterministic deployments.
-- The DiamondPackageCallBackFactory (interface ID `0x949da331` from `CENTRALLY_COMPUTED_NATSPEC_VALUES.md`; e.g. `deploy` at `0xe97fac05`) is safe for public reuse — it does **not** need to be redeployed per chain. Deploy proxies from packages without duplicating the factory logic.
-- Registries (Facet, Package, CallTarget) are auto-populated during Create3Factory and DFPkg operations; query them via canonical getters for already-verified components.
-- Attach facets from any DFPkg (e.g. `facetCuts()`, `initAccount()` at `0x870d4838`, `postDeploy()` at `0x70068fcf`) to compose Diamonds cheaply.
-- For development, inherit protocol TestBases (e.g. `TestBase_CamelotV2`, `TestBase_BalancerV3Vault`) and use utilities such as `ConstProdUtils` and type Sets (AddressSet/Bytes4Set + *SetRepo patterns) to accelerate agent-driven implementation with shared, tested logic.
-
-All claims are grounded in this reuse-based reasoning. See [docs/SUMMARY.md](docs/SUMMARY.md) (GitBook nav), [docs/getting-started.md](docs/getting-started.md), [docs/deployment/create3.md](docs/deployment/create3.md), [docs/deployment/dfpkg.md](docs/deployment/dfpkg.md), [docs/development/testing.md](docs/development/testing.md), and `.claude/skills/` (crane-deployment, crane-architecture, crane-testing) for usage. Cross-reference [AGENTS.md](AGENTS.md) for patterns and central NatSpec values (e.g. IFacet selectors `0x5b6f4d01`, `0x2ea80826`).
-
-## The DAOSYS Token + Bounty Board
-
-The DAOSYS token (name: DAOSYS, symbol: DAOSYS) represents the broader DAOSYS project (this workspace + Crane framework). It serves as the work token for an on-chain bounty board where AI agents (and humans) get paid to extend Crane, the DAOSYS examples, frontend tooling, and on-chain coordination features:
-
-- Anyone deposits DAOSYS to post a feature request with milestone terms.
-- Agents claim work, deliver PRs + tests + BattleChain survival (where applicable), and earn DAOSYS on approval.
-- Agents sell earned DAOSYS for compute credits (via Bankr LLM Gateway).
-- Trading fees on the DAOSYS token (launched via BankrBot on Base) help sustain ongoing development.
-
-The token contracts, bounty board, and UI will be implemented in the DAOSYS repo (using Crane's Diamond factories, DFPkgs, and patterns).
-
-Full model: see Crane's [GOVERNANCE.md](GOVERNANCE.md) and [BANKR_LAUNCH.md](BANKR_LAUNCH.md) (rebranded for the DAOSYS launch), plus future docs in the DAOSYS root.
-
-**Token launch target:** Base (via BankrBot fair launch). Core components first battle-tested on BattleChain (627/626) as needed.
-
-## BattleChain Security Gate (Required)
-
-Before any mainnet deployment of Crane factories, packages, or ported protocol components:
-
-1. Deploy to BattleChain testnet (627), then mainnet (626).
-2. Create Safe Harbor agreement (scope the top-level Create3Factory with `ChildContractScope.All` for lineage coverage).
-3. Request attack mode → survive whitehat testing.
-4. Promote to PRODUCTION.
-5. Only then ship identical bytecode to Base or other chains.
-
-See the pilot in `scripts/foundry/Script_Pilot_BC_ERC20Permit.s.sol` + `contracts/InitBcService.sol`. Update AGENTS.md in consuming repos.
-
-BattleChain docs (machine readable): https://docs.battlechain.com/llms-full.txt
-
-## Core Patterns
-
-- **Facet-Target-Repo** — Storage libraries with assembly slot binding, thin Targets, metadata-rich Facets implementing IFacet.
-- **DFPkg + Diamond Factory** — Bundled facet cuts + init logic for repeatable Diamonds.
-- **CREATE3 determinism** — Salt from type name hashes.
-- **Test infrastructure** — `TestBase_*` + `Behavior_*` libraries + declarative invariant handlers live alongside the code.
-
-See [AGENTS.md](AGENTS.md) and [docs/CODEBASE_MAP.md](docs/CODEBASE_MAP.md) for details.
-
-## Quick Start (Dev / Tests)
+## Quick start
 
 ```bash
+git clone --recurse-submodules https://github.com/cyotee/crane.git
+cd crane
 forge build
-forge test
+
+# Core path used by CI (recommended for most work)
+FOUNDRY_PROFILE=ci forge build
+FOUNDRY_PROFILE=ci forge test
 ```
 
 Bootstrap factories in tests:
@@ -80,50 +37,91 @@ Bootstrap factories in tests:
 ```solidity
 import {InitDevService} from "@crane/contracts/InitDevService.sol";
 
-(contract ICreate3FactoryProxy create3Factory, IDiamondPackageCallBackFactory diamondFactory) =
+(ICreate3FactoryProxy create3Factory, IDiamondPackageCallBackFactory diamondFactory) =
     InitDevService.initEnv(address(this));
 ```
 
-For BattleChain deploys use the parallel `InitBcService.initEnvBc(...)`.
+See [docs/getting-started.md](docs/getting-started.md) and [docs/SUMMARY.md](docs/SUMMARY.md).
 
-## Documentation & Skills
+## Documentation
 
-- **Published docs (GitHub Pages)**: https://cyotee.github.io/crane/
-- **Source (Markdown)**: [docs/](docs/) · nav: [docs/SUMMARY.md](docs/SUMMARY.md)
-- **Local preview**: `bash scripts/build_docs_pages.sh && mdbook serve --open` (after `mdbook` is installed)
-- **Getting Started (incl. For AI Agents)**: [docs/getting-started.md](docs/getting-started.md)
-- **Building Custom Modules**: [docs/concepts/building-with-crane.md](docs/concepts/building-with-crane.md)
-- NatSpec + include-tag standard: [AGENTS.md](AGENTS.md) and [docs/development/natspec.md](docs/development/natspec.md)
-- **AI Agent Skills**: `.claude/skills/` (crane-* core + 50+ protocol deep-dives for Aave, Balancer, Uniswap, Aerodrome/Slipstream, Euler, etc.). See [docs/reference/agent-skills.md](docs/reference/agent-skills.md).
+| Resource | Link |
+|----------|------|
+| Published docs | https://cyotee.github.io/crane/ |
+| Getting started | [docs/getting-started.md](docs/getting-started.md) |
+| Building with Crane | [docs/concepts/building-with-crane.md](docs/concepts/building-with-crane.md) |
+| CREATE3 / DFPkg | [docs/deployment/](docs/deployment/) |
+| Testing | [docs/development/testing.md](docs/development/testing.md) |
+| Contributor guide | [AGENTS.md](AGENTS.md) · [CONTRIBUTING.md](CONTRIBUTING.md) |
 
-## Build & Test Commands
+Local docs preview (requires [mdBook](https://rust-lang.github.io/mdBook/)):
+
+```bash
+bash scripts/build_docs_pages.sh
+mdbook serve --open
+```
+
+## AI agents
+
+Crane is intended for AI-assisted Solidity development:
+
+1. **In-repo skills** — `.claude/skills/` (`crane-architecture`, `crane-deployment`, `crane-testing`, protocol deep-dives, etc.). See [docs/reference/agent-skills.md](docs/reference/agent-skills.md).
+2. **Developer marketplace** — architecture, Crane commands, Foundry, protocol skills:
+
+   ```bash
+   /plugin marketplace add cyotee/cyotee-claude-plugins
+   /plugin install crane@cyotee
+   ```
+
+3. **Ops marketplace** — on-chain cast/Bankr runbooks (product operations, not architecture dumps):
+
+   ```bash
+   /plugin marketplace add cyotee/defi-agent-skills
+   /plugin install foundry-agent@defi-agent-skills
+   ```
+
+Also works with Codex, Grok Build, and OpenCode (see each marketplace README).
+
+## Architecture (short)
+
+- **Facet-Target-Repo** — assembly-bound storage libraries, thin Targets, Facets implementing `IFacet`
+- **DFPkg** — bundled facet cuts + init for repeatable Diamonds
+- **CREATE3** — salt from type-name hashes for deterministic addresses
+- **Registries** — facet / package / call-target discovery as factories run
+
+Details: [docs/concepts/](docs/concepts/) and [docs/CODEBASE_MAP.md](docs/CODEBASE_MAP.md).
+
+## Protocol ports & maturity
+
+Crane vendors and wraps many DeFi protocols (Uniswap, Balancer, Aerodrome, Aave, Euler, and others) under `contracts/protocols/` and `contracts/external/`.
+
+**Core factories, access control, tokens, and registries** are the primary supported product surface. Individual protocol ports vary from production-oriented wrappers to vendored-upstream / experimental. Prefer docs and skills for a given port, and do not assume every tree is battle-tested for mainnet.
+
+## Build & test commands
 
 ```bash
 forge build
-forge test
+FOUNDRY_PROFILE=ci forge test
 forge test --match-path test/foundry/spec/... -vvv
 forge fmt
 ```
 
-See full commands in [AGENTS.md](AGENTS.md).
+Full monorepo compile (including large protocol trees) can require significant memory; use the **ci** profile for a reliable core gate.
 
-## Professional Launch Readiness & Token
+## Security
 
-This repo is being prepared to professional standards so that other agents can confidently use Crane to build and deploy secure, low-cost modular contracts:
+Please report vulnerabilities privately via GitHub Security Advisories:
 
-- Full NatSpec everywhere critical.
-- Complete, GitBook-formatted docs (see [docs/SUMMARY.md](docs/SUMMARY.md) for GitBook navigation, including LR-2 required areas: CREATE3 Package chain setup, reusable DiamondPackageCallBackFactory (0x949da331), registries, ported protocol TestBases + utilities like ConstProdUtils/Sets).
-- Up-to-date agent skills for the framework and ports.
-- Emphasis on **reuse-based security and cost**: reusing already deployed and verified code (via facets attached through DFPkgs) eliminates the risk of introducing new bugs through inadvertent changes (especially high for AI-delegated work); reusing it directly saves gas by simply not needing to deploy as much bytecode. Supports "deploy once, attach everywhere" and "agent-proof reuse".
+→ **[SECURITY.md](SECURITY.md)**
 
-**Funding**: Trading fees from a BankrBot-launched token on Base will sustain development. See [BANKR_LAUNCH.md](BANKR_LAUNCH.md) for the process (requires Bankr Club subscription on an agent wallet + `bankr launch`).
+BattleChain may be used as an optional adversarial deployment gate for factories; it is not a substitute for responsible disclosure or a formal audit of every port.
 
-Repository: https://github.com/cyotee/crane (public mirrors at launch).
+## Contributing
 
-## License
-
-See LICENSE and licenses/ directory (mixed AGPL-3.0-or-later with vendored dependencies under their original terms).
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md) for style, NatSpec, testing, and PR expectations.
 
 ## License
 
-See LICENSE and licenses/ directory (mixed AGPL-3.0-or-later with vendored dependencies under their original terms).
+Crane-native code is licensed under the **GNU Affero General Public License v3.0** — see [LICENSE](LICENSE).
+
+Vendored dependencies and protocol sources retain **their original licenses**. See [NOTICE.md](NOTICE.md) and the `licenses/` directory.

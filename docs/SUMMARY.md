@@ -51,6 +51,7 @@
 * [AI Agent Skills](reference/agent-skills.md)
 * [Codebase Map](CODEBASE_MAP.md)
 
-## Funding
+## Project
 
-* [BankrBot Token Launch](funding/bankr-launch.md)
+* [Archive policy](archive/README.md)
+* [Public release inventory](roadmap/PUBLIC_RELEASE_INVENTORY.md)

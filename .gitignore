@@ -1,83 +1,48 @@
-
-# Ignores development broadcast logs
-!/broadcast
-/broadcast/*/31337/
-/broadcast/**/dry-run/
-
-# Dotenv file
+# Secrets / local env
 .env
+.env.*
+!.env.example
 
+# Node
 node_modules/
 
+# Hardhat
+/cache
+/artifacts
+/typechain
+/typechain-types
+/coverage
+/coverage.json
 ignition/
-
-node_modules
-.env
-
-# Hardhat files
-/cache
-/artifacts
-
-# TypeChain files
-/typechain
-/typechain-types
-
-# solidity-coverage files
-/coverage
-/coverage.json
-
-# Hardhat Ignition default folder for deployments against a local node
 ignition/deployments/chain-31337
 
-node_modules
-.env
-
-# Hardhat files
-/cache
-/artifacts
-
-# TypeChain files
-/typechain
-/typechain-types
-
-# solidity-coverage files
-/coverage
-/coverage.json
-
-# Hardhat Ignition default folder for deployments against a local node
-ignition/deployments/chain-31337
-
-node_modules
-.env
-
-# Hardhat files
-/cache
-/artifacts
-
-# TypeChain files
-/typechain
-/typechain-types
-
-# solidity-coverage files
-/coverage
-/coverage.json
-
-# Hardhat Ignition default folder for deployments against a local node
-ignition/deployments/chain-31337
-
-# Local AI/agent artifacts
-.opencode/
-.claude-plugin/
-plugins/
-PLUGIN_PRD.md
-.claude/homunculus/observations.jsonl
+# Foundry
 out/
 cache_forge/
+broadcast/*/31337/
+broadcast/**/dry-run/
+# Keep intentional broadcast templates if any under broadcast root
+!/broadcast
 
 # mdBook / GitHub Pages build artifacts
 book/
 .mdbook-src/
+
+# Generated / local noise
+tmp/
+reports/
+output/
+*.log
+COVERAGE*
 out_staking_eth/
 cache_staking_eth/
 out_d2full*
 cache_d2full*
+
+# Local AI/agent artifacts (do not ship machine-specific config)
+.opencode/
+.claude-plugin/
+.claude/settings.local.json
+.claude/homunculus/observations.jsonl
+plugins/
+PLUGIN_PRD.md

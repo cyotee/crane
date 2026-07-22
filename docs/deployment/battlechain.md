@@ -6,7 +6,11 @@ Before promoting Crane core factories, DFPkgs, or significant protocol ports to 
 
 BattleChain (chain ID 627 testnet / 626 mainnet) provides adversarial "attack mode" with whitehats and automated tools. It is the required quality bar for anything that will be reused by many agents and projects.
 
-See AGENTS.md and the pilot script: `scripts/foundry/Script_Pilot_BC_ERC20Permit.s.sol`.
+See AGENTS.md and:
+
+- Pilot: `scripts/foundry/Script_Pilot_BC_ERC20Permit.s.sol`
+- **IndexedEx launch promo (Wave A):** `scripts/foundry/Script_Promo_BC_Launch.s.sol` — Crane core + ERC20Permit + WETH + Uni V2/V3/V4 PoolManager + Permit2 + Safe Harbor
+- Consumer plan: IndexedEx `docs/BATTLECHAIN_LAUNCH_PROMO.md`
 
 ## Process
 
