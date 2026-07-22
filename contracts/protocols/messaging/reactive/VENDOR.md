@@ -47,3 +47,12 @@ demos/
 - Crane Facet / Target / Repo / DFPkg productization
 - `src/legacy/` demos from upstream
 - Hermetic TestBase / fork suites (follow-up)
+
+## Related packages
+
+| Package | Path |
+|---------|------|
+| Classic SDK | `contracts/external/reactive/` |
+| Omni SDK | `contracts/external/reactive-omni/` |
+| Test harness | `contracts/external/reactive-test-lib/` |
+| Package tests | `test/foundry/spec/protocols/messaging/reactive/test-lib/` |

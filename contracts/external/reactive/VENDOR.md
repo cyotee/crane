@@ -37,3 +37,11 @@ Example contracts that consume this SDK live at:
 `contracts/protocols/messaging/reactive/demos/`
 
 (from Reactive-Network/reactive-smart-contract-demos @ `f1f85ab2a0a8f917b9b37a57c00be2ffc8ad5ad4`).
+
+## Related packages
+
+| Package | Path |
+|---------|------|
+| Omni (next-gen API) | `contracts/external/reactive-omni/` |
+| Foundry test harness | `contracts/external/reactive-test-lib/` |
+| Demos | `contracts/protocols/messaging/reactive/demos/` |
