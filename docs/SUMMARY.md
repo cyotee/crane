@@ -55,5 +55,5 @@
 
 ## Project
 
-* [Archive policy](archive/README.md)
-* [Public release inventory](roadmap/PUBLIC_RELEASE_INVENTORY.md)
+* [Archive policy](roadmap/ARCHIVE_POLICY.md)
+* [Changelog](CHANGELOG.md)
