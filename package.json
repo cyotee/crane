@@ -41,7 +41,7 @@
     "axios": "^1.16.1",
     "chai": "^4.2.0",
     "ethers": "^6.4.0",
-    "fast-uri": "^3.1.2",
+    "fast-uri": "^3.1.4",
     "hardhat": "^2.27.1",
     "hardhat-gas-reporter": "^2.3.0",
     "mocha": "^10.8.2",
