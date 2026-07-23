@@ -185,15 +185,22 @@ contract Create3Factory is MinimalDiamondCallBackProxyResolution, Create3Factory
     // end::_create3(bytes,bytes32)[]
 
     // tag::_create3WithArgs(bytes,bytes,bytes32)[]
-    /// @notice Internal CREATE3 deploy with post-deploy callback/initData (used for self-init of aware contracts/DFPkgs).
+    /// @notice Internal CREATE3 deploy with constructor/init args packed into creation code.
+    /// @dev Idempotent like `_create3`: if code already exists at the predicted CREATE3 address
+    ///      for `salt`, return it (does not re-run constructor). New immutables require a new salt.
     /// @param initCode Creation bytecode.
-    /// @param initData_ Data passed via callback to deployed contract.
+    /// @param initData_ ABI-encoded constructor args (appended to initCode for CREATE3).
     /// @param salt CREATE3 salt.
-    /// @return proxy Deterministic deployed address.
+    /// @return proxy Deterministic deployed (or pre-existing) address.
     function _create3WithArgs(bytes memory initCode, bytes memory initData_, bytes32 salt)
         internal
+        virtual
         returns (address proxy)
     {
+        address predictedTarget = Creation._create3AddressOf(salt);
+        if (predictedTarget.isContract()) {
+            return predictedTarget;
+        }
         return Creation.create3WithArgs(initCode, initData_, salt);
     }
 

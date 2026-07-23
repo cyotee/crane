@@ -371,6 +371,100 @@ contract Create3Factory_Test is Test {
     }
 
     /* ---------------------------------------------------------------------- */
+    /*                    Idempotent with-args CREATE3 (gen2 fix)              */
+    /* ---------------------------------------------------------------------- */
+
+    /// @notice deployPackageWithArgs must not revert TargetAlreadyExists on re-call with same salt.
+    function test_deployPackageWithArgs_idempotent_sameSaltReturnsExisting() public {
+        bytes memory initCode = type(MockPackage).creationCode;
+        bytes4[] memory interfaces = new bytes4[](1);
+        interfaces[0] = bytes4(0x12345678);
+        address[] memory facets = new address[](0);
+        bytes memory constructorArgs = abi.encode("IdempotentPkg", interfaces, facets);
+        bytes32 salt = keccak256("package.idempotent.with.args");
+
+        vm.prank(owner);
+        IDiamondFactoryPackage pkg1 = factory.deployPackageWithArgs(initCode, constructorArgs, salt);
+
+        uint256 packageCountAfterFirst = factory.allPackages().length;
+
+        // Different constructor encoding would still resolve to same CREATE3 address (salt-only).
+        // Second call must return existing and not revert.
+        vm.prank(owner);
+        IDiamondFactoryPackage pkg2 = factory.deployPackageWithArgs(initCode, constructorArgs, salt);
+
+        assertEq(address(pkg1), address(pkg2), "Same salt must return same package address");
+        assertTrue(address(pkg1).code.length > 0, "Package must have code");
+        assertEq(factory.nameOfPackage(pkg1), "IdempotentPkg", "Name preserved after re-call");
+
+        // Registry AddressSet._add is idempotent — no duplicate allPackages entries.
+        assertEq(factory.allPackages().length, packageCountAfterFirst, "Re-call must not duplicate allPackages");
+    }
+
+    /// @notice create3WithArgs must be idempotent like create3.
+    function test_create3WithArgs_idempotent_sameSaltReturnsExisting() public {
+        bytes memory initCode = type(MockFacet).creationCode;
+        bytes4[] memory interfaces = new bytes4[](1);
+        interfaces[0] = type(IERC165).interfaceId;
+        bytes4[] memory funcs = new bytes4[](0);
+        bytes memory constructorArgs = abi.encode("IdempotentCreate3Args", interfaces, funcs);
+        bytes32 salt = keccak256("create3.with.args.idempotent");
+
+        vm.prank(owner);
+        address first = factory.create3WithArgs(initCode, constructorArgs, salt);
+
+        vm.prank(owner);
+        address second = factory.create3WithArgs(initCode, constructorArgs, salt);
+
+        assertEq(first, second, "Same salt must return same address");
+        assertTrue(first.code.length > 0, "Deployed contract must have code");
+        assertEq(MockFacet(first).facetName(), "IdempotentCreate3Args", "Existing contract not re-constructed");
+    }
+
+    /// @notice deployFacetWithArgs must not revert on re-call with same salt.
+    function test_deployFacetWithArgs_idempotent_sameSaltReturnsExisting() public {
+        bytes memory initCode = type(MockFacet).creationCode;
+        bytes4[] memory interfaces = new bytes4[](1);
+        interfaces[0] = type(IERC165).interfaceId;
+        bytes4[] memory funcs = new bytes4[](1);
+        funcs[0] = bytes4(0xdeadbeef);
+        bytes memory constructorArgs = abi.encode("IdempotentFacetArgs", interfaces, funcs);
+        bytes32 salt = keccak256("facet.with.args.idempotent");
+
+        vm.prank(owner);
+        IFacet facet1 = factory.deployFacetWithArgs(initCode, constructorArgs, salt);
+
+        uint256 facetCountAfterFirst = factory.allFacets().length;
+
+        vm.prank(owner);
+        IFacet facet2 = factory.deployFacetWithArgs(initCode, constructorArgs, salt);
+
+        assertEq(address(facet1), address(facet2), "Same salt must return same facet address");
+        assertEq(facet1.facetName(), "IdempotentFacetArgs", "Name preserved");
+        assertEq(factory.allFacets().length, facetCountAfterFirst, "Re-call must not duplicate allFacets");
+    }
+
+    /// @notice deployPackage (no ctor args) remains idempotent (control — already used _create3).
+    function test_deployPackage_idempotent_sameSaltReturnsExisting() public {
+        bytes4[] memory interfaces = new bytes4[](0);
+        address[] memory facets = new address[](0);
+        bytes memory initCode =
+            abi.encodePacked(type(MockPackage).creationCode, abi.encode("IdempotentPkgNoArgs", interfaces, facets));
+        bytes32 salt = keccak256("package.idempotent.no.args");
+
+        vm.prank(owner);
+        IDiamondFactoryPackage pkg1 = factory.deployPackage(initCode, salt);
+
+        uint256 packageCountAfterFirst = factory.allPackages().length;
+
+        vm.prank(owner);
+        IDiamondFactoryPackage pkg2 = factory.deployPackage(initCode, salt);
+
+        assertEq(address(pkg1), address(pkg2), "Same salt must return same package");
+        assertEq(factory.allPackages().length, packageCountAfterFirst, "No duplicate package registry entries");
+    }
+
+    /* ---------------------------------------------------------------------- */
     /*                       registerFacet Tests                               */
     /* ---------------------------------------------------------------------- */
 
