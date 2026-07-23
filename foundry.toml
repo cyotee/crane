@@ -42,7 +42,7 @@ remappings = [
     "battlechain-lib/=lib/battlechain-lib/src/",
     "@battlechain-contracts/=lib/battlechain-lib/lib/battlechain-safe-harbor-contracts/src/",
     "@oz/=lib/openzeppelin-contracts/",
-    "@ozu=lib/openzeppelin-contracts-upgradable/"
+    "@ozu/=contracts/external/openzeppelin-upgradeable/"
 ]
 
 ignored_error_codes = [

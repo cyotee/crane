@@ -43,7 +43,7 @@ Authorized public-readiness packaging is implemented locally (and plugin remotes
 | C-02 dead tasks/PRD paths | **Done** (AGENTS paths fixed) |
 | C-03 package version | **Partial** — version preview string; still `private: true` (intentional for library) |
 | C-04 dual lockfile | **Deferred** — npm documented as canonical; `yarn.lock` not deleted |
-| C-06 remappings | **Done** (`@ozu/` → external upgradeable tree) |
+| C-06 remappings | **Done** — both `remappings.txt` and `foundry.toml` use `@ozu/=contracts/external/openzeppelin-upgradeable/`; verified with `forge remappings` (single line, no typo path) |
 | C-09 CI honesty | **Done** (status.md + CONTRIBUTING/README) |
 | C-10 out_*/cache_* ignore | **Done** |
 | C-21 NatSpec public path | **Done** |

@@ -61,6 +61,33 @@ else
   fail=1
 fi
 
+# @ozu remapping: foundry.toml + remappings.txt must agree and not use the broken typo path
+if grep -q 'openzeppelin-contracts-upgradable' "$ROOT/foundry.toml" "$ROOT/remappings.txt" 2>/dev/null; then
+  echo "FAIL broken @ozu path (upgradable typo) still present"
+  fail=1
+else
+  echo "OK no broken @ozu typo path"
+fi
+if grep -q '@ozu/=contracts/external/openzeppelin-upgradeable/' "$ROOT/foundry.toml" \
+  && grep -q '@ozu/=contracts/external/openzeppelin-upgradeable/' "$ROOT/remappings.txt"; then
+  echo "OK @ozu mapping in foundry.toml and remappings.txt"
+else
+  echo "FAIL @ozu good path missing from foundry.toml or remappings.txt"
+  fail=1
+fi
+if command -v forge >/dev/null 2>&1; then
+  ozu_lines=$(forge remappings 2>/dev/null | grep -i ozu || true)
+  if echo "$ozu_lines" | grep -q 'openzeppelin-contracts-upgradable'; then
+    echo "FAIL forge remappings still emits broken @ozu path"
+    fail=1
+  elif echo "$ozu_lines" | grep -q 'openzeppelin-upgradeable'; then
+    echo "OK forge remappings: $ozu_lines"
+  else
+    echo "FAIL forge remappings missing @ozu: [$ozu_lines]"
+    fail=1
+  fi
+fi
+
 if [[ $fail -ne 0 ]]; then
   echo "verify_public_surface: FAILED"
   exit 1
