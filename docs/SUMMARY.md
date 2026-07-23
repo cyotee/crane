@@ -18,6 +18,7 @@
 * [Diamond Factory Packages](deployment/dfpkg.md)
 * [Factory Services](deployment/factory-services.md)
 * [BattleChain Security Gate](deployment/battlechain.md)
+* [Deployed Addresses](deployment/deployed-addresses.md)
 
 ## Development
 

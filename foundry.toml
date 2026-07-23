@@ -8,6 +8,8 @@ fs_permissions = [
     { access = "read", path = "./" },
     # Scripts export JSON under script/output.
     { access = "read-write", path = "./script/output" },
+    # BattleChain Wave A promo writes address book for the docs site (Script_Promo_BC_Launch).
+    { access = "read-write", path = "./docs/deployment/addresses" },
     # Aave V4 deployment-procedure and Logger tests write reports under ./output.
     { access = "read-write", path = "./output" },
     # Aave V4 vm.eip712HashType / vm.eip712HashStruct reads the generated EIP-712 bindings file.
@@ -210,6 +212,8 @@ ignore = [
 ]
 [rpc_endpoints]
 local = "http://127.0.0.1:8545"
+# BattleChain testnet (chain 627) settles to Ethereum Sepolia — preferred alias name
+"battlechain-sepolia" = "https://testnet.battlechain.com"
 battlechain_testnet = "https://testnet.battlechain.com"
 battlechain_mainnet = "https://mainnet.battlechain.com"
 ethereum_mainnet_infura = "https://mainnet.infura.io/v3/${INFURA_KEY}"
@@ -219,6 +223,8 @@ ethereum_sepolia_infura = "https://sepolia.infura.io/v3/${INFURA_KEY}"
 sepolia_infura = "https://sepolia.infura.io/v3/${INFURA_KEY}"
 ethereum_sepolia_alchemy = "https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}"
 sepolia_alchemy = "https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}"
+# Public Sepolia fallback for L1→BattleChain bridge scripts
+sepolia_public = "https://ethereum-sepolia-rpc.publicnode.com"
 
 base_mainnet_infura = "https://base-mainnet.infura.io/v3/${INFURA_KEY}"
 base_mainnet_alchemy = "https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
