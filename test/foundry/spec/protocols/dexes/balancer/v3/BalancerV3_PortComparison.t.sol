@@ -7,9 +7,8 @@ pragma solidity ^0.8.30;
   Requirements:
   - Fork tests must not inline INFURA_KEY; read env and skip if missing.
   - JSON artifacts MUST be written to:
-      tasks/CRANE-270-verify-balancer-v3-port/artifacts/
-  - Narrative diffs/gaps MUST be written to:
-      tasks/CRANE-270-verify-balancer-v3-port/REVIEW.md
+      output/balancer-v3-port-comparison/
+  - Narrative diffs/gaps (if any) under the same directory.
 
   This file started as a placeholder smoke test; it now contains the first upstream-parity
   scenario (Weighted pool invariant/balance math) and persists a JSON snapshot.
@@ -349,7 +348,7 @@ contract BalancerV3_PortComparison is CraneTest {
         // Non-fork preflight tests rely on write access to artifacts.
         // (The directory itself should already exist in the repo.)
         vm.createDir(
-            string(abi.encodePacked(vm.projectRoot(), "/tasks/CRANE-270-verify-balancer-v3-port/artifacts")), true
+            string(abi.encodePacked(vm.projectRoot(), "/output/balancer-v3-port-comparison")), true
         );
     }
 
@@ -490,7 +489,7 @@ contract BalancerV3_PortComparison is CraneTest {
 
     function test__preflight_artifactWritePermissionsConfigured() public {
         // This test doesn't need a fork. It just verifies that Foundry can write
-        // CRANE-270 artifacts (fs_permissions in foundry.toml).
+        // Port comparison artifacts under ./output (foundry.toml fs_permissions).
         string memory key = "CRANE_270_preflight";
         string memory json = vm.serializeUint(key, "timestamp", block.timestamp);
         vm.writeJson(json, _artifactPath("preflight.json"));
@@ -1407,8 +1406,8 @@ contract BalancerV3_PortComparison is CraneTest {
     }
 
     function _artifactPath(string memory fileName) internal view returns (string memory path) {
-        path =
-            string(abi.encodePacked(vm.projectRoot(), "/tasks/CRANE-270-verify-balancer-v3-port/artifacts/", fileName));
+        // Write under ./output (foundry.toml fs_permissions read-write); tasks/ tree was removed.
+        path = string(abi.encodePacked(vm.projectRoot(), "/output/balancer-v3-port-comparison/", fileName));
     }
 
     function _decimalsOrSkip(address token) internal returns (uint8 decimals) {

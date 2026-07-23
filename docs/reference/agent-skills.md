@@ -2,13 +2,16 @@
 
 Crane ships with a rich library of skills under `.claude/skills/`. These enable Claude Code, Bankr agents, OpenClaw, Cursor, and other compatible tools to author correct, secure, gas-efficient Diamond contracts using Crane patterns.
 
+Public skills live under `.claude/skills/`. The tree is curated for **Crane product + protocol architecture + Foundry + borderline TS tooling**. Personal/Bankr-ecosystem bazaar skills are not tracked in this repository.
+
 ## Core Crane Skills (Start Here)
 
 - `crane-architecture` — Facet-Target-Repo, storage slots, guard functions, AwareRepo, Service, DFPkg rules.
 - `crane-deployment` — CREATE3, DiamondPackageCallBackFactory, FactoryService, Init*Service, salt conventions.
 - `crane-testing` — TestBase, Behavior libraries, handlers, invariants, comparators.
+- `crane-adversarial-testing` — Abuse/attack catalogs for diamonds/vaults.
 - `crane-code-style` — Headers, naming (`_layoutStruct`, `param_`), no viaIR, struct patterns for stack.
-- `crane-natspec` — Full documentation requirements with include-tags and custom selectors.
+- `crane-natspec` — Full documentation requirements with include-tags and custom selectors. Values: [CENTRALLY_COMPUTED_NATSPEC_VALUES.md](CENTRALLY_COMPUTED_NATSPEC_VALUES.md).
 - `crane-access` — Operable, ERC8023 MultiStepOwnable, reentrancy.
 - `crane-tokens` — ERC20/2612/4626 native implementations + DFPkgs + Permit2 aware.
 - `crane-utilities` — Math (ConstProdUtils), sets, EIP712, cryptography, pagination.

@@ -20,6 +20,9 @@ import {
     MockStakingV1Deployer
 } from "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/mocks/MockStakingV1Deployer.sol";
 import "@crane/test/foundry/spec/protocols/staking/liquity/v2/gov/constants.sol";
+import {
+    TestBase_EthereumStakingFork
+} from "@crane/test/foundry/fork/ethereum/protocols/staking/ethereum/TestBase_EthereumStakingFork.sol";
 
 abstract contract GovernanceAttacksTest is Test {
     ILQTY internal lqty;
@@ -294,9 +297,10 @@ contract MockedGovernanceAttacksTest is GovernanceAttacksTest, MockStakingV1Depl
     }
 }
 
-contract ForkedGovernanceAttacksTest is GovernanceAttacksTest {
+contract ForkedGovernanceAttacksTest is GovernanceAttacksTest, TestBase_EthereumStakingFork {
     function setUp() public override {
-        vm.createSelectFork(vm.rpcUrl("ethereum_mainnet_alchemy"), 20430000);
+        // Alchemy → Infura → public; skip suite if no RPC is reachable (DNS/network).
+        if (!_forkEthereumAtBlock(20430000)) return;
 
         lqty = ILQTY(MAINNET_LQTY);
         lusd = ILUSD(MAINNET_LUSD);

@@ -66,8 +66,12 @@ ignored_error_codes = [
 ]
 
 skip = [
-    # D2-FULL vendor trees: compiled via FOUNDRY_PROFILE=d2full_pkg_* (not skipped).
-    # Heavy multi-pragma leftovers can be skipped per-profile only.
+    # Vendor inventory under contracts/external: not primary sources for monorepo solc 0.8.35.
+    # Foundry still compiles files that production/test code imports. Full vendor package units
+    # use FOUNDRY_PROFILE=d2full_pkg_* (and similar). Prevents multi-pragma 0.4/0.6/0.7 trees,
+    # dual OZ pins, Osaka-only Solady CLZ variants, and dead vendor tests from forcing a
+    # 5k-unit compile of unused inventory.
+    "contracts/external/**",
 
     # Aave V3.6 upstream formal-verification trees that are not required for runtime compilation.
     "contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/certora/**",
@@ -78,16 +82,6 @@ skip = [
     "lib/bold/**",
     # Frax upstream submodule — ported tree lives under contracts/protocols/tokens/stable/frax/.
     "lib/frax-solidity/**",
-    # frax-std: tests only need FraxTest + helpers (skip script/proxy extras).
-    "contracts/external/frax-std/FraxUpgradeableProxy.sol",
-    "contracts/external/frax-std/FraxTransparentProxy.sol",
-    "contracts/external/frax-std/BaseScript.sol",
-    "contracts/external/frax-std/SafeTxHelper.sol",
-    "contracts/external/frax-std/TestHelper.sol",
-    "contracts/external/frax-std/Logger.sol",
-    "contracts/external/frax-std/NumberFormat.sol",
-    "contracts/external/frax-std/access-control/**",
-    "contracts/external/frax-std/BytesHelper.sol",
 ]
 
 [bind_json]

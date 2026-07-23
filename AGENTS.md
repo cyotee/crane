@@ -20,7 +20,7 @@ If PROGRESS.md exists in the project root, read it for cross-session context bef
   - `.claude/agents/docs-skill-scribe.md` — docs-site crawl → skill family authoring.
 - See `docs/` (especially `docs/deployment/` and `docs/development/testing.md`) for additional reference material.
 - See `docs/CODEBASE_MAP.md` for architecture overview.
-- See `DEFI_PORTING_PRD.md`, `DEDUPLICATION.md`, and `Aave_Vendored_Dependencies_Dedup_Plan.md` for the porting/dedup program.
+- Historical porting/dedup notes: `docs/archive/internal-plans/` (e.g. DEFI_PORTING_PRD, DEDUPLICATION, Aave dedup plan).
 - Generic Foundry primers (`forge-testing`) are subordinate to `crane-testing` for protocol and Diamond work.
 - Adversarial / security abuse tests: use `crane-adversarial-testing` (not happy-path-only coverage).
 
@@ -41,12 +41,12 @@ Rules: expand shared external first; remap imports to `@crane/contracts/external
 
 Crane is a Diamond-first (ERC2535) Solidity development framework for building modular, upgradeable smart contracts. It provides structured patterns, deterministic deployment infrastructure, and protocol integration utilities for DeFi development.
 
-**Stack**: Solidity 0.8.30, Foundry, Diamond Pattern (ERC2535), CREATE3 deterministic deployment
+**Stack**: Solidity **0.8.35** (see `foundry.toml`), Foundry, Diamond Pattern (ERC2535), CREATE3 deterministic deployment
 
 **Structure**:
 - `contracts/` - Core framework (access, factories, introspection, protocols, tokens, utils)
 - `test/foundry/` - Test specifications mirroring contracts structure
-- `tasks/` - Task management for ongoing development
+- `docs/` - Product documentation (`docs/SUMMARY.md`); historical plans under `docs/archive/`
 
 For detailed architecture, see [docs/CODEBASE_MAP.md](docs/CODEBASE_MAP.md).
 
@@ -874,7 +874,7 @@ abstract contract TestBase_ERC20 is Test {
 
 ## Configuration
 
-- Solidity 0.8.30
+- Solidity 0.8.35
 - Optimizer runs: 1 (for contract size limits)
 - EVM version: Prague
 - Import remappings defined in `foundry.toml`

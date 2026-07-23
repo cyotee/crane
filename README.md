@@ -95,7 +95,7 @@ Details: [docs/concepts/](docs/concepts/) and [docs/CODEBASE_MAP.md](docs/CODEBA
 
 Crane vendors and wraps many DeFi protocols (Uniswap, Balancer, Aerodrome, Aave, Euler, and others) under `contracts/protocols/` and `contracts/external/`.
 
-**Core factories, access control, tokens, and registries** are the primary supported product surface. Individual protocol ports vary from production-oriented wrappers to vendored-upstream / experimental. Prefer docs and skills for a given port, and do not assume every tree is battle-tested for mainnet.
+**Core factories, access control, tokens, and registries** are the primary supported product surface. See the maturity matrix: **[docs/protocols/status.md](docs/protocols/status.md)**. Do not assume every protocol tree is production-complete.
 
 ## Build & test commands
 

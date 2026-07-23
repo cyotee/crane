@@ -7,4 +7,4 @@ battlechain-lib-mocks/=lib/battlechain-lib/test/mocks/
 lib/battlechain-lib/:src/=lib/battlechain-lib/src/
 @battlechain-contracts/=lib/battlechain-lib/lib/battlechain-safe-harbor-contracts/src/
 @oz/=lib/openzeppelin-contracts/
-@ozu=lib/openzeppelin-contracts-upgradable/
+@ozu/=contracts/external/openzeppelin-upgradeable/

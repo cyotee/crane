@@ -36,6 +36,7 @@
 
 ## Protocols
 
+* [Maturity status](protocols/status.md)
 * [DEX Integrations](protocols/dexes.md)
 * [Lending Protocols](protocols/lending.md)
 
@@ -48,6 +49,7 @@
 ## Reference
 
 * [Key Interfaces](reference/interfaces.md)
+* [Centrally computed NatSpec values](reference/CENTRALLY_COMPUTED_NATSPEC_VALUES.md)
 * [AI Agent Skills](reference/agent-skills.md)
 * [Codebase Map](CODEBASE_MAP.md)
 

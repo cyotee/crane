@@ -1,8 +1,8 @@
 {
   "name": "crane",
   "license": "AGPL-3.0-or-later",
-  "version": "0.0.1",
-  "description": "A Diamond first Solidity development framework",
+  "version": "0.1.0-public-preview",
+  "description": "Diamond-first (ERC-2535) Solidity development framework",
   "main": "index.js",
   "repository": "https://github.com/cyotee/crane",
   "author": "cyotee <not_cyotee@proton.me>",

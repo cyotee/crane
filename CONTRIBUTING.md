@@ -6,7 +6,7 @@ Thanks for helping improve Crane. This repository is a Diamond-first (ERC-2535) 
 
 - [Foundry](https://book.getfoundry.sh/getting-started/installation) (forge, cast, anvil)
 - Git with submodule support
-- Optional: Node/npm if you touch Hardhat or TS tooling
+- Optional: Node/**npm** if you touch Hardhat or TS tooling. **npm is the canonical package manager** (`package-lock.json`). A `yarn.lock` may still exist historically — do not rely on it for new work.
 
 ## Setup
 
