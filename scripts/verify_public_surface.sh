@@ -76,7 +76,8 @@ else
   fail=1
 fi
 if command -v forge >/dev/null 2>&1; then
-  ozu_lines=$(forge remappings 2>/dev/null | grep -i ozu || true)
+  # Must run from repo root so foundry.toml + remappings.txt apply
+  ozu_lines=$(cd "$ROOT" && forge remappings 2>/dev/null | grep -i ozu || true)
   if echo "$ozu_lines" | grep -q 'openzeppelin-contracts-upgradable'; then
     echo "FAIL forge remappings still emits broken @ozu path"
     fail=1
