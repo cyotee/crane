@@ -20,5 +20,11 @@ interface IEtherFiLiquidityPool {
 
     function sharesForAmount(uint256 amount) external view returns (uint256);
 
+    /// @notice Shares needed to withdraw `amount` of ETH face (ceiling / protocol-favoring).
+    function sharesForWithdrawalAmount(uint256 amount) external view returns (uint256);
+
     function amountForShare(uint256 shares) external view returns (uint256);
+
+    /// @notice Request async eETH withdrawal; mints WithdrawRequestNFT to recipient.
+    function requestWithdraw(address recipient, uint256 amount) external returns (uint256);
 }

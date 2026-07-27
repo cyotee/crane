@@ -1,0 +1,11 @@
+{
+  "phase": 4,
+  "mode": "bind-only",
+  "script": "scripts/foundry/bc/Script_BC_Phase4_Euler.s.sol",
+  "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "addresses": {
+    "evc": "0xB5D56dECA76e65cC9332Af01971bC8ad018a1Fc1",
+    "eUsdc": "0x9a6fb480a74e6BAEE31EAbe297384ceA1EBb4d81",
+    "eWeth": "0x38aF9d1C638C43d4340a700A854721dD5cdCf974"
+  }
+}

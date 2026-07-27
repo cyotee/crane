@@ -10,6 +10,7 @@ See AGENTS.md and:
 
 - Pilot: `scripts/foundry/Script_Pilot_BC_ERC20Permit.s.sol`
 - **IndexedEx launch promo (Wave A):** `scripts/foundry/Script_Promo_BC_Launch.s.sol` — Crane core + ERC20Permit + Uni V2/V4 + Permit2 + Safe Harbor; **use BC-provided WETH + Uni V3**
+- **Balancer V3 (Wave B):** `scripts/foundry/Script_Promo_BC_BalancerV3.s.sol` — Vault + Router diamonds + Weighted/Stable/ConstProd pool DFPkgs; **binds Wave A factories + BC WETH/Permit2**. Plan: `docs/superpowers/plans/2026-07-23-bc-balancer-v3-wave-b.md`. X: `docs/roadmap/X_BC_BALANCER_V3.md`
 - Consumer plan: IndexedEx `docs/BATTLECHAIN_LAUNCH_PROMO.md`
 
 ## Practice: use BattleChain-provided contracts

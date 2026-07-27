@@ -4,8 +4,9 @@ Crane ports major lending protocols with full fidelity (faithful source mirrors)
 
 - Aave v3.6 and Aave v4 (Hub/Spoke + TokenizationSpoke + PositionManager + gateways + dynamic config + risk).
 - Euler (EVC batching, modular EVault, rich periphery, sophisticated oracles).
+- Morpho (Blue isolated markets + MetaMorpho V1.1 + Public Allocator + Vault V2 + Bundler3; Crane Service/TestBase/fork parity under `protocols/lending/morpho/`).
 
-See dedicated skills: aave-*, euler-* (and subskills like aave-v3-pool, aave-v3-stata-token, euler-evc, euler-evk-*).
+See dedicated skills: aave-*, euler-*, morpho-architecture, morpho-blue-operations, morpho-vaults, crane-morpho (and subskills like aave-v3-pool, aave-v3-stata-token, euler-evc, euler-evk-*).
 
 Native Crane pieces include `Permit2Aware` (IPermit2Aware + Repo/Target) and rate provider patterns (IERC4626RateProvider) usable across lending and yield.
 

@@ -1,0 +1,46 @@
+Your next exploit lives here.
+
+I just stood up a full Crane + DeFi testing stack on @battlechain testnet (chain 627)—not as a token launch, not as theater, but so whitehats and security agents can red-team *real* protocol composition under Safe Harbor.
+
+BattleChain is the missing stage between “audit passed” and “mainnet with real money.” Empty vaults don’t teach anyone anything. So I loaded the primitives attackers and agent red-teams actually need—and I followed the rule that keeps the ecosystem coherent:
+
+Use what BattleChain already provides. Do not replace it.
+
+BC-provided (bound, not redeployed):
+• WETH
+• Uniswap V3 Factory
+• Uniswap V3 SwapRouter
+• Uniswap V3 NonfungiblePositionManager
+
+Crane Wave A (CREATE3 + diamond lineage, under one Safe Harbor root):
+• Create3Factory + DiamondPackageCallBackFactory
+• ERC20 / ERC5267 / ERC2612 facets + ERC20Permit DFPkg
+• Demo ERC20Permit token (not a mainnet raise)
+• Uniswap V2 Factory + Router (wired to BC WETH)
+• Uniswap V4 PoolManager
+• Permit2
+• Safe Harbor agreement + attack-mode path
+
+Why this exists:
+Protocols and agent operators need a place to deploy modular Diamond packages *and* exercise swaps, factories, and approvals against a real L2 surface—while whitehats are legally allowed to try to drain them. That’s the product of @battlechain. Crane is the framework that makes those packages reusable instead of rewriting the same bytecode every time.
+
+If you’re a researcher, agent builder, or protocol shipping toward production: the address book and Solidity constants are public. Come break it. Tell us what hurts. That’s the point.
+
+Deployed addresses (docs):
+https://github.com/cyotee/crane/blob/main/docs/deployment/deployed-addresses.md
+
+JSON address book:
+https://github.com/cyotee/crane/blob/main/docs/deployment/addresses/battlechain-sepolia.json
+
+Solidity constants (import-ready):
+https://github.com/cyotee/crane/blob/main/contracts/constants/networks/BC_TESTNET.sol
+
+Explorer:
+https://explorer.testnet.battlechain.com
+
+Repo:
+https://github.com/cyotee/crane
+
+@battlechain @cyfrin @PatrickAlphaC @hansfriese @CodeHawks
+
+Go attackable.

@@ -210,4 +210,59 @@ library BASE_MAIN {
 
     /// @notice StaticAToken (StataToken) Factory for Aave V3 on Base
     address constant AAVE_V3_STATIC_A_TOKEN_FACTORY = 0x78d33BF0014ab169725F2Ea5a62b200F2977faeE;
+
+    /* -------------------------------------------------------------------------- */
+    /*                              Morpho (docs.morpho.org)                      */
+    /* -------------------------------------------------------------------------- */
+    // Source: https://docs.morpho.org/developers/contracts/addresses/ (2026-07-27)
+
+    /* -------------------------------- Morpho Blue ----------------------------- */
+
+    /// @notice Morpho Blue singleton (same CREATE2 address as Ethereum)
+    address constant MORPHO = 0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb;
+    address constant MORPHO_BLUE = MORPHO;
+
+    /// @notice AdaptiveCurve IRM
+    address constant MORPHO_ADAPTIVE_CURVE_IRM = 0x46415998764C29aB2a25CbeA6254146D50D22687;
+
+    /// @notice Morpho ChainlinkOracleV2 factory
+    address constant MORPHO_CHAINLINK_ORACLE_V2_FACTORY = 0x2DC205F24BCb6B311E5cdf0745B0741648Aebd3d;
+
+    /* --------------------------- Morpho Vaults V1 (MetaMorpho) ---------------- */
+
+    address constant MORPHO_METAMORPHO_FACTORY_V1_1 = 0xFf62A7c278C62eD665133147129245053Bbf5918;
+    address constant MORPHO_METAMORPHO_FACTORY_V1_0 = 0xA9c3D3a366466Fa809d1Ae982Fb2c46E5fC41101;
+    address constant MORPHO_PUBLIC_ALLOCATOR = 0xA090dD1a701408Df1d4d0B85b716c87565f90467;
+
+    /* ------------------------------ Morpho Vaults V2 -------------------------- */
+
+    address constant MORPHO_VAULT_V2_FACTORY = 0x4501125508079A99ebBebCE205DeC9593C2b5857;
+    address constant MORPHO_VAULT_V1_ADAPTER_FACTORY = 0xF42D9c36b34c9c2CF3Bc30eD2a52a90eEB604642;
+    address constant MORPHO_MARKET_V1_ADAPTER_V2_FACTORY = 0x9a1B378C43BA535cDB89934230F0D3890c51C0EB;
+    address constant MORPHO_REGISTRY = 0x5C2531Cbd2cf112Cf687da3Cd536708aDd7DB10a;
+
+    /* --------------------------------- Bundlers ------------------------------- */
+
+    address constant MORPHO_BUNDLER3 = 0x6BFd8137e702540E7A42B74178A4a49Ba43920C4;
+    address constant MORPHO_GENERAL_ADAPTER_1 = 0xb98c948CFA24072e58935BC004a8A7b376AE746A;
+    address constant MORPHO_ERC20_WRAPPER_ADAPTER = 0xdeEf55F0A7366cC3Baf5E04313269389Fe17E9AE;
+    address constant MORPHO_CHAIN_AGNOSTIC_BUNDLER_V2 = 0x23055618898e202386e6c13955a58D3C68200BFB;
+
+    /* --------------------------------- Rewards -------------------------------- */
+
+    address constant MORPHO_URD_FACTORY = 0x7276454fc1cf9C408deeed722fd6b5E7A4CA25D8;
+    address constant MORPHO_URD = 0x5400dBb270c956E8985184335A1C62AcA6Ce1333;
+
+    /* ------------------------------ MORPHO token ------------------------------ */
+
+    address constant MORPHO_TOKEN = 0xBAa5CC21fd487B8Fcc2F632f3F4E8D37262a0842;
+
+    /* ----------------------- Morpho Midnight (Base only) ---------------------- */
+
+    address constant MORPHO_MIDNIGHT = 0xAdedD8ab6dE832766Fedf0FaC4992E5C4D3EA18A;
+    address constant MORPHO_MIDNIGHT_SETTER_RATIFIER = 0x800B5F12A61B8198a5a6EfD794Cac6699B294d63;
+    address constant MORPHO_MIDNIGHT_ECRECOVER_RATIFIER = 0xd6e70365C8E8DDa9a4ca662C07bbE663b017755E;
+    address constant MORPHO_MIDNIGHT_ECRECOVER_AUTHORIZER = 0x292bEa9f1443d54E0E509120c919106765c6a493;
+    address constant MORPHO_MIDNIGHT_MEMPOOL = 0xdD6DCE32e21f7b020898a8258dA37355b4017993;
+    address constant MORPHO_MIDNIGHT_BUNDLES_V1 = 0x091183d729BE9f808c212b475E387A12E67850A7;
 }

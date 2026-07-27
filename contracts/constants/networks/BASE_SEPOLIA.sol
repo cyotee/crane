@@ -52,4 +52,21 @@ library BASE_SEPOLIA {
     /* -------------------------------------------------------------------------- */
 
     address constant PERMIT2 = 0x000000000022D473030F116dDEE9F6B43aC78BA3;
+
+    /* -------------------------------------------------------------------------- */
+    /*                              Morpho (docs.morpho.org)                      */
+    /* -------------------------------------------------------------------------- */
+    // Source: https://docs.morpho.org/developers/contracts/addresses/ (2026-07-27)
+
+    /// @notice Morpho Blue (CREATE2-aligned with Base mainnet)
+    address constant MORPHO = 0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb;
+    address constant MORPHO_BLUE = MORPHO;
+    address constant MORPHO_ADAPTIVE_CURVE_IRM = 0x46415998764C29aB2a25CbeA6254146D50D22687;
+    address constant MORPHO_CHAINLINK_ORACLE_V2_FACTORY = 0x2DC205F24BCb6B311E5cdf0745B0741648Aebd3d;
+
+    address constant MORPHO_METAMORPHO_FACTORY_V1_1 = 0x2c3FE6D71F8d54B063411Abb446B49f13725F784;
+
+    address constant MORPHO_VAULT_V2_FACTORY = 0xE3a2CEbca662d99D0F279aF13a6bb8c9825D2ea0;
+    address constant MORPHO_MARKET_V1_ADAPTER_V2_FACTORY = 0xa24674Cc2c603FBA8AE6b442E3dB05f3dDaAa3D5;
+    address constant MORPHO_REGISTRY = 0xCED92dd29B6E99120DD41CB79321126Abd5852b2;
 }

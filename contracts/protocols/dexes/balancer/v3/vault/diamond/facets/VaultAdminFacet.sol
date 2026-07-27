@@ -75,7 +75,7 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
 
     /// @inheritdoc IFacet
     function facetFuncs() public pure returns (bytes4[] memory funcs) {
-        funcs = new bytes4[](29);
+        funcs = new bytes4[](30);
         // Vault pause
         funcs[0] = this.pauseVault.selector;
         funcs[1] = this.unpauseVault.selector;
@@ -115,6 +115,14 @@ contract VaultAdminFacet is BalancerV3VaultModifiers, IFacet {
         funcs[26] = this.initializeBuffer.selector;
         funcs[27] = this.addLiquidityToBuffer.selector;
         funcs[28] = this.removeLiquidityFromBuffer.selector;
+        // IAuthentication — required by TimelockAuthorizer constructor (getActionId on vault)
+        funcs[29] = this.getActionId.selector;
+    }
+
+    /// @notice Action ID for authorizer checks (matches diamond-internal `_getActionId`).
+    /// @dev Exposed so TimelockAuthorizer can resolve `setAuthorizer` action id at deploy time.
+    function getActionId(bytes4 selector) external view returns (bytes32) {
+        return _getActionId(selector);
     }
 
     /// @inheritdoc IFacet

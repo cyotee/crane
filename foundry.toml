@@ -257,6 +257,15 @@ apeChain_rpc = "https://rpc.apechain.com"
 apeChain_drpc = "https://apechain.drpc.org"
 apeChain_curtis_rpc = "https://rpc.curtis.apechain.com"
 
+# Robinhood Chain (Arbitrum Orbit L2) — chain 4663 mainnet / 46630 testnet
+# Public RPCs are rate-limited; Alchemy recommended for production forks.
+robinhood_mainnet = "https://rpc.mainnet.chain.robinhood.com"
+robinhood_mainnet_public = "https://rpc.mainnet.chain.robinhood.com"
+robinhood_mainnet_alchemy = "https://robinhood-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
+robinhood_testnet = "https://rpc.testnet.chain.robinhood.com"
+robinhood_testnet_public = "https://rpc.testnet.chain.robinhood.com"
+robinhood_testnet_alchemy = "https://robinhood-testnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
+
 # Narrow profile for ethereum staking integration ports (import-graph only; no remapping changes).
 [profile.staking_eth]
 src = 'contracts/protocols/staking/ethereum'
@@ -487,3 +496,34 @@ remappings = [
     "@crane/contracts/=contracts/",
     "@crane/test/=test/",
 ]
+
+# Narrow profile for Morpho port (Phase 0–6): vendor + Crane wrappers + path-scoped tests.
+
+# Morpho port: vendor domain only (fast compile). Crane wrappers/tests import via @crane/ and pull deps.
+[profile.morpho_port]
+src = "contracts/external/morpho"
+test = "test/foundry"
+out = "out_morpho_port"
+cache_path = "cache_morpho_port"
+libs = ["lib"]
+solc = "0.8.35"
+optimizer = true
+optimizer_runs = 1
+via_ir = false
+allow_internal_expect_revert = true
+skip = []
+fs_permissions = [{ access = "read-write", path = "./"}]
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts/",
+    "@crane/contracts/=contracts/",
+    "@crane/test/=test/",
+    "erc4626-tests/=contracts/external/erc4626-tests/",
+]
+[profile.morpho_port.rpc_endpoints]
+ethereum_mainnet_alchemy = "https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
+ethereum_mainnet_infura = "https://mainnet.infura.io/v3/${INFURA_KEY}"
+ethereum_mainnet_public = "https://ethereum-rpc.publicnode.com"
+base_mainnet_alchemy = "https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
+base_mainnet_infura = "https://base-mainnet.infura.io/v3/${INFURA_KEY}"
+

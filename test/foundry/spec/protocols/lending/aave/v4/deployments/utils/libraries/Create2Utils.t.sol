@@ -21,9 +21,26 @@ contract Create2UtilsTest is Create2TestHelper {
         _create2UtilsWrapper = new Create2UtilsWrapper();
     }
 
-    function testCreate2Deploy_revertsWith_missingCreate2Factory() public {
-        vm.expectRevert(Create2Utils.MissingCreate2Factory.selector);
-        _create2UtilsWrapper.create2Deploy(bytes32(0), type(Dummy).creationCode);
+    /// @notice Path B when Path A is empty: real CREATE (or BC Deployer) factory — never etch at 0x914d.
+    function testCreate2Deploy_pathB_realFactoryWhenPathAMissing() public {
+        assertEq(Create2Utils.CREATE2_FACTORY.code.length, 0, "Path A empty precondition");
+
+        address factory = _create2UtilsWrapper.ensureCreate2Factory();
+        assertTrue(factory.code.length > 0, "Path B factory has code");
+        assertTrue(factory != Create2Utils.CREATE2_FACTORY, "Path B must not be the empty Path A address");
+        // Proves we did not etch the canonical Safe Singleton address.
+        assertEq(Create2Utils.CREATE2_FACTORY.code.length, 0, "must not etch Path A");
+
+        bytes32 salt = bytes32(uint256(1));
+        bytes memory bytecode = type(Dummy).creationCode;
+        address deployed = _create2UtilsWrapper.create2Deploy(salt, bytecode);
+        assertTrue(deployed.code.length > 0, "CREATE2 deploy succeeded after Path B");
+        assertEq(
+            deployed,
+            _create2UtilsWrapper.computeCreate2Address(salt, keccak256(bytecode), factory),
+            "CREATE2 address uses Path B factory"
+        );
+        assertEq(_create2UtilsWrapper.getFactory(), factory, "getFactory resolves Path B");
     }
 
     function testCreate2Deploy_revertsWith_create2AddressDerivationFailure(bytes32 salt) public {

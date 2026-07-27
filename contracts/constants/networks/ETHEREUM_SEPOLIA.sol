@@ -113,4 +113,20 @@ library ETHEREUM_SEPOLIA {
     address constant BALANCER_V3_TIMELOCK_AUTHORIZER_MIGRATOR = address(0x6eaD84Af26E997D27998Fc9f8614e8a19BB93938);
 
     /* ------------------------ Gauges and Governance ----------------------- */
+
+    /* -------------------------------------------------------------------------- */
+    /*                              Morpho (docs.morpho.org)                      */
+    /* -------------------------------------------------------------------------- */
+    // Source: https://docs.morpho.org/developers/contracts/addresses/ (2026-07-27)
+
+    address constant MORPHO = 0xd011EE229E7459ba1ddd22631eF7bF528d424A14;
+    address constant MORPHO_BLUE = MORPHO;
+    address constant MORPHO_ADAPTIVE_CURVE_IRM = 0x8C5dDCD3F601c91D1BF51c8ec26066010ACAbA7c;
+    address constant MORPHO_CHAINLINK_ORACLE_V2_FACTORY = 0xa6c843fc53aAf6EF1d173C4710B26419667bF6CD;
+
+    address constant MORPHO_METAMORPHO_FACTORY_V1_1 = 0x98CbFE4053ad6778E0E3435943aC821f565D0b03;
+
+    address constant MORPHO_VAULT_V2_FACTORY = 0xb3fE2D5f8Af90f194B01db546397058Fcebb85D1;
+    address constant MORPHO_MARKET_V1_ADAPTER_V2_FACTORY = 0x5481f54CACdf0aECE9f71F2Bb2c0A8e44b2d5D81;
+    address constant MORPHO_REGISTRY = 0xE8eE811C7c9748De2db8c878dc5e32c9DD12dAB3;
 }

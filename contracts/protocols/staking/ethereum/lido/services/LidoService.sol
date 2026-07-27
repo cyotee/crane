@@ -49,4 +49,13 @@ library LidoService {
     function _stEthPerToken(IWstETH wsteth) internal view returns (uint256) {
         return wsteth.stEthPerToken();
     }
+
+    /// @notice Wrap native ETH to WETH (caller must hold ETH balance / msg.value already credited).
+    function _wrapEthToWeth(address weth, uint256 amount) internal {
+        if (weth == address(0)) revert ZeroAddress();
+        if (amount == 0) revert ZeroAmount();
+        // solhint-disable-next-line avoid-low-level-calls
+        (bool ok,) = weth.call{value: amount}(abi.encodeWithSignature("deposit()"));
+        require(ok, "WETH_DEPOSIT_FAILED");
+    }
 }

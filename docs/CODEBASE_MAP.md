@@ -71,7 +71,7 @@ contracts/
 ├── protocols/
 │   ├── cdps/                # Sky (deep DSS + SkyDssFactoryService + TestBase), Liquity v2
 │   ├── dexes/               # balancer/v3 (deepest: diamond vault/router/pools, DFPkgs), uniswap/v2/v3/v4, aerodrome/{v1,slipstream}, camelot/v2
-│   ├── lending/             # aave/{v3.6, v4 hub/spoke + tokenization + config-engine}, euler/v1 (EVC + EVault + periphery)
+│   ├── lending/             # aave/{v3.6, v4}, euler/v1, morpho/{blue,metamorpho,vault-v2,bundler}
 │   ├── oracles/             # Chainlink interfaces
 │   ├── perps/pendle/        # Full vendored (SY, Market, PT/YT, RouterV4, LM, oracles, offchain)
 │   ├── staking/reliquary/   # Reliquary + curves + RollingRewarder + Service + TestBase
@@ -259,6 +259,7 @@ These utilities tie directly to reusability (LR-4): reuse `ConstProdUtils` + Set
 - Aave v3.6: Full upstream port (Pool, Configurator, AToken/Debt, oracle, stata ERC4626, config engines).
 - Aave v4: Hub/Spoke architecture (Hub for liquidity, Spoke for risk/positions, TokenizationSpoke as ERC4626, PositionManager + gateways + config-engine + heavy EIP712).
 - Euler: Full EVC (transient, batch, controllers), modular EVault + modules, rich periphery (Lens, IRM factories, Perspectives, ERC4626EVC wrappers), sophisticated EulerRouter + adapters (incl. RateProviderOracle).
+- **Morpho** (full stack port, 2026-07-27): Domain under `contracts/external/morpho/{blue,blue-irm,blue-oracles,metamorpho-v1.1,public-allocator,vault-v2,bundler3}/` with `VENDOR.md` pins. Crane surface under `contracts/protocols/lending/morpho/{blue,metamorpho,vault-v2,bundler}/` (Service, AwareRepo, TestBase, Behavior). Upstream Morpho Blue Foundry suite ported to `test/foundry/spec/protocols/lending/morpho/blue/upstream/` (144 tests). Fork parity: matching-market live vs local on ETH/Base (`test/foundry/fork/{ethereum_main,base_main}/morpho/*Parity*`). Network constants seeded on ETH/Base/OP/Arb/Sepolia/BC. Profile: `FOUNDRY_PROFILE=morpho_port`.
 - Native Crane pieces: Full Permit2 + Permit2AwareFacet/Repo/Target; native ERC4626 (Repo/Service/Facet/DFPkg + TestBase_ERC4626 with invariants); RateProvider pattern (IERC4626RateProvider).
 - Oracles: Interfaces + external vendors (Pyth/Redstone/Chainlink); protocol-specific oracles.
 

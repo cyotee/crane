@@ -20,4 +20,9 @@ interface IStETH is IERC20 {
     function getTotalPooledEther() external view returns (uint256);
 
     function getTotalShares() external view returns (uint256);
+
+    /// @dev Optional on mainnet Lido; may be absent on hermetic ports.
+    function isStakingPaused() external view returns (bool);
+
+    function getCurrentStakeLimit() external view returns (uint256);
 }

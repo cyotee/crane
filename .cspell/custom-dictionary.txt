@@ -69,6 +69,7 @@ callvalue
 cancellers
 Cano
 cbrt
+CCIP
 certora
 chainid
 Chainlink
@@ -88,6 +89,7 @@ codesize
 collateralized
 Commited
 Configurator
+configurators
 contractlistipfs
 convertedve
 cooldown
@@ -263,6 +265,7 @@ maxtokens
 megadumping
 memcpy
 Merkle
+metamorpho
 metapool
 metatx
 micropayment

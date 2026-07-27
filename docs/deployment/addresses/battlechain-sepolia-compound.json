@@ -1,0 +1,15 @@
+{
+  "phase": 5,
+  "mode": "bind-only",
+  "script": "scripts/foundry/bc/Script_BC_Phase5_Compound.s.sol",
+  "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "addresses": {
+    "comptroller": "0xAE582334FCf2f932ea1B4D0B484aC34A8184B2e8",
+    "vUsdc": "0x91442C344c069e9B62f068C6F7075E9B403840E0",
+    "vWeth": "0x2A7b8d39e8544517F0Ce0ff4ac895580c79ff692",
+    "vWbtc": "0x9F01733b6B26404495b38fe69f20D5A8252EFd14",
+    "vDai": "0x7ea22541B90794ADa16E5b42A5FF2bf7489e587c",
+    "vBnb": "0x11e4B3Bbe7Fc26514b8D13383a3FB30E3Ced1F62",
+    "vUsdt": "0x2D9680c4cEfe5E36bFB0B78c48dd1d8A06090e8d"
+  }
+}
