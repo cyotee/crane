@@ -527,3 +527,46 @@ ethereum_mainnet_public = "https://ethereum-rpc.publicnode.com"
 base_mainnet_alchemy = "https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
 base_mainnet_infura = "https://base-mainnet.infura.io/v3/${INFURA_KEY}"
 
+
+# Narrow profile for Olympus V3 port: domain + path-scoped tests (avoids full monorepo compile).
+[profile.olympus_port]
+ffi = true
+ast = true
+src = "contracts/protocols/tokens/stable/olympus"
+test = "test/foundry/spec/protocols/tokens/stable/olympus"
+out = "out_olympus_port"
+cache_path = "cache_olympus_port"
+libs = ["lib", "node_modules"]
+solc = "0.8.35"
+optimizer = true
+optimizer_runs = 1
+via_ir = false
+allow_internal_expect_revert = true
+# external is imported via remaps; do not skip needed files (skip empty)
+skip = [
+    # Upstream Uniswap periphery NFT descriptor / SVG are heavy and unused by olympus tests
+    "contracts/external/uniswap/v3-periphery/contracts/libraries/NFTDescriptor.sol",
+    "contracts/external/uniswap/v3-periphery/contracts/libraries/NFTSVG.sol",
+    "contracts/external/uniswap/v3-periphery/contracts/NonfungibleTokenPositionDescriptor.sol",
+    "contracts/external/uniswap/v3-periphery/contracts/NonfungiblePositionManager.sol",
+    "contracts/external/uniswap/v3-periphery/contracts/V3Migrator.sol",
+    "contracts/external/uniswap/v3-periphery/contracts/SwapRouter.sol",
+    "contracts/external/uniswap/v3-periphery/contracts/lens/**",
+    "contracts/external/uniswap/v3-periphery/contracts/examples/**",
+    "contracts/external/uniswap/v3-periphery/contracts/test/**",
+    "contracts/external/uniswap/v3-core/contracts/test/**",
+    "contracts/external/solmate/test/**",
+]
+fs_permissions = [
+    { access = "read-write", path = "./" },
+    { access = "read", path = "./out_olympus_port" },
+]
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v4/",
+    "@crane/contracts/=contracts/",
+    "@crane/test/=test/",
+    "solmate/=contracts/external/solmate/",
+    "clones/=contracts/external/clones-with-immutable-args/",
+]
+legacy_assertions = true

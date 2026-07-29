@@ -33,7 +33,8 @@ Extensive high-quality ports with dedicated skills:
 - Aerodrome + Slipstream (pools, gauges, CL math, rewards, voter)
 - Aave v3 + v4 Hub/Spoke (full architecture, config, liquidation, tokens, position mgr)
 - Euler (EVC, EVault, risk, oracles, periphery)
-- And many more (Pendle, Frax ecosystem, Reliquary, Resupply, Comet, Permit2, Chainlink VRF, etc.)
+- **pons** (Robinhood Chain launchpad): `pons-architecture`, `pons-operations`, `pons-integration` (+ `pons-family` coverage/sources) — docs-derived end-user and integrator skills for v1 (live Uniswap V3) and v2 (curve → V4; addresses pending)
+- And many more (Pendle, Frax ecosystem, Reliquary, Resupply, Comet, Permit2, Chainlink VRF, Olympus, Morpho, Reactive, etc.)
 
 Each protocol skill teaches both the external protocol *and* how Crane wraps it with services, aware repos, DFPkgs, and test infrastructure.
 

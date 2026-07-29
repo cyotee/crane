@@ -1,36 +1,36 @@
 {
-  "accessManager": "0x96Ba62ebEbd40EfaA0e39868333B3c1217549230",
-  "configPositionManager": "0x50790c7f298Ae19E459C339D2d28369fa1E00fcD",
-  "giverPositionManager": "0xE79c153A1F11FB4dB66dA2616741De9746CB1647",
+  "accessManager": "0x1A70c0F58AF24f271c65cAcfC0C0266Db652f12a",
+  "configPositionManager": "0x5c9E432C62fb350082aFF03A96854f269EE15Ddf",
+  "giverPositionManager": "0x71c9FE3Fd94A96c6D5E48Bb51fC4B4f1A6BA1697",
   "hub": {
-    "core": "0x3B21ad426F7E50bCFA5EdCb2A5435a7901545B0F",
-    "prime": "0x580E90A902906FA880d2d529266D8132C1768285"
+    "core": "0x84640cb178E0952CA6d6c493cAD8eD5b92C9DEB6",
+    "prime": "0x729193bfD60bA6c4423b3cC6E79185C8e564293b"
   },
-  "hubConfigurator": "0xD31A370d7207A76786d0Ed9170e9A136Eceeda27",
+  "hubConfigurator": "0x4b99DA4bBcf0b02b06148622050b5cA5c763572d",
   "hubImplementation": {
-    "core": "0xbb41036C7b9aA8fB6e68A41310d8aE78cfdeAE08",
-    "prime": "0x3f4645f718756cD31b2D38Ff83Ff689c4FEd58B1"
+    "core": "0x252f26c64e99DEEd25177661d170057b26aC2D05",
+    "prime": "0xd8c56434C59159fbb23F3B125A8D9EDb0cc7D141"
   },
   "irStrategy": {
-    "core": "0x0eC807fe870Bfa3807E3Ca55C838116D0060b895",
-    "prime": "0xB47A02B439c38659C1CCAF79ff360e5440B0685A"
+    "core": "0x96deF7301782541daE1fE496c3ebeA579cb430F2",
+    "prime": "0x6B3C590BcCAA3Ad3730F07987f5a69D5E7FAd332"
   },
-  "nativeTokenGateway": "0xE159894a79ca63f723d06d919dDC5fC307EB9ceB",
+  "nativeTokenGateway": "0xf78F76A0aFa3C26e1C3A4701dca67A5576fDe65F",
   "oracle": {
     "lrt": "0x7bbF82d926eeB5089eeFABb513Fd48B8caDAa985",
     "mainnet": "0xF98EA47C7980e60Dc9Ad3b59e2E90BA7aaD18cb0"
   },
   "salt": "0x8bcfa1e0aed22543ed44d41a95e315383294a18f9fb6e67ee082afcd585a6ff1",
-  "signatureGateway": "0xdE84a7A02507aa973d0929C95c29440480547Fa3",
+  "signatureGateway": "0x725A0D3803c9EF65e06dC305E611e7726cc0BB05",
   "spoke": {
-    "lrt": "0xE72226348c4C15fC556BEE2ED974A63a31b555E8",
-    "mainnet": "0x27Abc53E8017813781516786fE43C34555644034"
+    "lrt": "0xdc076dfFBf69499E1a63B6e1e5872A2e9A18ecD4",
+    "mainnet": "0xC4Bc1B0a72Ab3cBEDB221a9F6c35446769B5b84b"
   },
-  "spokeConfigurator": "0xaE5a513f2ab723039DC7201394a5F096E255dd75",
+  "spokeConfigurator": "0xbf6988c18a675aF7898153511dF44F8dE6aCea56",
   "spokeImplementation": {
-    "lrt": "0xb175aE8eA6427594f7390d4197bBF43E39D39E98",
-    "mainnet": "0xA4c85F171429c42067f75aC50EF1B74eAf62F269"
+    "lrt": "0x2dcd9b20d89F0c6cbd6C3064DCaf2f9be79bAF6C",
+    "mainnet": "0xf90B84BFb3a525Aa5030D73245f750BAa74E0ae8"
   },
-  "takerPositionManager": "0xFe72ebD9fF330a7cB85faD7FFa0bDB09462cB076",
-  "treasurySpoke": "0x639e6878b73a0Ec6e7e72f9DDed02C6b2C87C78c"
+  "takerPositionManager": "0x123C235646458282111F6FF6b5b8FF3d85cdffd9",
+  "treasurySpoke": "0x3b6FF779EDcB1036385A1D2f941232b621275ae2"
 }

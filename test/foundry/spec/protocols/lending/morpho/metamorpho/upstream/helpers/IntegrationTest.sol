@@ -4,6 +4,8 @@ pragma solidity ^0.8.0;
 
 import "./BaseTest.sol";
 
+import {MetaMorphoV1_1} from "@crane/contracts/external/morpho/metamorpho-v1.1/MetaMorphoV1_1.sol";
+
 uint256 constant TIMELOCK = 1 weeks;
 
 contract IntegrationTest is BaseTest {
@@ -41,9 +43,8 @@ contract IntegrationTest is BaseTest {
         vm.stopPrank();
     }
 
-    // Deploy MetaMorpho from artifacts
-    // Replaces using `new MetaMorpho` which would force 0.8.26 on all tests
-    // (since MetaMorpho has pragma solidity 0.8.26)
+    // Crane: deploy via `new` / compile-time creationCode (deployCode artifact lookup is profile-fragile).
+    // Upstream used deployCode so tests could stay off MetaMorpho's pinned pragma; Crane's port is ^0.8.35.
     function createMetaMorpho(
         address owner,
         address morpho,
@@ -53,7 +54,7 @@ contract IntegrationTest is BaseTest {
         string memory symbol
     ) public returns (IMetaMorphoV1_1) {
         return IMetaMorphoV1_1(
-            deployCode("MetaMorphoV1_1.sol", abi.encode(owner, morpho, initialTimelock, asset, name, symbol))
+            address(new MetaMorphoV1_1(owner, morpho, initialTimelock, asset, name, symbol))
         );
     }
 

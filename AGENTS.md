@@ -14,6 +14,7 @@ If PROGRESS.md exists in the project root, read it for cross-session context bef
   - `crane-porting` for vendoring protocols into `contracts/external` + `contracts/protocols` with **shared** transitive deps (no new private OZ/Solady trees).
   - `crane-porting-verification` for hermetic/fork/Behavior gates that prove a port works (required for DoD).
   - **Morpho family:** `morpho-architecture` (stack map), `morpho-blue-operations` (supply/borrow/liquidate), `morpho-vaults` (MetaMorpho/Vault V2/Bundler3), `crane-morpho` (Service/TestBase/fork parity / `FOUNDRY_PROFILE=morpho_port`).
+  - **Olympus family:** `olympus-architecture` (Kernel/Module/Policy/Default Framework), `olympus-operations` (end-user/operator call flows, Cooler), `crane-olympus` (port layout, `FOUNDRY_PROFILE=olympus_port`, integration patterns).
   - `docs-to-skills` for scraping/crawling full documentation sites and emitting compartmentalized skill families (complete inventory required).
   - `skill-authoring` for progressive-disclosure skill writing (lean SKILL.md, `references/`, discovery descriptions).
 - **Agent identities:**
