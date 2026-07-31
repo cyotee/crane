@@ -51,6 +51,7 @@ Bloemen
 Boba
 Bokky
 bootstrapper
+Bophades
 Borrowable
 bountybot
 Bountycaster
@@ -185,6 +186,7 @@ FXSUSD
 gantt
 gasleft
 gelato
+godmode
 Gogs
 Gonçalo
 GONS
@@ -351,6 +353,7 @@ primitivefi
 PRNG
 Proxiable
 ptrdata
+Quabi
 Raphson
 Raphson's
 Raptoreum
@@ -485,6 +488,7 @@ Unvested
 Upgrader
 UPPERCASED
 uqdiv
+USDG
 USDS
 usdx
 usdy

@@ -23,13 +23,13 @@
   "salt": "0x8bcfa1e0aed22543ed44d41a95e315383294a18f9fb6e67ee082afcd585a6ff1",
   "signatureGateway": "0x725A0D3803c9EF65e06dC305E611e7726cc0BB05",
   "spoke": {
-    "lrt": "0xdc076dfFBf69499E1a63B6e1e5872A2e9A18ecD4",
-    "mainnet": "0xC4Bc1B0a72Ab3cBEDB221a9F6c35446769B5b84b"
+    "lrt": "0x72AC50330e1474A0D1bB9EB7d304c22C74A1dAFE",
+    "mainnet": "0x5844685Dd5AFfE81FDefE86b916873155ca0dE96"
   },
   "spokeConfigurator": "0xbf6988c18a675aF7898153511dF44F8dE6aCea56",
   "spokeImplementation": {
-    "lrt": "0x2dcd9b20d89F0c6cbd6C3064DCaf2f9be79bAF6C",
-    "mainnet": "0xf90B84BFb3a525Aa5030D73245f750BAa74E0ae8"
+    "lrt": "0xb718226CDd7ECFF12f20dC19ce96052eb5DD53c7",
+    "mainnet": "0x7404BEBF9C13D37f65f4073D1c15c9e2FDf92E6C"
   },
   "takerPositionManager": "0x123C235646458282111F6FF6b5b8FF3d85cdffd9",
   "treasurySpoke": "0x3b6FF779EDcB1036385A1D2f941232b621275ae2"

@@ -206,6 +206,9 @@ contract AuctionGraduationTest is AuctionBaseTest {
         uint256 totalSupply = auction.totalSupply();
         $bidAmount = uint128(totalSupply.fullMulDivUp($maxPrice, FixedPoint96.Q96) / 2);
         vm.assume($bidAmount > 0);
+        // givenGraduatedAuction assumed the *original* $bidAmount met the threshold; re-check after overwrite.
+        // Without this, exitBid takes the non-graduated full-refund path and never hits CannotExitBid.
+        vm.assume($bidAmount >= params.requiredCurrencyRaised);
         uint256 bidId = auction.submitBid{value: $bidAmount}($maxPrice, $bidAmount, alice, params.floorPrice, bytes(""));
 
         vm.roll(block.number + 1);
@@ -236,6 +239,8 @@ contract AuctionGraduationTest is AuctionBaseTest {
         Checkpoint memory finalCheckpoint = auction.checkpoint();
         // Assert that the auction finishes at the first maxPrice
         assertEq(auction.clearingPrice(), $maxPrice);
+        // Hard gate: this scenario only applies once the auction has graduated.
+        assertTrue(auction.isGraduated(), "auction must be graduated for CannotExitBid path");
 
         // Locally validate that for the first bid, the sum of the individual sections would overflow the original bid amount
         Bid memory bid = auction.bids(bidId);

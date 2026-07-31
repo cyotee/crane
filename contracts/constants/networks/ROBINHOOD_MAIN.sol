@@ -180,6 +180,19 @@ library ROBINHOOD_MAIN {
     address internal constant RH_PLTR = 0x894E1EC2D74FFE5AEF8Dc8A9e84686acCB964F2A;
 
     /* -------------------------------------------------------------------------- */
+    /*                         ponsFamily launchpad (active)                      */
+    /* -------------------------------------------------------------------------- */
+    // Source: https://docs.ponsfamily.com/ · https://github.com/ponsdotdev/ponsfamily
+    // Verified 2026-07-28 via public RH RPC + docs.ponsfamily.com (active start block).
+
+    /// @dev Active PonsLaunchFactory (frontend / production). Start block 8991118.
+    address internal constant PONS_LAUNCH_FACTORY_ACTIVE = 0xA5aAb3F0c6EeadF30Ef1D3Eb997108E976351feB;
+    /// @dev Active launch locker (custody of position NFTs + fee routing).
+    address internal constant PONS_LAUNCH_LOCKER_ACTIVE = 0x736D76699C26D0d966744cAe304C000d471f7F35;
+    /// @dev First block where active factory/locker era is in force (docs + explorer).
+    uint256 internal constant PONS_ACTIVE_START_BLOCK = 8_991_118;
+
+    /* -------------------------------------------------------------------------- */
     /*                              Morpho (docs.morpho.org)                      */
     /* -------------------------------------------------------------------------- */
     // Source: https://docs.morpho.org/developers/contracts/addresses/ (2026-07-27)
