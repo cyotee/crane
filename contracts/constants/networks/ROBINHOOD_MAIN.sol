@@ -137,6 +137,9 @@ library ROBINHOOD_MAIN {
     /* -------------------------------------------------------------------------- */
     /*                                 Uniswap V4                                 */
     /* -------------------------------------------------------------------------- */
+    // Official Uniswap deployments (Robinhood Chain 4663):
+    // https://developers.uniswap.org/docs/protocols/v4/deployments
+    // Used by UniV4SingleStandardExchangeDETF fork TestBases.
 
     address internal constant UNISWAP_V4_POOL_MANAGER = 0x8366a39CC670B4001A1121B8F6A443A643e40951;
     address internal constant UNISWAP_V4_POSITION_DESCRIPTOR = 0x9639443158E8C5efa35Bd45287bf2EFfd3D8dC06;
