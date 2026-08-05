@@ -31,6 +31,17 @@ abstract contract RouteSigner is EIP712 {
     /// @notice Thrown when a nonce has already been used
     error NonceAlreadyUsed();
 
+    /// @dev EIP-712 ExecuteSigned field bundle (keeps abi.encode stack under limit without via_ir).
+    struct ExecuteSignedFields {
+        bytes32 commandsHash;
+        bytes32 inputsHash;
+        bytes32 intent;
+        bytes32 data;
+        address sender;
+        bytes32 nonce;
+        uint256 deadline;
+    }
+
     /// @dev Stores the signature context (signer, intent, data) in transient storage
     function _setSignatureContext(
         bytes calldata commands,
@@ -42,24 +53,16 @@ abstract contract RouteSigner is EIP712 {
         bytes calldata signature,
         uint256 deadline
     ) internal returns (address signer) {
-        // Hash the inputs array per EIP712: hash each element, concatenate, then hash again
-        uint256 inputsLength = inputs.length;
-        bytes32[] memory inputHashes = new bytes32[](inputsLength);
-        for (uint256 i = 0; i < inputsLength; ++i) {
-            inputHashes[i] = keccak256(inputs[i]);
-        }
-        bytes32 inputsHash = keccak256(abi.encodePacked(inputHashes));
+        ExecuteSignedFields memory fields;
+        fields.commandsHash = keccak256(commands);
+        fields.inputsHash = _hashInputs(inputs);
+        fields.intent = intent;
+        fields.data = data;
+        fields.sender = verifySender ? msg.sender : address(0);
+        fields.nonce = nonce;
+        fields.deadline = deadline;
 
-        // Determine sender for signature verification
-        address sender = verifySender ? msg.sender : address(0);
-
-        // Construct EIP712 hash
-        bytes32 structHash = keccak256(
-            abi.encode(EXECUTE_SIGNED_TYPEHASH, keccak256(commands), inputsHash, intent, data, sender, nonce, deadline)
-        );
-        bytes32 digest = _hashTypedDataV4(structHash);
-
-        // Recover signer
+        bytes32 digest = _hashTypedDataV4(_executeSignedStructHash(fields));
         signer = ECDSA.recover(digest, signature);
 
         // Check and mark nonce as used (skip if nonce == bytes32(type(uint256).max))
@@ -74,6 +77,30 @@ abstract contract RouteSigner is EIP712 {
             tstore(ROUTE_INTENT_SLOT, intent)
             tstore(ROUTE_DATA_SLOT, data)
         }
+    }
+
+    function _hashInputs(bytes[] calldata inputs) private pure returns (bytes32 inputsHash) {
+        uint256 inputsLength = inputs.length;
+        bytes32[] memory inputHashes = new bytes32[](inputsLength);
+        for (uint256 i = 0; i < inputsLength; ++i) {
+            inputHashes[i] = keccak256(inputs[i]);
+        }
+        inputsHash = keccak256(abi.encodePacked(inputHashes));
+    }
+
+    function _executeSignedStructHash(ExecuteSignedFields memory f) private pure returns (bytes32) {
+        return keccak256(
+            abi.encode(
+                EXECUTE_SIGNED_TYPEHASH,
+                f.commandsHash,
+                f.inputsHash,
+                f.intent,
+                f.data,
+                f.sender,
+                f.nonce,
+                f.deadline
+            )
+        );
     }
 
     /// @dev Clears the signature context from transient storage

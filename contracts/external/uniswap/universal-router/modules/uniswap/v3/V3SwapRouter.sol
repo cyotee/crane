@@ -36,57 +36,79 @@ abstract contract V3SwapRouter is UniswapImmutables, Permit2Payments, IUniswapV3
     /// @dev The maximum value that can be returned from #getSqrtRatioAtTick. Equivalent to getSqrtRatioAtTick(MAX_TICK)
     uint160 internal constant MAX_SQRT_RATIO = 1461446703485210103287273052203988822378723970342;
 
+    /// @dev Bundle callback decode locals to keep `uniswapV3SwapCallback` under the stack limit (via_ir=false).
+    struct V3CallbackState {
+        address payer;
+        uint256[] minHopPriceX36;
+        uint256 hopIndex;
+        address tokenIn;
+        address tokenOut;
+        uint256 amountToPay;
+        bool isExactInput;
+    }
+
     function uniswapV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
         if (amount0Delta <= 0 && amount1Delta <= 0) revert V3InvalidSwap(); // swaps entirely within 0-liquidity regions are not supported
-        (, address payer, uint256[] memory minHopPriceX36, uint256 hopIndex) =
-            abi.decode(data, (bytes, address, uint256[], uint256));
+
+        V3CallbackState memory s;
+        (, s.payer, s.minHopPriceX36, s.hopIndex) = abi.decode(data, (bytes, address, uint256[], uint256));
         bytes calldata path = data.toBytes(0);
 
         // because exact output swaps are executed in reverse order, in this case tokenOut is actually tokenIn
-        (address tokenIn, uint24 fee, address tokenOut) = path.decodeFirstPool();
+        uint24 fee;
+        (s.tokenIn, fee, s.tokenOut) = path.decodeFirstPool();
 
-        if (computePoolAddress(tokenIn, tokenOut, fee) != msg.sender) revert V3InvalidCaller();
+        if (computePoolAddress(s.tokenIn, s.tokenOut, fee) != msg.sender) revert V3InvalidCaller();
 
-        (bool isExactInput, uint256 amountToPay) =
-            amount0Delta > 0 ? (tokenIn < tokenOut, uint256(amount0Delta)) : (tokenOut < tokenIn, uint256(amount1Delta));
+        (s.isExactInput, s.amountToPay) = amount0Delta > 0
+            ? (s.tokenIn < s.tokenOut, uint256(amount0Delta))
+            : (s.tokenOut < s.tokenIn, uint256(amount1Delta));
 
-        if (isExactInput) {
+        if (s.isExactInput) {
             // Pay the pool (msg.sender)
-            payOrPermit2Transfer(tokenIn, payer, msg.sender, amountToPay);
-        } else {
-            // either initiate the next swap or pay
-            if (path.hasMultiplePools()) {
-                // Per-hop price check for exact-output intermediate hops
-                if (minHopPriceX36.length != 0) {
-                    uint256 amountOut = uint256(-(amount0Delta > 0 ? amount1Delta : amount0Delta));
-                    uint256 price = amountOut * Constants.PRICE_PRECISION / amountToPay;
-                    uint256 minPrice = minHopPriceX36[hopIndex];
-                    if (price < minPrice) revert V3TooMuchRequestedPerHop(hopIndex, minPrice, price);
-                }
-                // this is an intermediate step so the payer is actually this contract
-                path = path.skipToken();
-                _swap(
-                    -amountToPay.toInt256(),
-                    msg.sender,
-                    path,
-                    payer,
-                    false,
-                    minHopPriceX36,
-                    hopIndex > 0 ? hopIndex - 1 : 0
-                );
-            } else {
-                if (amountToPay > MaxInputAmount.get()) revert V3TooMuchRequested();
-                // Per-hop price check for the first trading hop (last executed in exact-output)
-                if (minHopPriceX36.length != 0) {
-                    uint256 amountOut = uint256(-(amount0Delta > 0 ? amount1Delta : amount0Delta));
-                    uint256 price = amountOut * Constants.PRICE_PRECISION / amountToPay;
-                    uint256 minPrice = minHopPriceX36[hopIndex];
-                    if (price < minPrice) revert V3TooMuchRequestedPerHop(hopIndex, minPrice, price);
-                }
-                // note that because exact output swaps are executed in reverse order, tokenOut is actually tokenIn
-                payOrPermit2Transfer(tokenOut, payer, msg.sender, amountToPay);
-            }
+            payOrPermit2Transfer(s.tokenIn, s.payer, msg.sender, s.amountToPay);
+            return;
         }
+
+        // exact output: either continue multi-hop or settle final pay
+        _handleExactOutputCallback(amount0Delta, amount1Delta, path, s);
+    }
+
+    /// @dev Split exact-output callback path to free stack slots for the recursive `_swap` call.
+    function _handleExactOutputCallback(
+        int256 amount0Delta,
+        int256 amount1Delta,
+        bytes calldata path,
+        V3CallbackState memory s
+    ) private {
+        if (path.hasMultiplePools()) {
+            _checkExactOutHopPrice(amount0Delta, amount1Delta, s.amountToPay, s.minHopPriceX36, s.hopIndex);
+            // this is an intermediate step so the payer is actually this contract
+            path = path.skipToken();
+            uint256 nextHopIndex = s.hopIndex > 0 ? s.hopIndex - 1 : 0;
+            _swap(-s.amountToPay.toInt256(), msg.sender, path, s.payer, false, s.minHopPriceX36, nextHopIndex);
+            return;
+        }
+
+        if (s.amountToPay > MaxInputAmount.get()) revert V3TooMuchRequested();
+        // Per-hop price check for the first trading hop (last executed in exact-output)
+        _checkExactOutHopPrice(amount0Delta, amount1Delta, s.amountToPay, s.minHopPriceX36, s.hopIndex);
+        // note that because exact output swaps are executed in reverse order, tokenOut is actually tokenIn
+        payOrPermit2Transfer(s.tokenOut, s.payer, msg.sender, s.amountToPay);
+    }
+
+    function _checkExactOutHopPrice(
+        int256 amount0Delta,
+        int256 amount1Delta,
+        uint256 amountToPay,
+        uint256[] memory minHopPriceX36,
+        uint256 hopIndex
+    ) private pure {
+        if (minHopPriceX36.length == 0) return;
+        uint256 amountOut = uint256(-(amount0Delta > 0 ? amount1Delta : amount0Delta));
+        uint256 price = amountOut * Constants.PRICE_PRECISION / amountToPay;
+        uint256 minPrice = minHopPriceX36[hopIndex];
+        if (price < minPrice) revert V3TooMuchRequestedPerHop(hopIndex, minPrice, price);
     }
 
     /// @notice Performs a Uniswap v3 exact input swap
@@ -117,46 +139,73 @@ abstract contract V3SwapRouter is UniswapImmutables, Permit2Payments, IUniswapV3
             amountIn = ERC20(tokenIn).balanceOf(address(this));
         }
 
-        uint256 amountOut;
-        uint256 hopIndex;
-        uint256 previousAmountIn = amountIn;
-        uint256[] memory emptyHopPrice = new uint256[](0);
+        uint256 amountOut = _v3ExactInputLoop(recipient, amountIn, path, payer, minHopPriceX36);
+        if (amountOut < amountOutMinimum) revert V3TooLittleReceived();
+    }
+
+    /// @dev Exact-input multi-hop loop extracted for stack headroom under via_ir=false.
+    function _v3ExactInputLoop(
+        address recipient,
+        uint256 amountIn,
+        bytes calldata path,
+        address payer,
+        uint256[] calldata minHopPriceX36
+    ) private returns (uint256 amountOut) {
+        ExactInLoop memory loop;
+        loop.amountIn = amountIn;
+        loop.previousAmountIn = amountIn;
+        loop.payer = payer;
+        loop.emptyHopPrice = new uint256[](0);
+
         while (true) {
             bool hasMultiplePools = path.hasMultiplePools();
+            address hopRecipient = hasMultiplePools ? address(this) : recipient;
 
-            // the outputs of prior swaps become the inputs to subsequent ones
             (int256 amount0Delta, int256 amount1Delta, bool zeroForOne) = _swap(
-                amountIn.toInt256(),
-                hasMultiplePools ? address(this) : recipient, // for intermediate swaps, this contract custodies
-                path.getFirstPool(), // only the first pool is needed
-                payer, // for intermediate swaps, this contract custodies
+                loop.amountIn.toInt256(),
+                hopRecipient,
+                path.getFirstPool(),
+                loop.payer,
                 true,
-                emptyHopPrice, // exact-in callbacks don't need price checks
+                loop.emptyHopPrice,
                 0
             );
 
-            amountIn = uint256(-(zeroForOne ? amount1Delta : amount0Delta));
+            loop.amountIn = uint256(-(zeroForOne ? amount1Delta : amount0Delta));
+            _checkExactInHopPrice(loop.amountIn, loop.previousAmountIn, minHopPriceX36, loop.hopIndex);
 
-            // Per-hop price check for exact-input
-            if (minHopPriceX36.length != 0) {
-                uint256 price = amountIn * Constants.PRICE_PRECISION / previousAmountIn;
-                uint256 minPrice = minHopPriceX36[hopIndex];
-                if (price < minPrice) revert V3TooLittleReceivedPerHop(hopIndex, minPrice, price);
-            }
-
-            // decide whether to continue or terminate
             if (hasMultiplePools) {
-                payer = address(this);
+                loop.payer = address(this);
                 path = path.skipToken();
-                previousAmountIn = amountIn;
-                hopIndex++;
+                loop.previousAmountIn = loop.amountIn;
+                unchecked {
+                    ++loop.hopIndex;
+                }
             } else {
-                amountOut = amountIn;
+                amountOut = loop.amountIn;
                 break;
             }
         }
+    }
 
-        if (amountOut < amountOutMinimum) revert V3TooLittleReceived();
+    struct ExactInLoop {
+        uint256 amountIn;
+        uint256 previousAmountIn;
+        uint256 hopIndex;
+        address payer;
+        uint256[] emptyHopPrice;
+    }
+
+    function _checkExactInHopPrice(
+        uint256 amountIn,
+        uint256 previousAmountIn,
+        uint256[] calldata minHopPriceX36,
+        uint256 hopIndex
+    ) private pure {
+        if (minHopPriceX36.length == 0) return;
+        uint256 price = amountIn * Constants.PRICE_PRECISION / previousAmountIn;
+        uint256 minPrice = minHopPriceX36[hopIndex];
+        if (price < minPrice) revert V3TooLittleReceivedPerHop(hopIndex, minPrice, price);
     }
 
     /// @notice Performs a Uniswap v3 exact output swap
