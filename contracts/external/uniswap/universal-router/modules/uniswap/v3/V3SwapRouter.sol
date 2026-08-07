@@ -251,6 +251,16 @@ abstract contract V3SwapRouter is UniswapImmutables, Permit2Payments, IUniswapV3
         MaxInputAmount.set(0);
     }
 
+    /// @dev Packed pool.swap args so `_swap` stays under the stack limit without via_ir.
+    struct V3PoolSwapArgs {
+        address pool;
+        address recipient;
+        bool zeroForOne;
+        int256 amountSpecified;
+        uint160 sqrtPriceLimitX96;
+        bytes data;
+    }
+
     /// @dev Performs a single swap for both exactIn and exactOut
     /// For exactIn, `amount` is `amountIn`. For exactOut, `amount` is `-amountOut`
     function _swap(
@@ -262,18 +272,36 @@ abstract contract V3SwapRouter is UniswapImmutables, Permit2Payments, IUniswapV3
         uint256[] memory minHopPriceX36,
         uint256 hopIndex
     ) private returns (int256 amount0Delta, int256 amount1Delta, bool zeroForOne) {
+        V3PoolSwapArgs memory a = _buildV3PoolSwapArgs(amount, recipient, path, payer, isExactIn, minHopPriceX36, hopIndex);
+        zeroForOne = a.zeroForOne;
+        (amount0Delta, amount1Delta) = _callV3PoolSwap(a);
+    }
+
+    function _buildV3PoolSwapArgs(
+        int256 amount,
+        address recipient,
+        bytes calldata path,
+        address payer,
+        bool isExactIn,
+        uint256[] memory minHopPriceX36,
+        uint256 hopIndex
+    ) private view returns (V3PoolSwapArgs memory a) {
         (address tokenIn, uint24 fee, address tokenOut) = path.decodeFirstPool();
+        a.zeroForOne = isExactIn ? tokenIn < tokenOut : tokenOut < tokenIn;
+        a.pool = computePoolAddress(tokenIn, tokenOut, fee);
+        a.recipient = recipient;
+        a.amountSpecified = amount;
+        a.sqrtPriceLimitX96 = a.zeroForOne ? MIN_SQRT_RATIO + 1 : MAX_SQRT_RATIO - 1;
+        a.data = abi.encode(path, payer, minHopPriceX36, hopIndex);
+    }
 
-        zeroForOne = isExactIn ? tokenIn < tokenOut : tokenOut < tokenIn;
-
-        (amount0Delta, amount1Delta) = IUniswapV3Pool(computePoolAddress(tokenIn, tokenOut, fee))
-            .swap(
-                recipient,
-                zeroForOne,
-                amount,
-                (zeroForOne ? MIN_SQRT_RATIO + 1 : MAX_SQRT_RATIO - 1),
-                abi.encode(path, payer, minHopPriceX36, hopIndex)
-            );
+    function _callV3PoolSwap(V3PoolSwapArgs memory a)
+        private
+        returns (int256 amount0Delta, int256 amount1Delta)
+    {
+        return IUniswapV3Pool(a.pool).swap(
+            a.recipient, a.zeroForOne, a.amountSpecified, a.sqrtPriceLimitX96, a.data
+        );
     }
 
     function computePoolAddress(address tokenA, address tokenB, uint24 fee) private view returns (address pool) {

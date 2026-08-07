@@ -18,8 +18,12 @@
 ## Adaptations
 
 - Imports rewritten from upstream remappings (`@uniswap/v4-*`, `permit2/`, `solmate/`, `@openzeppelin/`) to `@crane/...` paths.
-- No logic changes intended in domain contracts.
-- Upstream builds with `via_ir = true` and low optimizer runs for `UniversalRouter.sol`. IndexedEx default profile has `via_ir = false`; use FOUNDRY profile that enables `via_ir` when compiling/deploying this package (see monorepo `foundry.toml` profile `universal_router` if present).
+- **Stack-safe for `via_ir = false`** (Crane/IndexedEx project law — never enable viaIR):
+  - `modules/ChainedActions.sol` — Across `depositV3` via low-level encode+call (12-arg stack).
+  - `modules/uniswap/v3/V3SwapRouter.sol` — packed `V3PoolSwapArgs` / callback structs / exact-in loop frame.
+  - `modules/uniswap/v2/V2SwapRouter.sol` — `V2HopState` + per-hop helper.
+- Behavioral intent matches Uniswap universal-router **2.1.1**; only stack frames / call encoding differ.
+- Compile with monorepo `FOUNDRY_PROFILE=universal_router` (or any profile with `via_ir = false`).
 
 ## Inventory (production)
 
