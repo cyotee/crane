@@ -3,6 +3,16 @@
 This file provides guidance to AI Agents when working with code in this repository.
 If PROGRESS.md exists in the project root, read it for cross-session context before starting work.
 
+## Discovery (agent maps & inventory)
+
+| Need | Open |
+|------|------|
+| Primary structure map | [`docs/CODEBASE_MAP.md`](docs/CODEBASE_MAP.md) |
+| Capability inventory | [`docs/agent/CRANE_CAPABILITY_INVENTORY.md`](docs/agent/CRANE_CAPABILITY_INVENTORY.md) |
+| Task → skill / path | [`docs/agent/AGENT_NAVIGATION_INDEX.md`](docs/agent/AGENT_NAVIGATION_INDEX.md) |
+| Protocol maturity | [`docs/protocols/status.md`](docs/protocols/status.md) |
+| Code graph | `.cartographer/` — install CLI via consuming repo (`scripts/install-cartographer.sh`) or Claude marketplace + Bun |
+
 ## Required Reading
 
 - Read this file for high-level Crane patterns and navigation.

@@ -1,5 +1,12 @@
 Read AGENTS.md in this repo.
 
+## Discovery
+
+- Map: [`docs/CODEBASE_MAP.md`](docs/CODEBASE_MAP.md)
+- Capabilities: [`docs/agent/CRANE_CAPABILITY_INVENTORY.md`](docs/agent/CRANE_CAPABILITY_INVENTORY.md)
+- Navigation: [`docs/agent/AGENT_NAVIGATION_INDEX.md`](docs/agent/AGENT_NAVIGATION_INDEX.md)
+- Cartographer: install via consuming repo or marketplace (no separate Crane installer)
+
 ## Codebase Overview
 
 Crane is a Diamond-first (ERC2535) Solidity development framework for modular, upgradeable smart contracts. It provides structured Facet-Target-Repo + *Service + DFPkg patterns, deterministic CREATE3 + callback Diamond factory infrastructure, rigorous TestBase/Behavior/handler testing, and deep faithful ports of major DeFi protocols (with shared dependencies remapped to Crane equivalents).

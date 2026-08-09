@@ -1,24 +1,24 @@
 {
   "schemaVersion": "cartographer.graph.v2",
-  "root": "/Users/cyotee/Development/github-cyotee/indexedex/lib/daosys/lib/crane",
-  "generatedAt": "2026-06-21T15:56:09.609Z",
+  "root": "/Users/cyotee/Development/projects-defi/daosys/lib/indexedex/lib/crane",
+  "generatedAt": "2026-08-09T11:38:54.744Z",
   "scanner": {
     "name": "cartographer",
     "version": "0.1.0"
   },
   "git": {
-    "commit": "809f391931e10b5fb06a1acc722958ff5ffb0f13",
-    "dirty": true,
-    "trackedFiles": 10901,
+    "commit": "dd43f9d37571af53f47d2780d0d21a85a8439958",
+    "dirty": false,
+    "trackedFiles": 13397,
     "untrackedFiles": 0,
-    "modifiedFiles": 36,
+    "modifiedFiles": 0,
     "deletedFiles": 0
   },
   "totals": {
-    "files": 10664,
-    "packages": 40,
-    "nodes": 13864,
-    "edges": 19829,
+    "files": 13032,
+    "packages": 57,
+    "nodes": 17125,
+    "edges": 24115,
     "findings": 0
   },
   "ignorePatterns": [
@@ -47,7 +47,7 @@
     "source": "syntax",
     "confidence": "parser-backed",
     "freshness": "fresh",
-    "snapshotCommit": "809f391931e10b5fb06a1acc722958ff5ffb0f13",
+    "snapshotCommit": "dd43f9d37571af53f47d2780d0d21a85a8439958",
     "scannerVersion": "0.1.0"
   }
 }
