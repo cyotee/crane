@@ -139,7 +139,7 @@ library ROBINHOOD_MAIN {
     /* -------------------------------------------------------------------------- */
     // Official Uniswap deployments (Robinhood Chain 4663):
     // https://developers.uniswap.org/docs/protocols/v4/deployments
-    // Used by UniV4SingleStandardExchangeDETF fork TestBases.
+    // Used by Uni V4 DETF / hook hermetic and fork TestBases.
 
     address internal constant UNISWAP_V4_POOL_MANAGER = 0x8366a39CC670B4001A1121B8F6A443A643e40951;
     address internal constant UNISWAP_V4_POSITION_DESCRIPTOR = 0x9639443158E8C5efa35Bd45287bf2EFfd3D8dC06;
@@ -186,14 +186,25 @@ library ROBINHOOD_MAIN {
     /*                         ponsFamily launchpad (active)                      */
     /* -------------------------------------------------------------------------- */
     // Source: https://docs.ponsfamily.com/ · https://github.com/ponsdotdev/ponsfamily
-    // Verified 2026-07-28 via public RH RPC + docs.ponsfamily.com (active start block).
+    // V1 verified 2026-07-28; V2 addresses from live factory getters + README (2026-08).
 
-    /// @dev Active PonsLaunchFactory (frontend / production). Start block 8991118.
+    /// @dev Active V1 PonsLaunchFactory (frontend / production). Start block 8991118.
     address internal constant PONS_LAUNCH_FACTORY_ACTIVE = 0xA5aAb3F0c6EeadF30Ef1D3Eb997108E976351feB;
-    /// @dev Active launch locker (custody of position NFTs + fee routing).
+    /// @dev Active V1 launch locker (custody of position NFTs + fee routing).
     address internal constant PONS_LAUNCH_LOCKER_ACTIVE = 0x736D76699C26D0d966744cAe304C000d471f7F35;
-    /// @dev First block where active factory/locker era is in force (docs + explorer).
+    /// @dev First block where active V1 factory/locker era is in force (docs + explorer).
     uint256 internal constant PONS_ACTIVE_START_BLOCK = 8_991_118;
+
+    /// @dev Live V2 PonsV2LaunchFactory (github.com/ponsdotdev/ponsfamily README).
+    address internal constant PONS_V2_LAUNCH_FACTORY = 0x7eD598BcEf8bd9Edd8C97A195C6d13f40801EC7e;
+    /// @dev V2 fee escrow (factory.feeEscrow(); source not published — interface only in tree).
+    address internal constant PONS_V2_FEE_ESCROW = 0xd3AFEB2a57f70eF218Aa82451c51B2fb0416Ac9e;
+    /// @dev V2 meme hook (factory.memeHook()).
+    address internal constant PONS_V2_MEME_HOOK = 0xE5e702641Ea86F4ae6cC3cDaeD2B886f976Be044;
+    /// @dev V2 launch locker (factory.locker()).
+    address internal constant PONS_V2_LAUNCH_LOCKER = 0x267444D099b10fB5Ed7c3Cc7B7c767AdcA574952;
+    /// @dev V2 buyback vault (factory.buybackVault()).
+    address internal constant PONS_V2_BUYBACK_VAULT = 0x42df2a798f82289E177311362e8f5ccC45c1219c;
 
     /* -------------------------------------------------------------------------- */
     /*                              Morpho (docs.morpho.org)                      */

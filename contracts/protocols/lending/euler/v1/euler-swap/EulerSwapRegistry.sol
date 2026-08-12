@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: BSL-1.1
 pragma solidity ^0.8.27;
 
 import {EnumerableSet} from "@crane/contracts/external/openzeppelin-contracts/utils/structs/EnumerableSet.sol";

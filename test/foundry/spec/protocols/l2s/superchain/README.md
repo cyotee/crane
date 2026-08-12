@@ -56,7 +56,7 @@ Set `ALCHEMY_KEY` before running the suite.
 ```bash
 cd /Users/cyotee/Development/github-cyotee/indexedex/lib/daosys/lib/crane
 export ALCHEMY_KEY=your_key_here
-forge test --match-path test/foundry/spec/protocols/l2s/superchain/TokenTransferRelayer_Superchain.t.sol -vv
+FOUNDRY_PROFILE=fork forge test --match-path test/foundry/fork/protocols/l2s/superchain/TokenTransferRelayer_Superchain.t.sol -vv
 ```
 
 ## Notes

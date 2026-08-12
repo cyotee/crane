@@ -151,29 +151,29 @@ forge test --match-contract Create3Factory_Test --match-test idempotent -vv
 forge test --match-path test/foundry/spec/scripts/bc/BCPhaseScriptBase_Bind.t.sol -vv
 
 # Phase 1–3 fork (needs BC RPC or env used by tests)
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase1_Factories_Fork.t.sol -vv
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase2_Balancer_Fork.t.sol -vv
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase3_Aave_Fork.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase1_Factories_Fork.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase2_Balancer_Fork.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase3_Aave_Fork.t.sol -vv
 
 # Phase 6–8, 10, 12 hermetic
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase6_Aerodrome_Hermetic.t.sol -vv
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase7_Uniswap_Hermetic.t.sol -vv
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase8_Camelot_Hermetic.t.sol -vv
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase10_Sky_Hermetic.t.sol -vv
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase12_Reliquary_Hermetic.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase6_Aerodrome_Hermetic.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase7_Uniswap_Hermetic.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase8_Camelot_Hermetic.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase10_Sky_Hermetic.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase12_Reliquary_Hermetic.t.sol -vv
 
 # Phase 9 / 13a / 13b hermetic (always-on)
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase9_Liquity_Hermetic.t.sol -vv
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase13a_Pendle_Hermetic.t.sol -vv
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase13b_Frax_Hermetic.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase9_Liquity_Hermetic.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase13a_Pendle_Hermetic.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase13b_Frax_Hermetic.t.sol -vv
 
 # Optional fork when BC RPC up (some suites skip cleanly if down)
 BC_FORK_RPC=https://testnet.battlechain.com \
-  forge test --match-path test/foundry/spec/scripts/bc/BC_Phase9_Liquity_Fork.t.sol -vv
+  forge test --match-path test/foundry/fork/scripts/bc/BC_Phase9_Liquity_Fork.t.sol -vv
 BC_FORK_RPC=https://testnet.battlechain.com \
-  forge test --match-path test/foundry/spec/scripts/bc/BC_Phase13a_Pendle_Fork.t.sol -vv
+  forge test --match-path test/foundry/fork/scripts/bc/BC_Phase13a_Pendle_Fork.t.sol -vv
 BC_FORK_RPC=https://testnet.battlechain.com \
-  forge test --match-path test/foundry/spec/scripts/bc/BC_Phase13b_Frax_Fork.t.sol -vv
+  forge test --match-path test/foundry/fork/scripts/bc/BC_Phase13b_Frax_Fork.t.sol -vv
 ```
 
 **Anvil BC fork (optional operator dry-run):**
@@ -250,7 +250,7 @@ forge build --contracts scripts/foundry/bc/
 
 ```bash
 # Verify (preferred)
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase1_Factories_Fork.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase1_Factories_Fork.t.sol -vv
 
 # Live (Tier D only)
 forge script scripts/foundry/bc/Script_BC_Phase1_Factories.s.sol:Script_BC_Phase1_Factories \
@@ -281,7 +281,7 @@ forge script scripts/foundry/bc/Script_BC_Phase1_Factories.s.sol:Script_BC_Phase
 | **Not** | New agreement / attack mode; NullAuthorizer as final auth |
 
 ```bash
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase2_Balancer_Fork.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase2_Balancer_Fork.t.sol -vv
 
 forge script scripts/foundry/bc/Script_BC_Phase2_BalancerV3.s.sol:Script_BC_Phase2_BalancerV3 \
   --rpc-url battlechain-sepolia --broadcast --skip-simulation \
@@ -318,7 +318,7 @@ Standalone Phase 1 / 2 remain primary for **resume** after partial failure (CREA
 **Lineage note:** Aave uses CREATE2/`new`, not Phase 1 CREATE3 root (tracked as optional DEBT P3a-10).
 
 ```bash
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase3_Aave_Fork.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase3_Aave_Fork.t.sol -vv
 # Expect 6/6: binds, Path B no-etch, V3, V4 core+configure, full, supply smoke
 
 forge script scripts/foundry/bc/Script_BC_Phase3_Aave.s.sol:Script_BC_Phase3_Aave \
@@ -403,7 +403,7 @@ No Comet deploy (PRD default is Venus bind).
 **Manifests:** `battlechain-sepolia-aerodrome.json` (and greenfield runtime copy if script writes both)
 
 ```bash
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase6_Aerodrome_Hermetic.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase6_Aerodrome_Hermetic.t.sol -vv
 
 forge script scripts/foundry/bc/Script_BC_Phase6_Aerodrome.s.sol:Script_BC_Phase6_Aerodrome \
   --rpc-url battlechain-sepolia --broadcast --skip-simulation \
@@ -424,7 +424,7 @@ forge script scripts/foundry/bc/Script_BC_Phase6_Aerodrome.s.sol:Script_BC_Phase
 | **Deploy** | PositionDescriptor, PositionManager, StateView, V4Quoter, `BcV4Router` |
 
 ```bash
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase7_Uniswap_Hermetic.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase7_Uniswap_Hermetic.t.sol -vv
 
 forge script scripts/foundry/bc/Script_BC_Phase7_Uniswap.s.sol:Script_BC_Phase7_Uniswap \
   --rpc-url battlechain-sepolia --broadcast --skip-simulation \
@@ -442,7 +442,7 @@ forge script scripts/foundry/bc/Script_BC_Phase7_Uniswap.s.sol:Script_BC_Phase7_
 | Smoke | Hermetic `createPair` |
 
 ```bash
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase8_Camelot_Hermetic.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase8_Camelot_Hermetic.t.sol -vv
 
 forge script scripts/foundry/bc/Script_BC_Phase8_Camelot.s.sol:Script_BC_Phase8_Camelot \
   --rpc-url battlechain-sepolia --broadcast --skip-simulation \
@@ -465,7 +465,7 @@ forge script scripts/foundry/bc/Script_BC_Phase8_Camelot.s.sol:Script_BC_Phase8_
 **Open-trove constraints:** `MIN_DEBT = 2000e18` BOLD; `ETH_GAS_COMPENSATION = 0.0375e18` WETH to gas pool.
 
 ```bash
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase9_Liquity_Hermetic.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase9_Liquity_Hermetic.t.sol -vv
 
 forge script scripts/foundry/bc/Script_BC_Phase9_Liquity.s.sol:Script_BC_Phase9_Liquity \
   --rpc-url battlechain-sepolia --broadcast --skip-simulation \
@@ -485,7 +485,7 @@ forge script scripts/foundry/bc/Script_BC_Phase9_Liquity.s.sol:Script_BC_Phase9_
 | Smoke | Hermetic join + frob + exit DAI (`openCdp`) |
 
 ```bash
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase10_Sky_Hermetic.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase10_Sky_Hermetic.t.sol -vv
 
 forge script scripts/foundry/bc/Script_BC_Phase10_Sky.s.sol:Script_BC_Phase10_Sky \
   --rpc-url battlechain-sepolia --broadcast --skip-simulation \
@@ -510,7 +510,7 @@ forge script scripts/foundry/bc/Script_BC_Phase10_Sky.s.sol:Script_BC_Phase10_Sk
 | Smoke | Hermetic `createRelicAndDeposit` |
 
 ```bash
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase12_Reliquary_Hermetic.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase12_Reliquary_Hermetic.t.sol -vv
 
 forge script scripts/foundry/bc/Script_BC_Phase12_Reliquary.s.sol:Script_BC_Phase12_Reliquary \
   --rpc-url battlechain-sepolia --broadcast --skip-simulation \
@@ -530,7 +530,7 @@ forge script scripts/foundry/bc/Script_BC_Phase12_Reliquary.s.sol:Script_BC_Phas
 | Deploy | PendlePYLpOracle behind ERC1967Proxy |
 
 ```bash
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase13a_Pendle_Hermetic.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase13a_Pendle_Hermetic.t.sol -vv
 
 forge script scripts/foundry/bc/Script_BC_Phase13a_Pendle.s.sol:Script_BC_Phase13a_Pendle \
   --rpc-url battlechain-sepolia --broadcast --skip-simulation \
@@ -555,7 +555,7 @@ forge script scripts/foundry/bc/Script_BC_Phase13a_Pendle.s.sol:Script_BC_Phase1
 Hermetic uses mintable DummyTokens; live/fork uses BC WETH/USDC when available. **Out of scope:** TWAMM / Range.
 
 ```bash
-forge test --match-path test/foundry/spec/scripts/bc/BC_Phase13b_Frax_Hermetic.t.sol -vv
+forge test --match-path test/foundry/fork/scripts/bc/BC_Phase13b_Frax_Hermetic.t.sol -vv
 
 forge script scripts/foundry/bc/Script_BC_Phase13b_Frax.s.sol:Script_BC_Phase13b_Frax \
   --rpc-url battlechain-sepolia --broadcast --skip-simulation \

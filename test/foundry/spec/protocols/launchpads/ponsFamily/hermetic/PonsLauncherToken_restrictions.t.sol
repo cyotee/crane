@@ -3,9 +3,9 @@ pragma solidity ^0.8.35;
 
 import {
     TestBase_PonsFamily
-} from "@crane/contracts/protocols/launchpads/ponsFamily/test/bases/TestBase_PonsFamily.sol";
+} from "@crane/contracts/protocols/launchpads/ponsFamily/v1/test/bases/TestBase_PonsFamily.sol";
 import {PonsLauncherToken} from
-    "@crane/contracts/protocols/launchpads/ponsFamily/pons/PonsLauncherToken.sol";
+    "@crane/contracts/protocols/launchpads/ponsFamily/v1/PonsLauncherToken.sol";
 
 contract PonsLauncherToken_restrictions_Test is TestBase_PonsFamily {
     function test_sameBlock_nonCreatorBuy_reverts() public {

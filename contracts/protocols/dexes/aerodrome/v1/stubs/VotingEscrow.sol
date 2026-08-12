@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: BSL-1.1
 pragma solidity ^0.8.19;
 
 import {IERC721Receiver} from "@crane/contracts/interfaces/IERC721Receiver.sol";

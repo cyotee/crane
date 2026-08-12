@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: BSL-1.1
 pragma solidity >=0.5.0;
 
 import "@crane/contracts/external/etherfi/interfaces/eigenlayer-interfaces/IStrategyManager.sol";

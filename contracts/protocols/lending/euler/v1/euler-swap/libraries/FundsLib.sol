@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: BSL-1.1
 pragma solidity ^0.8.27;
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";

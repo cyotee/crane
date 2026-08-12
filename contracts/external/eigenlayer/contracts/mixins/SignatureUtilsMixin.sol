@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: BSL-1.1
 pragma solidity ^0.8.0;
 
 import "@crane/contracts/external/openzeppelin-contracts-v5/utils/ShortStrings.sol";

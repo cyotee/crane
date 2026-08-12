@@ -1,6 +1,6 @@
 // Copyright 2021-2022, Offchain Labs, Inc.
 // For license information, see https://github.com/nitro/blob/master/LICENSE
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: BSL-1.1
 // OpenZeppelin Contracts (last updated v4.9.0) (vendor/arbitrum/IBridge.sol)
 
 // solhint-disable-next-line compiler-version

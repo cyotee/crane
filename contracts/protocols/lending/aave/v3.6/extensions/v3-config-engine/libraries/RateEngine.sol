@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: BSL-1.1
 pragma solidity ^0.8.18;
 
 import {IDefaultInterestRateStrategyV2} from "../../../interfaces/IDefaultInterestRateStrategyV2.sol";

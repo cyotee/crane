@@ -3,9 +3,9 @@ pragma solidity ^0.8.35;
 
 import {
     TestBase_PonsFamily
-} from "@crane/contracts/protocols/launchpads/ponsFamily/test/bases/TestBase_PonsFamily.sol";
+} from "@crane/contracts/protocols/launchpads/ponsFamily/v1/test/bases/TestBase_PonsFamily.sol";
 import {PonsLaunchFactory} from
-    "@crane/contracts/protocols/launchpads/ponsFamily/pons/PonsLaunchFactory.sol";
+    "@crane/contracts/protocols/launchpads/ponsFamily/v1/PonsLaunchFactory.sol";
 
 contract PonsLaunchFactory_predict_Test is TestBase_PonsFamily {
     function test_predictTokenAddress_matchesDeploy() public {

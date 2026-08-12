@@ -3,13 +3,13 @@ pragma solidity ^0.8.35;
 
 import {
     TestBase_PonsFamily
-} from "@crane/contracts/protocols/launchpads/ponsFamily/test/bases/TestBase_PonsFamily.sol";
+} from "@crane/contracts/protocols/launchpads/ponsFamily/v1/test/bases/TestBase_PonsFamily.sol";
 import {PonsLaunchFactory} from
-    "@crane/contracts/protocols/launchpads/ponsFamily/pons/PonsLaunchFactory.sol";
+    "@crane/contracts/protocols/launchpads/ponsFamily/v1/PonsLaunchFactory.sol";
 import {PonsLauncherToken} from
-    "@crane/contracts/protocols/launchpads/ponsFamily/pons/PonsLauncherToken.sol";
+    "@crane/contracts/protocols/launchpads/ponsFamily/v1/PonsLauncherToken.sol";
 import {IPonsLaunchFactory} from
-    "@crane/contracts/protocols/launchpads/ponsFamily/pons/interfaces/ILaunchpad.sol";
+    "@crane/contracts/protocols/launchpads/ponsFamily/v1/interfaces/ILaunchpad.sol";
 
 contract PonsLaunchFactory_launch_Test is TestBase_PonsFamily {
     function test_launchToken_withoutSeedBuy() public {
@@ -37,7 +37,7 @@ contract PonsLaunchFactory_launch_Test is TestBase_PonsFamily {
         address pool = PonsLauncherToken(token).liquidityPool();
         assertTrue(pool != address(0), "pool exists");
         assertEq(_positionOwner(launched.positionId), address(ponsLocker), "NFT with locker");
-        assertTrue(ponsLocker.isLocked(token), "locker recorded lock");
+        // Production locker does not expose isLocked; NFT custody asserted via positionOwner.
         assertEq(ponsFeeSink.balance, feeBefore + PONS_LAUNCH_FEE, "launch fee paid to sink");
         assertEq(PonsLauncherToken(token).totalSupply(), PONS_SUPPLY);
     }
@@ -57,7 +57,7 @@ contract PonsLaunchFactory_launch_Test is TestBase_PonsFamily {
         IPonsLaunchFactory.LaunchedToken memory launched = _launched(token);
         assertEq(launched.initialBuyAmount, seedEth, "seed amount recorded");
         assertGt(PonsLauncherToken(token).balanceOf(seedRecipient), 0, "seed recipient got tokens");
-        assertEq(ponsLocker.feeRedirect(token), seedRecipient, "fee redirect set");
+        assertEq(ponsLocker.feeRedirects(token), seedRecipient, "fee redirect set");
     }
 
     function test_launchToken_revertsWhenFeeUnderpaid() public {

@@ -3,73 +3,59 @@
 | Item | Value |
 |------|-------|
 | Upstream | https://github.com/ponsdotdev/ponsfamily |
-| Pin | `60fcd76499a8d84caa09a1b252b0b1ae46a7bd86` (`main` as of 2026-07-28) |
-| Solidity domain files | 5 (`PonsLaunchFactory`, `PonsLauncherToken`, `ILaunchpad`, `PonsLiquidityMath`, `PonsTickMath`) |
-| Copy date | 2026-07-28 |
-| License | MIT (factory, token, interfaces, liquidity math); **GPL-2.0-or-later** (`PonsTickMath`) |
-| Import policy | OpenZeppelin **v5** only via `@crane/contracts/external/openzeppelin-contracts-v5/...`. **Do not** nest OZ/Solady under `ponsFamily/`. **Do not** use default project `openzeppelin-contracts` 4.9.6 tree for this port. |
+| V1 pin | Domain from earlier Crane port + layout reorg 2026-08-11 |
+| V1 locker | Sourcify exact_match `0x736D76699C26D0d966744cAe304C000d471f7F35` (2026-07-13) — **not** on GitHub |
+| V2 pin | Sourcify exact_match factory `0x7eD598BcEf8bd9Edd8C97A195C6d13f40801EC7e` (2026-08-04); GitHub `main` can lag live |
+| V2 fee escrow | Reconstructed from `IPonsV2FeeEscrow` + integration events (live source unpublished) |
+| Layout date | 2026-08-12 |
+| License | MIT (first-party); **GPL-2.0-or-later** (`v1/libraries/PonsTickMath.sol`) |
+| Import policy | OZ v5 + Uni V4 + Permit2 via Crane shared trees. No nested OZ under `ponsFamily/`. |
 
-## Live active addresses (Robinhood Chain 4663)
-
-| Role | Address | Notes |
-|------|---------|--------|
-| Active factory | `0xA5aAb3F0c6EeadF30Ef1D3Eb997108E976351feB` | Start block **8991118** |
-| Active locker | `0x736D76699C26D0d966744cAe304C000d471f7F35` | |
-| V3 factory / PM / router / WETH | See `ROBINHOOD_MAIN` | Shared Uni V3 stack |
-
-Live `getLaunchConfig(0)` (verified 2026-07-28 via public RH RPC):
-
-| Field | Value |
-|-------|--------|
-| pairToken | WETH `0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73` |
-| graduationThreshold | `4.2 ether` |
-| initialTick | `-204200` |
-| supply | `1_000_000_000 ether` (1e9 * 1e18) |
-| maxWalletBps / maxTxBps | `500` / `550` |
-| restrictionBlocks | `2` |
-| routerRequiresDeadline | `false` on live (SwapRouter02-style) |
-| launchFee | `0.0005 ether` |
-
-Hermetic tests set **`routerRequiresDeadline = true`** and wire Crane classic `SwapRouter`.
-
-## Adaptations (no business-logic edits)
-
-- Pragma `^0.8.30` → `^0.8.35` (Crane project solc).
-- `@openzeppelin/contracts/...` → `@crane/contracts/external/openzeppelin-contracts-v5/...`.
-- Relative imports within `pons/` preserved.
-- **Stack depth (no viaIR):** pure upstream fails legacy-codegen stack-too-deep without viaIR.
-  Crane keeps `via_ir = false` and applies compile-only structural adaptations that preserve
-  external launch/restriction/graduation behavior:
-  - `PonsLauncherToken` constructor takes a single `Init` struct (same fields as upstream flat args).
-  - `PonsLaunchFactory.launchToken` split into `_prepareLaunch` / `_seedPoolAndPosition` /
-    `_recordLockAndEmit` with a `LaunchCtx` memory struct.
-- Profile `pons_port` uses `optimizer_runs = 300` (matches upstream `contract-meta.json`) and
-  `evm_version = "cancun"`.
-
-## Explicit non-ports
-
-- Upstream `contracts/lib/openzeppelin-contracts/**` — **not** copied (shared external).
-- Product **v2** bonding-curve docs — **not** in this GitHub repo; do not invent.
-- Locker implementation — **not** upstream open source; hermetic uses `stubs/PonsLaunchLockerStub.sol` implementing `IPonsLaunchLocker`.
-- Service / Aware / Behavior wrappers — follow-up (PF4).
-
-## Inventory
+## Layout
 
 ```
 ponsFamily/
 ├── VENDOR.md
-├── pons/
-│   ├── PonsLaunchFactory.sol
-│   ├── PonsLauncherToken.sol
-│   ├── interfaces/ILaunchpad.sol
-│   └── libraries/{PonsLiquidityMath,PonsTickMath}.sol
-├── stubs/PonsLaunchLockerStub.sol
-└── test/bases/{TestBase_PonsFamily,TestBase_PonsFamily_Fork}.sol
+├── INDEXEDEX_MIGRATION.md   # consumer import map (IndexedEx agents)
+├── v1/                      # production V1 (factory, token, locker, math, TestBases)
+└── v2/                      # production V2 domain (full architecture for hermetic tests)
 ```
 
-## Fork profile
+## Live addresses (Robinhood 4663)
+
+### V1
+| Role | Address |
+|------|---------|
+| Factory | `0xA5aAb3F0c6EeadF30Ef1D3Eb997108E976351feB` |
+| Locker | `0x736D76699C26D0d966744cAe304C000d471f7F35` |
+
+### V2
+| Role | Address | Solidity in tree |
+|------|---------|------------------|
+| Factory | `0x7eD598BcEf8bd9Edd8C97A195C6d13f40801EC7e` | yes |
+| Fee escrow | `0xd3AFEB2a57f70eF218Aa82451c51B2fb0416Ac9e` | **yes** (`PonsV2FeeEscrow.sol`, reconstructed) |
+| Meme hook | `0xE5e702641Ea86F4ae6cC3cDaeD2B886f976Be044` | yes |
+| Locker | `0x267444D099b10fB5Ed7c3Cc7B7c767AdcA574952` | yes |
+| Buyback vault | `0x42df2a798f82289E177311362e8f5ccC45c1219c` | yes |
+
+See `ROBINHOOD_MAIN.sol`.
+
+## Compile policy
+
+- **Default profile** compiles V1 + V2 (no `pons_port` profile). `via_ir = false`.
+- **V2 stack-depth adaptations** (behavior-preserving; required because upstream used viaIR):
+  - `PonsV2BondingCurve` / `PonsV2LauncherToken`: constructors take a single init **struct** (`PonsV2CurveInit` / `Init`) instead of a flat 12/9-arg list.
+  - `PonsV2LaunchDeployer`: CREATE2 arg encoding builds those structs then `abi.encode`s them.
+  - Hot paths use memory **ctx structs** + helper splits: curve `buy`/`_sweepFees`, hook `sweepPoolFees`/`_afterSwap`/`_distribute`/`unlockCallback`, factory `_createPoolAndMintPosition`.
+- **Fee escrow**: upstream Solidity was not on Sourcify/GitHub. Crane ships a faithful ledger implementing `IPonsV2FeeEscrow` with `Credited` / `Claimed` / `CreditedToken` / `ClaimedToken` events for hermetic full-stack tests. Fork tests may still bind live bytecode at `PONS_V2_FEE_ESCROW`.
+- CREATE2 addresses for **new** hermetic V2 deploys may differ from mainnet (constructor ABI packaging + optimizer runs).
+
+## Tests
 
 ```bash
-FOUNDRY_PROFILE=pons_port forge test \
-  --match-path 'test/foundry/spec/protocols/launchpads/ponsFamily/fork/**' -vv
+# Default profile: hermetic only (no RPC / fork paths skipped)
+forge test --match-path 'test/foundry/spec/protocols/launchpads/ponsFamily/hermetic/**' -vv
+
+# Fork profile: includes fork suite (needs Robinhood RPC)
+FOUNDRY_PROFILE=fork forge test --match-path 'test/foundry/fork/protocols/launchpads/ponsFamily/**' -vv
 ```

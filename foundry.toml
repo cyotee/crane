@@ -1,9 +1,15 @@
+# ---------------------------------------------------------------------------
+# Profiles (only two):
+#   default — hermetic / unit / integration; skips all **/fork/** tests (no RPC)
+#   fork    — only **/fork/** tests (requires RPC endpoints below)
+# ---------------------------------------------------------------------------
+
 [profile.default]
 src = 'contracts'
 out = 'out'
 libs = ['node_modules', 'lib']
 test = 'test'
-cache_path  = 'cache_forge'
+cache_path = 'cache_forge'
 fs_permissions = [
     { access = "read", path = "./" },
     # Scripts export JSON under script/output.
@@ -22,20 +28,18 @@ fs_permissions = [
     { access = "read", path = "./out" },
     { access = "read", path = "./config" },
 ]
-# block_gas_limit = "9223372036854775807"
 solc = "0.8.35"
 sizes = true
 optimizer = true
-# optimizer_runs = 4294967295
-# CamelotFactory requires 16683 to fit within execution code size limits
-# optimizer_runs = 16683
-# optimizer_runs = 2000
-# optimizer_runs = 999
+# optimizer_runs = 1 keeps many protocol ports under EIP-170 when size is tight
 optimizer_runs = 1
 # viaIR disabled - use structs to avoid "stack too deep" errors
 viaIR = false
 # Allow vm.expectRevert() for internal/library function calls (Foundry v1.0+ changed depth requirements)
 allow_internal_expect_revert = true
+# Olympus and some ports use FFI / AST in tests
+ffi = true
+ast = true
 remappings = [
     "forge-std/=lib/forge-std/src/",
     "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts/",
@@ -44,13 +48,17 @@ remappings = [
     "battlechain-lib/=lib/battlechain-lib/src/",
     "@battlechain-contracts/=lib/battlechain-lib/lib/battlechain-safe-harbor-contracts/src/",
     "@oz/=lib/openzeppelin-contracts/",
-    "@ozu/=contracts/external/openzeppelin-upgradeable/"
+    "@ozu/=contracts/external/openzeppelin-upgradeable/",
+    # Protocol ports (Morpho / Olympus / V4 deps) — previously only on port-specific profiles
+    "solmate/=contracts/external/solmate/",
+    "clones/=contracts/external/clones-with-immutable-args/",
+    "erc4626-tests/=contracts/external/erc4626-tests/",
 ]
 
 ignored_error_codes = [
-    2394, 
-    3860, 
-    5574, 
+    2394,
+    3860,
+    5574,
     2072,
     1878,
     # Unreachable code
@@ -64,15 +72,16 @@ ignored_error_codes = [
     # Tuple type conversion issues in vendored/generated protocol code (Liquity, Aerodrome)
     7407,
     # Documented parameter not found in function (natspec mismatch in core DFPkgs)
-    3881
+    3881,
 ]
+
+# Default: do not run fork tests (no RPC required for local/CI hermetic runs).
+no_match_path = "**/fork/**"
 
 skip = [
     # Vendor inventory under contracts/external: not primary sources for monorepo solc 0.8.35.
-    # Foundry still compiles files that production/test code imports. Full vendor package units
-    # use FOUNDRY_PROFILE=d2full_pkg_* (and similar). Prevents multi-pragma 0.4/0.6/0.7 trees,
-    # dual OZ pins, Osaka-only Solady CLZ variants, and dead vendor tests from forcing a
-    # 5k-unit compile of unused inventory.
+    # Foundry still compiles files that production/test code imports.
+    # Multi-pragma 0.4/0.6/0.7 trees, dual OZ pins, and dead vendor tests force this inventory skip.
     "contracts/external/**",
 
     # Aave V3.6 upstream formal-verification trees that are not required for runtime compilation.
@@ -93,30 +102,12 @@ include = ["test/foundry/spec/protocols/lending/aave/v4/helpers/mocks/EIP712Type
 [invariant]
 runs = 50
 depth = 5
-# corpus_dir = 'corpus'
-# corpus_gzip = true
 
 [profile.default.fmt]
 # Vendored / protocol-port trees: do not require forge-fmt churn across huge imports.
-# lib/ is git submodules; contracts/external is vendored third-party code.
 skip = [
     "lib/**",
     "contracts/external/**",
-]
-
-# GitHub Actions free runners OOM when compiling the entire monorepo (~5k units).
-# CI profile builds/tests framework core only; full protocol ports are local/nightly.
-[profile.ci]
-inherits = "default"
-sizes = false
-skip = [
-    "lib/**",
-    "contracts/external/**",
-    "contracts/protocols/**",
-    "test/foundry/spec/protocols/**",
-    "test/foundry/fork/**",
-    # Upstream formal verification / certora trees under Aave ports (if not covered above)
-    "contracts/protocols/lending/**/certora/**",
 ]
 
 [lint]
@@ -135,7 +126,7 @@ exclude_lints = [
     "unsafe-typecast",
     "unwrapped-modifier-logic",
     "unsafe-cheatcode",
-    "named-struct-fields"
+    "named-struct-fields",
 ]
 ignore = [
     "contracts/test/stubs/greeter/OperableGreeter.sol",
@@ -208,8 +199,10 @@ ignore = [
     "contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/interfaces/IERC721Receiver.sol",
     "contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/interfaces/IERC1155.sol",
     "contracts/protocols/lending/aave/v3.6/dependencies/openzeppelin-contracts/contracts/interfaces/IERC1155MetadataURI.sol",
-    "contracts/interfaces/IMultiStepOwnableView.sol"
+    "contracts/interfaces/IMultiStepOwnableView.sol",
 ]
+
+# Shared by default and fork (profiles auto-inherit top-level keys in this Foundry version).
 [rpc_endpoints]
 local = "http://127.0.0.1:8545"
 # BattleChain testnet (chain 627) settles to Ethereum Sepolia — preferred alias name
@@ -266,375 +259,11 @@ robinhood_testnet = "https://rpc.testnet.chain.robinhood.com"
 robinhood_testnet_public = "https://rpc.testnet.chain.robinhood.com"
 robinhood_testnet_alchemy = "https://robinhood-testnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
 
-# Narrow profile for ethereum staking integration ports (import-graph only; no remapping changes).
-[profile.staking_eth]
-src = 'contracts/protocols/staking/ethereum'
-test = 'test/foundry/fork/ethereum/protocols/staking/ethereum'
-out = 'out_staking_eth'
-cache_path = 'cache_staking_eth'
-libs = ['lib']
-solc = "0.8.35"
-optimizer = true
-optimizer_runs = 1
-via_ir = false
-allow_internal_expect_revert = true
-fs_permissions = [{ access = "read-write", path = "./"}]
-remappings = [
-    "forge-std/=lib/forge-std/src/",
-    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts/",
-    "@crane/contracts/=contracts/",
-    "@crane/test/=test/",
-]
-[profile.staking_eth.rpc_endpoints]
-ethereum_mainnet_infura = "https://mainnet.infura.io/v3/${INFURA_KEY}"
-ethereum_mainnet_alchemy = "https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
-ethereum_mainnet_public = "https://ethereum-rpc.publicnode.com"
-
-
-# D2-FULL vendor trees: multi-version solc; excluded from default src scan
-# Compiled via FOUNDRY_PROFILE=d2full_vendor (auto_detect_solc, no forced solc pin).
-[profile.d2full_vendor]
-# Domain + entrypoint tests import all four vendor graphs (S/E/L/R). No skip of those trees.
-# Default profile still skips heavy trees for monorepo compile speed.
-src = "contracts/external/stakewise"
-test = "test/foundry/unit/external/staking_d2full"
-out = "out_d2full_vendor"
-cache_path = "cache_d2full_vendor"
-libs = ["lib"]
-solc = "0.8.35"
-optimizer = true
-optimizer_runs = 1
-via_ir = false
-fs_permissions = [{ access = "read-write", path = "./"}]
-remappings = [
-    "forge-std/=lib/forge-std/src/",
-    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v5/",
-    "@crane/contracts/=contracts/",
-    "@crane/test/=test/",
-]
-
-[profile.d2full_all]
-# Domain suites only: import graphs pull S/E/L/R vendored entrypoints (no monorepo scan of full external).
-src = "test/foundry/unit/external/staking_d2full"
-test = "test/foundry/unit/external/staking_d2full"
-out = "out_d2full_all"
-cache_path = "cache_d2full_all"
-libs = ["lib"]
-solc = "0.8.35"
-optimizer = true
-optimizer_runs = 1
-via_ir = false
-fs_permissions = [{ access = "read-write", path = "./"}]
-remappings = [
-    "forge-std/=lib/forge-std/src/",
-    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v4/",
-    "@crane/contracts/=contracts/",
-    "@crane/test/=test/",
-]
-
-
-[profile.d2full_etherfi]
-src = "contracts/external/etherfi"
-test = "test/foundry/unit/external/staking_d2full"
-out = "out_d2full_etherfi"
-cache_path = "cache_d2full_etherfi"
-libs = ["lib"]
-solc = "0.8.35"
-optimizer = true
-optimizer_runs = 1
-via_ir = false
-fs_permissions = [{ access = "read-write", path = "./"}]
-remappings = [
-    "forge-std/=lib/forge-std/src/",
-    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v4/",
-    "@crane/contracts/=contracts/",
-    "@crane/test/=test/",
-]
-
-
-# --- D2-FULL package-scope builds (src = vendor root; forge build proves package unit) ---
-[profile.d2full_pkg_stakewise]
-src = "contracts/external/stakewise"
-test = "test/foundry/unit/external/staking_d2full"
-out = "out_d2full_pkg_sw"
-cache_path = "cache_d2full_pkg_sw"
-libs = ["lib"]
-solc = "0.8.35"
-optimizer = true
-optimizer_runs = 1
-via_ir = false
-fs_permissions = [{ access = "read-write", path = "./"}]
-remappings = [
-    "forge-std/=lib/forge-std/src/",
-    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v5/",
-    "@crane/contracts/=contracts/",
-    "@crane/test/=test/",
-]
-
-[profile.d2full_pkg_etherfi]
-src = "contracts/external/etherfi"
-test = "test/foundry/unit/external/staking_d2full"
-out = "out_d2full_pkg_e"
-cache_path = "cache_d2full_pkg_e"
-libs = ["lib"]
-solc = "0.8.35"
-optimizer = true
-optimizer_runs = 1
-via_ir = false
-fs_permissions = [{ access = "read-write", path = "./"}]
-skip = [
-  "contracts/external/etherfi/archive/**",
-  "contracts/external/etherfi/restaking/**",
-  "contracts/external/etherfi/oracle/**",
-  "contracts/external/etherfi/rewards/**",
-  "contracts/external/etherfi/helpers/**",
-  "contracts/external/etherfi/deposits/**",
-  "contracts/external/etherfi/staking/**",
-  "contracts/external/etherfi/withdrawals/**",
-  "contracts/external/etherfi/core/LiquidityPool.sol",
-  "contracts/external/etherfi/core/MembershipManager.sol",
-  "contracts/external/etherfi/core/EtherFiAdmin.sol",
-  "contracts/external/etherfi/core/EtherFiOracle.sol",
-  "contracts/external/etherfi/core/AuctionManager.sol",
-  "contracts/external/etherfi/core/BucketRateLimiter.sol",
-  "contracts/external/etherfi/core/EtherFiNode.sol",
-  "contracts/external/etherfi/core/EtherFiNodesManager.sol",
-  "contracts/external/etherfi/core/EtherFiEarlyAdopter.sol",
-  "contracts/external/etherfi/core/RegulationsManager.sol",
-  "contracts/external/etherfi/core/TNFT.sol",
-  "contracts/external/etherfi/core/BNFT.sol",
-  "contracts/external/etherfi/core/NodeOperatorManager.sol",
-  "contracts/external/etherfi/core/ProtocolRevenueManager.sol",
-]
-remappings = [
-    "forge-std/=lib/forge-std/src/",
-    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v4/",
-    "@crane/contracts/=contracts/",
-    "@crane/test/=test/",
-]
-
-[profile.d2full_pkg_lido]
-src = "contracts/external/lido"
-test = "test/foundry/unit/external/staking_d2full"
-out = "out_d2full_pkg_l"
-cache_path = "cache_d2full_pkg_l"
-libs = ["lib"]
-solc = "0.8.35"
-optimizer = true
-optimizer_runs = 1
-via_ir = false
-fs_permissions = [{ access = "read-write", path = "./"}]
-# Package unit for mint/wrap: domain WstETH + common libs. Multi-pragma Aragon/0.4 trees stay vendored for inventory.
-skip = [
-  "contracts/external/lido/0.4.24/**",
-  "contracts/external/lido/0.6.11/**",
-  "contracts/external/lido/0.6.12/**",
-  "contracts/external/lido/0.8.9/**",
-  "contracts/external/lido/0.8.25/**",
-  "contracts/external/lido/tooling/**",
-  "contracts/external/lido/upgrade/**",
-  "contracts/external/lido/openzeppelin/**",
-]
-remappings = [
-    "forge-std/=lib/forge-std/src/",
-    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v4/",
-    "@crane/contracts/=contracts/",
-    "@crane/test/=test/",
-]
-
-[profile.d2full_pkg_rocketpool]
-src = "contracts/external/rocketpool"
-test = "test/foundry/unit/external/staking_d2full"
-out = "out_d2full_pkg_r"
-cache_path = "cache_d2full_pkg_r"
-libs = ["lib"]
-solc = "0.8.35"
-optimizer = true
-optimizer_runs = 1
-via_ir = false
-fs_permissions = [{ access = "read-write", path = "./"}]
-skip = [
-  "contracts/external/rocketpool/thirdparty/**",
-  "contracts/external/rocketpool/contract/helper/**",
-  "contracts/external/rocketpool/contract/auction/**",
-  "contracts/external/rocketpool/contract/token/temp/**",
-  "contracts/external/rocketpool/contract/dao/**",
-  "contracts/external/rocketpool/contract/util/SafeERC20.sol",
-]
-remappings = [
-    "forge-std/=lib/forge-std/src/",
-    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v5/",
-    "@crane/contracts/=contracts/",
-    "@crane/test/=test/",
-]
-
-[profile.d2full_pkg_eigenlayer]
-src = "contracts/external/eigenlayer"
-test = "test/foundry/unit/external/staking_d2full"
-out = "out_d2full_pkg_el"
-cache_path = "cache_d2full_pkg_el"
-libs = ["lib"]
-solc = "0.8.35"
-optimizer = true
-optimizer_runs = 1
-via_ir = false
-fs_permissions = [{ access = "read-write", path = "./"}]
-skip = [
-  "contracts/external/eigenlayer/test/**",
-  "contracts/external/eigenlayer/script/**",
-  "contracts/external/eigenlayer/contracts/token/**",
-  "contracts/external/eigenlayer/contracts/pods/**",
-  "contracts/external/eigenlayer/contracts/multichain/**",
-  "contracts/external/eigenlayer/contracts/avs/**",
-  "contracts/external/eigenlayer/contracts/core/**",
-  "contracts/external/eigenlayer/contracts/mixins/**",
-  "contracts/external/eigenlayer/contracts/permissions/**",
-]
-remappings = [
-    "forge-std/=lib/forge-std/src/",
-    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v4/",
-    "@crane/contracts/=contracts/",
-    "@crane/test/=test/",
-]
-
-# Narrow profile for Morpho port (Phase 0–6): vendor + Crane wrappers + path-scoped tests.
-
-# Morpho port: vendor domain only (fast compile). Crane wrappers/tests import via @crane/ and pull deps.
-# match_path restricts *execution* to Morpho trees so monorepo tests (Aave, CCA, BC scripts, …)
-# are not run against out_morpho_port artifacts (which lack those contracts).
-[profile.morpho_port]
-src = "contracts/external/morpho"
-test = "test/foundry"
-out = "out_morpho_port"
-cache_path = "cache_morpho_port"
-libs = ["lib"]
-solc = "0.8.35"
-optimizer = true
-optimizer_runs = 1
-via_ir = false
-allow_internal_expect_revert = true
-skip = []
-match_path = "**/morpho/**"
-fs_permissions = [{ access = "read-write", path = "./"}]
-remappings = [
-    "forge-std/=lib/forge-std/src/",
-    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts/",
-    "@crane/contracts/=contracts/",
-    "@crane/test/=test/",
-    "erc4626-tests/=contracts/external/erc4626-tests/",
-]
-# RPCs inherit top-level [rpc_endpoints]; nested profile.rpc_endpoints is not a Foundry key.
-
-
-# Narrow profile for Olympus V3 port: domain + path-scoped tests (avoids full monorepo compile).
-[profile.olympus_port]
-ffi = true
-ast = true
-src = "contracts/protocols/tokens/stable/olympus/v2"
-test = "test/foundry/spec/protocols/tokens/stable/olympus/v2"
-out = "out_olympus_port"
-cache_path = "cache_olympus_port"
-libs = ["lib", "node_modules"]
-solc = "0.8.35"
-optimizer = true
-optimizer_runs = 1
-via_ir = false
-allow_internal_expect_revert = true
-# external is imported via remaps; do not skip needed files (skip empty)
-skip = [
-    # Upstream Uniswap periphery NFT descriptor / SVG are heavy and unused by olympus tests
-    "contracts/external/uniswap/v3-periphery/contracts/libraries/NFTDescriptor.sol",
-    "contracts/external/uniswap/v3-periphery/contracts/libraries/NFTSVG.sol",
-    "contracts/external/uniswap/v3-periphery/contracts/NonfungibleTokenPositionDescriptor.sol",
-    "contracts/external/uniswap/v3-periphery/contracts/NonfungiblePositionManager.sol",
-    "contracts/external/uniswap/v3-periphery/contracts/V3Migrator.sol",
-    "contracts/external/uniswap/v3-periphery/contracts/SwapRouter.sol",
-    "contracts/external/uniswap/v3-periphery/contracts/lens/**",
-    "contracts/external/uniswap/v3-periphery/contracts/examples/**",
-    "contracts/external/uniswap/v3-periphery/contracts/test/**",
-    "contracts/external/uniswap/v3-core/contracts/test/**",
-    "contracts/external/solmate/test/**",
-]
-fs_permissions = [
-    { access = "read-write", path = "./" },
-    { access = "read", path = "./out_olympus_port" },
-]
-remappings = [
-    "forge-std/=lib/forge-std/src/",
-    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v4/",
-    "@crane/contracts/=contracts/",
-    "@crane/test/=test/",
-    "solmate/=contracts/external/solmate/",
-    "clones/=contracts/external/clones-with-immutable-args/",
-]
-legacy_assertions = true
-
-# Narrow profile for Olympus V3 forward port (dual tree with olympus_port → v2).
-[profile.olympus_v3_port]
-ffi = true
-ast = true
-src = "contracts/protocols/tokens/stable/olympus/v3"
-test = "test/foundry/spec/protocols/tokens/stable/olympus/v3"
-out = "out_olympus_v3_port"
-cache_path = "cache_olympus_v3_port"
-libs = ["lib", "node_modules"]
-solc = "0.8.35"
-optimizer = true
-optimizer_runs = 1
-via_ir = false
-allow_internal_expect_revert = true
-skip = [
-    "contracts/external/uniswap/v3-periphery/contracts/libraries/NFTDescriptor.sol",
-    "contracts/external/uniswap/v3-periphery/contracts/libraries/NFTSVG.sol",
-    "contracts/external/uniswap/v3-periphery/contracts/NonfungibleTokenPositionDescriptor.sol",
-    "contracts/external/uniswap/v3-periphery/contracts/NonfungiblePositionManager.sol",
-    "contracts/external/uniswap/v3-periphery/contracts/V3Migrator.sol",
-    "contracts/external/uniswap/v3-periphery/contracts/SwapRouter.sol",
-    "contracts/external/uniswap/v3-periphery/contracts/lens/**",
-    "contracts/external/uniswap/v3-periphery/contracts/examples/**",
-    "contracts/external/uniswap/v3-periphery/contracts/test/**",
-    "contracts/external/uniswap/v3-core/contracts/test/**",
-    "contracts/external/solmate/test/**",
-]
-fs_permissions = [
-    { access = "read-write", path = "./" },
-    { access = "read", path = "./out_olympus_v3_port" },
-]
-remappings = [
-    "forge-std/=lib/forge-std/src/",
-    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v4/",
-    "@crane/contracts/=contracts/",
-    "@crane/test/=test/",
-    "solmate/=contracts/external/solmate/",
-    "clones/=contracts/external/clones-with-immutable-args/",
-]
-legacy_assertions = true
-
-# Narrow profile for ponsFamily port: hermetic + Robinhood fork bind tests.
-# optimizer_runs=300 matches upstream contract-meta.json (needed for constructor stack depth without viaIR).
-[profile.pons_port]
-src = "contracts/protocols/launchpads/ponsFamily"
-test = "test/foundry/spec/protocols/launchpads/ponsFamily"
-out = "out_pons_port"
-cache_path = "cache_pons_port"
-libs = ["lib", "node_modules"]
-solc = "0.8.35"
-optimizer = true
-optimizer_runs = 300
-via_ir = false
-evm_version = "cancun"
-allow_internal_expect_revert = true
-fs_permissions = [
-    { access = "read-write", path = "./" },
-    { access = "read", path = "./out_pons_port" },
-]
-remappings = [
-    "forge-std/=lib/forge-std/src/",
-    "@openzeppelin/contracts/=contracts/external/openzeppelin-contracts-v5/",
-    "@crane/contracts/=contracts/",
-    "@crane/test/=test/",
-]
-[profile.pons_port.rpc_endpoints]
-robinhood_mainnet = "https://rpc.mainnet.chain.robinhood.com"
-robinhood_mainnet_public = "https://rpc.mainnet.chain.robinhood.com"
-robinhood_mainnet_alchemy = "https://robinhood-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}"
+# ---------------------------------------------------------------------------
+# Fork profile — only RPC fork tests (**/fork/**).
+# ---------------------------------------------------------------------------
+[profile.fork]
+# Only execute tests under a fork/ directory (top-level or protocol-local).
+match_path = "**/fork/**"
+# Clear default's no_match so the positive match_path is not also excluded.
+no_match_path = ""
