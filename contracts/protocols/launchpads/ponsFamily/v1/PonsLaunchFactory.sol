@@ -591,9 +591,19 @@ contract PonsLaunchFactory is Ownable2Step, ReentrancyGuard, IPonsLaunchFactory 
  if (!sent) revert FeeTransferFailed();
  }
 
- function _computeCreate2Address(bytes32 salt, bytes32 initCodeHash) private view returns (address) {
- return address(uint160(uint256(keccak256(abi.encodePacked(bytes1(0xff), address(this), salt, initCodeHash)))));
- }
+    /// @dev Constant-memory CREATE2. `abi.encodePacked` per vanity iteration MemoryOOGs
+    /// (search limit 1e6, optimizer_runs=1). Scratch layout matches Solady CREATE3.
+    function _computeCreate2Address(bytes32 salt, bytes32 initCodeHash) private view returns (address predicted) {
+        assembly ("memory-safe") {
+            let free := mload(0x40)
+            mstore(0x00, address())
+            mstore8(0x0b, 0xff)
+            mstore(0x20, salt)
+            mstore(0x40, initCodeHash)
+            predicted := and(keccak256(0x0b, 0x55), shr(96, not(0)))
+            mstore(0x40, free)
+        }
+    }
 
  /// @dev Last two bytes of the address must equal `0xbbbb`.
  function _hasRequiredSuffix(address token) private pure returns (bool) {
