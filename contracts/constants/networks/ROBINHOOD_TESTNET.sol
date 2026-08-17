@@ -37,7 +37,8 @@ library ROBINHOOD_TESTNET {
     uint256 internal constant SETTLEMENT_CHAIN_ID = 11155111;
 
     /// @dev Pin near research time; bump when a known-good state is needed for hermetic forks.
-    uint256 internal constant DEFAULT_FORK_BLOCK = 93_919_631;
+    /// D35 (2026-08-15): recent 46630 head observed at 101_843_604; pin slightly behind tip.
+    uint256 internal constant DEFAULT_FORK_BLOCK = 101_800_000;
 
     /* -------------------------------------------------------------------------- */
     /*                              Core L2 tokens                                */

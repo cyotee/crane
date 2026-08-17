@@ -27,13 +27,13 @@ library ERC20MinterFacadeRepo {
     /**
      * @dev Standardized storage layout for ERC-20 minter facade.
      *      maxMintAmount: Maximum mintable in one tx (or per interval).
-     *      minMintInterval: Minimum seconds between mints per account.
-     *      lastMintTimestamps: Last mint time per account for interval enforcement.
+     *      minMintInterval: Minimum seconds between mints per (token, recipient).
+     *      lastMintTimestamps: Last mint time keyed by token then recipient.
      */
     struct Storage {
         uint256 maxMintAmount;
         uint256 minMintInterval;
-        mapping(address account => uint256 lastMintTimestamp) lastMintTimestamps;
+        mapping(address token => mapping(address recipient => uint256 lastMintTimestamp)) lastMintTimestamps;
     }
 
     // end::Storage[]
@@ -186,55 +186,68 @@ library ERC20MinterFacadeRepo {
 
     // end::_minMintInterval()[]
 
-    // tag::_lastMintTimestamp(Storage-address)[]
+    // tag::_lastMintTimestamp(Storage-address-address)[]
     /**
      * @dev Argumented version of _lastMintTimestamp to allow direct Storage access.
      * @dev The Storage struct to operate on.
      * @param layoutStruct The Storage struct to operate on.
-     * @param account The account to query last mint for.
-     * @return The last mint timestamp.
+     * @param token The token that was minted.
+     * @param recipient The recipient of the mint.
+     * @return The last mint timestamp for (token, recipient).
      */
-    function _lastMintTimestamp(Storage storage layoutStruct, address account) internal view returns (uint256) {
-        return layoutStruct.lastMintTimestamps[account];
+    function _lastMintTimestamp(Storage storage layoutStruct, address token, address recipient)
+        internal
+        view
+        returns (uint256)
+    {
+        return layoutStruct.lastMintTimestamps[token][recipient];
     }
 
-    // end::_lastMintTimestamp(Storage-address)[]
+    // end::_lastMintTimestamp(Storage-address-address)[]
 
-    // tag::_lastMintTimestamp(address)[]
+    // tag::_lastMintTimestamp(address-address)[]
     /**
      * @dev Default version of _lastMintTimestamp binding to the standard STORAGE_SLOT.
-     * @param account The account to query last mint for.
-     * @return The last mint timestamp.
+     * @param token The token that was minted.
+     * @param recipient The recipient of the mint.
+     * @return The last mint timestamp for (token, recipient).
      */
-    function _lastMintTimestamp(address account) internal view returns (uint256) {
-        return _lastMintTimestamp(_layoutStruct(), account);
+    function _lastMintTimestamp(address token, address recipient) internal view returns (uint256) {
+        return _lastMintTimestamp(_layoutStruct(), token, recipient);
     }
 
-    // end::_lastMintTimestamp(address)[]
+    // end::_lastMintTimestamp(address-address)[]
 
-    // tag::_setLastMintTimestamp(Storage-address-uint256)[]
+    // tag::_setLastMintTimestamp(Storage-address-address-uint256)[]
     /**
      * @dev Argumented version of _setLastMintTimestamp to allow direct Storage access.
      * @dev The Storage struct to operate on.
      * @param layoutStruct The Storage struct to operate on.
-     * @param account The account.
+     * @param token The token that was minted.
+     * @param recipient The recipient of the mint.
      * @param timestamp The timestamp to record.
      */
-    function _setLastMintTimestamp(Storage storage layoutStruct, address account, uint256 timestamp) internal {
-        layoutStruct.lastMintTimestamps[account] = timestamp;
+    function _setLastMintTimestamp(
+        Storage storage layoutStruct,
+        address token,
+        address recipient,
+        uint256 timestamp
+    ) internal {
+        layoutStruct.lastMintTimestamps[token][recipient] = timestamp;
     }
 
-    // end::_setLastMintTimestamp(Storage-address-uint256)[]
+    // end::_setLastMintTimestamp(Storage-address-address-uint256)[]
 
-    // tag::_setLastMintTimestamp(address-uint256)[]
+    // tag::_setLastMintTimestamp(address-address-uint256)[]
     /**
      * @dev Default version of _setLastMintTimestamp binding to the standard STORAGE_SLOT.
-     * @param account The account.
+     * @param token The token that was minted.
+     * @param recipient The recipient of the mint.
      * @param timestamp The timestamp to record.
      */
-    function _setLastMintTimestamp(address account, uint256 timestamp) internal {
-        _setLastMintTimestamp(_layoutStruct(), account, timestamp);
+    function _setLastMintTimestamp(address token, address recipient, uint256 timestamp) internal {
+        _setLastMintTimestamp(_layoutStruct(), token, recipient, timestamp);
     }
-    // end::_setLastMintTimestamp(address-uint256)[]
+    // end::_setLastMintTimestamp(address-address-uint256)[]
 }
 // end::ERC20MinterFacadeRepo[]
