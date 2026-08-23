@@ -151,6 +151,25 @@ library ROBINHOOD_TESTNET {
     address internal constant BALANCER_V3_VAULT = address(0);
 
     /* -------------------------------------------------------------------------- */
+    /*                              Morpho (docs.morpho.org)                      */
+    /* -------------------------------------------------------------------------- */
+    // Robinhood Chain tab (same CREATE2 as ROBINHOOD_MAIN). Source:
+    // https://docs.morpho.org/developers/contracts/addresses/ (2026-07-27).
+    // 46630 public RPC had **no code** at these addresses as of 2026-08-23.
+    // Launch group 03c deploys a rehearsal Morpho + IRM + oracle when morpho has no code.
+
+    address internal constant MORPHO = 0x9D53d5E3bd5E8d4Cbfa6DB1ca238AEA02E651010;
+    address internal constant MORPHO_BLUE = MORPHO;
+    address internal constant MORPHO_ADAPTIVE_CURVE_IRM = 0x2BD3d5965B26B51814AC95127B2b80dD6CcC0fa1;
+    address internal constant MORPHO_CHAINLINK_ORACLE_V2_FACTORY = 0xB7c16F6F8cF531447Bf27Ca7220f981E79C9cdF2;
+    address internal constant MORPHO_VAULT_V2_FACTORY = 0x0FBad98595b0186dA120E41f77C102beb49f803c;
+    address internal constant MORPHO_VAULT_V1_ADAPTER_FACTORY = 0x7a91222F3f7B927bB8fb624593Ca86e111C2F85e;
+    address internal constant MORPHO_MARKET_V1_ADAPTER_V2_FACTORY = 0x79370Ed003CE325C088E530d5e8655c99c2993e1;
+    address internal constant MORPHO_REGISTRY = 0xe785a2eFD384BA7B95BaEd3851BC76aeD67C676f;
+    address internal constant MORPHO_BUNDLER3 = 0x6478e9393d4C5bB4d53ee881d1DE78786A0344a6;
+    address internal constant MORPHO_GENERAL_ADAPTER_1 = 0xc5E188541D107e8B79e43478bDE365F1406665D6;
+
+    /* -------------------------------------------------------------------------- */
     /*                    Faucet mock stock tokens (simulation)                   */
     /* -------------------------------------------------------------------------- */
     // From explorer.testnet.chain.robinhood.com token list / faucet page.
