@@ -121,7 +121,9 @@ library ROBINHOOD_TESTNET {
     /* -------------------------------------------------------------------------- */
     /*                                 Uniswap V3                                 */
     /* -------------------------------------------------------------------------- */
-    // Mainnet V3 factory / NPM / SwapRouter02 addresses have no code on testnet.
+    // Uniswap Labs lists V3 only on Robinhood main (4663). 46630 has no canonical V3
+    // (mainnet factory/NPM/router addresses have no code; eth_getCode 2026-07-27).
+    // Launch group 03d deploys a rehearsal UniswapV3Factory + Uni V3 SE DFPkg.
 
     address internal constant UNISWAP_V3_FACTORY = address(0);
     address internal constant UNISWAP_V3_TICK_LENS = address(0);

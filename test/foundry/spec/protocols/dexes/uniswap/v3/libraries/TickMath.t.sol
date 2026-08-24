@@ -240,6 +240,41 @@ contract TickMath_Bijection_Test is Test {
     }
 
     /* -------------------------------------------------------------------------- */
+    /*                           Tick Spacing Helpers                             */
+    /* -------------------------------------------------------------------------- */
+
+    /**
+     * @notice Tests minUsableTick and maxUsableTick helpers
+     */
+    function test_usableTicks() public pure {
+        // Common tick spacings
+        int24[] memory spacings = new int24[](4);
+        spacings[0] = 1; // 0.01% pools
+        spacings[1] = 10; // 0.05% pools
+        spacings[2] = 60; // 0.3% pools
+        spacings[3] = 200; // 1% pools
+
+        for (uint256 i = 0; i < spacings.length; i++) {
+            int24 spacing = spacings[i];
+
+            int24 minUsable = TickMath.minUsableTick(spacing);
+            int24 maxUsable = TickMath.maxUsableTick(spacing);
+
+            // Verify divisibility
+            assertEq(minUsable % spacing, 0, "minUsableTick should be divisible by spacing");
+            assertEq(maxUsable % spacing, 0, "maxUsableTick should be divisible by spacing");
+
+            // Verify bounds
+            assertGe(minUsable, MIN_TICK, "minUsableTick should be >= MIN_TICK");
+            assertLe(maxUsable, MAX_TICK, "maxUsableTick should be <= MAX_TICK");
+
+            // Verify they're the closest usable ticks to the limits
+            assertLt(minUsable - spacing, MIN_TICK, "minUsable - spacing should be < MIN_TICK");
+            assertGt(maxUsable + spacing, MAX_TICK, "maxUsable + spacing should be > MAX_TICK");
+        }
+    }
+
+    /* -------------------------------------------------------------------------- */
     /*                     Monotonicity: Higher tick = Higher sqrtPrice           */
     /* -------------------------------------------------------------------------- */
 
