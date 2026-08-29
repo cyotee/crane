@@ -56,6 +56,7 @@ contracts/protocols/
 ├── oracles/     # chainlink
 ├── utils/       # permit2, gsn
 ├── messaging/ · perps/ · wallets/ · staking/
+├── pol/         # NetNet Capital ($NET) — experimental, no DFPkg
 ```
 
 **External:** `contracts/external/**` — vendor sources with `VENDOR.md`; expand shared deps first; remap imports to `@crane/contracts/external/...`.
@@ -69,6 +70,7 @@ contracts/protocols/
 | Uniswap stack | `contracts/protocols/dexes/uniswap/` | `crane-uniswap`, `uniswap-v*` |
 | Balancer V3 | protocols + external | `crane-balancer`, `balancer-v3-*` |
 | Aerodrome / Slipstream | `contracts/protocols/dexes/aerodrome/` | `crane-aerodrome`, `slipstream-*` |
+| NetNet Capital ($NET) | `contracts/protocols/pol/net/` | `crane-netnet` |
 
 ## Testing map
 

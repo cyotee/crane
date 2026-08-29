@@ -5,7 +5,8 @@ pragma solidity ^0.8.24;
 /// Arbitrum Orbit L2 on Ethereum; ETH native gas. Permissionless EVM deploy.
 ///
 /// Sources (cores verified 2026-07-27 via public RPC + official docs;
-///          RHJ Stock Tokens refreshed 2026-08-15 from /rhj/assets):
+///          RHJ Stock Tokens refreshed 2026-08-15 from /rhj/assets;
+///          NetNet pins 2026-08-28 from Official Channels):
 /// - https://docs.robinhood.com/chain/connecting/
 /// - https://docs.robinhood.com/chain/protocol-contracts/
 /// - https://docs.robinhood.com/chain/contracts/
@@ -14,11 +15,13 @@ pragma solidity ^0.8.24;
 /// - https://docs.robinhood.com/chain/deploy-smart-contracts/
 /// - https://developers.uniswap.org/docs/protocols/v3/deployments/v3-robinhood-chain-deployments
 /// - https://developers.uniswap.org/docs/protocols/v4/deployments (Robinhood Chain: 4663)
+/// - https://docs.netnet.capital/official-channels
 ///
 /// Inventory notes:
 /// - Uniswap v2/v3/v4 + Universal Router + Permit2 are live.
 /// - Balancer V3 is **not** deployed at the common Vault address (0xbA13…); deploy yourself if needed.
 /// - Canonical stable is USDG (Global Dollar, 6 decimals), not USDC.
+/// - NetNet Capital Management ($NET) is live; pin from Official Channels (not RH_NET / Cloudflare).
 /// - Official RHJ Stock Tokens: 194 ACTIVE ERC-20s on 4663 (`RH_*`, `RH_STOCK_TOKEN_COUNT`).
 ///   Source: GET https://api.robinhood.com/rhj/assets (2026-08-15). Do not invent addresses.
 library ROBINHOOD_MAIN {
@@ -50,6 +53,11 @@ library ROBINHOOD_MAIN {
 
     /// @dev Global Dollar (Paxos) — primary USD stable on this chain; 6 decimals.
     address internal constant USDG = 0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168;
+
+    /// @dev NetNet Capital Management reserve token. 9 decimals, 5% FoT on mapped AMM pairs.
+    ///      Canonical: https://docs.netnet.capital/official-channels
+    ///      Distinct from `RH_NET` (Cloudflare stock token).
+    address internal constant NET = 0xCA9c78Dd337A67F6e0077F65F5E9218719d30eDf;
 
     /// @dev Ethena USDe (present on explorer token list; not RH protocol-docs core pair).
     address internal constant USDE = 0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34;
@@ -398,6 +406,117 @@ library ROBINHOOD_MAIN {
     address internal constant PONS_V2_BUYBACK_VAULT = 0x42df2a798f82289E177311362e8f5ccC45c1219c;
 
     /* -------------------------------------------------------------------------- */
+    /*              NetNet Capital Management (official-channels)                 */
+    /* -------------------------------------------------------------------------- */
+    // Canonical: https://docs.netnet.capital/official-channels (2026-08-28).
+    // If it is not on that page, it is not theirs. Distinct from `RH_NET` (Cloudflare).
+    // Extra fork-test pins (live getters 2026-08-28, not on Official Channels):
+    //   steakUSDG vault, RWA Sleeve, Loopback Morpho market id / LLTV / IRM.
+    // THE BUTTON is documented but not deployed — no address to pin.
+
+    /* ----------------------------- Core fund (2026-07-16) --------------------- */
+
+    /// @dev Same as `NET` in Core L2 tokens.
+    address internal constant NETNET_NET = NET;
+    /// @dev Staked NET (rebasing sNET). 9 decimals.
+    address internal constant SNET = 0xb773ec2C326B7f98a5a83fc098825492F020a4c7;
+    address internal constant NETNET_SNET = SNET;
+
+    address internal constant NETNET_GENESIS_BOND = 0x575b7B7c97Ef3E21C82DAeB427899d583e1E913f;
+    address internal constant NETNET_SHARE_CERTIFICATE = 0xfB8058769063519f26FB114631919c0E5254068e;
+    address internal constant NETNET_STAKING = 0xB078cc304A0B264C5F3680DC0488954ACcd02E87;
+    address internal constant NETNET_TREASURY = 0x04822Ea321A0DEE6F40656172F29312104855d66;
+    address internal constant NETNET_DISTRIBUTOR = 0x79e71F8a8a2912E40687a8820b2dC0fdd2f686b3;
+    address internal constant NETNET_BOND_DEPOSITORY = 0xff32a969A0c567129eECD926D04657728E1980C1;
+    address internal constant NETNET_INVERSE_BOND = 0x92166e94Eea5B7799b761653881692f881dFC4C9;
+    address internal constant NETNET_PREMIUM_SELLER = 0x346e1a31171A0f7aC73909010b5435768d3B5462;
+    address internal constant NETNET_PAIR_ORACLE = 0x929631b33F4070D6f54477fba3FD27566567dAca;
+    address internal constant NETNET_TAX_COLLECTOR = 0x086C58400b8708Ef993f256E12e752dcF0AC918e;
+    address internal constant NETNET_PTEAM = 0x650F58079dAa17ee28928c2F92d22291d038B2B0;
+    /// @dev Canonical Uniswap v2 NET/USDG pair (TWAP, FoT mapping, POL).
+    address internal constant NETNET_NET_USDG_PAIR = 0x59F95461E68e0c77605299791E1449f175165B54;
+    /// @dev Guardian Safe: add-only taxed-pair mapping + queued fee exemptions.
+    address internal constant NETNET_TEAM_SAFE = 0x3Bb7A23316f82C0e984fA2E784846d8928a35f42;
+    /// @dev Steakhouse USDG Morpho Vault V2 (share token steakUSDG, 18 decimals, asset = USDG).
+    ///      Treasury yield venue: Treasury.morphoVault() on 2026-08-28.
+    ///      https://app.morpho.org/robinhood-chain/vault/0xBeEff033F34C046626B8D0A041844C5d1A5409dd/steakhouse-usdg
+    ///      Not listed on Official Channels (external Robinhood Earn vault, not a NetNet deploy).
+    address internal constant NETNET_STEAK_USDG = 0xBeEff033F34C046626B8D0A041844C5d1A5409dd;
+    address internal constant NETNET_MORPHO_VAULT = NETNET_STEAK_USDG;
+
+    /* --------------- Managed Futures Desk (test program, 2026-07-21) ---------- */
+    // tNET is valueless. Interact only via trading.netnet.capital.
+
+    /// @dev Test margin token. No value.
+    address internal constant NETNET_TNET = 0xCeF73866b088766DeD46Ba71d9Bd7591B5e931d2;
+    address internal constant NETNET_FUTURES_CLEARINGHOUSE = 0xf6ec124ca62C841384ABD0e128552cF9Eb446205;
+    address internal constant NETNET_UNDERWRITING_VAULT = 0x3a7Dce19447f9028C360592fDfdb3f27c50daE29;
+    address internal constant NETNET_PERP_ORACLE = 0xc8a11E8793F8714a159061369173dc86A0A5E23F;
+    address internal constant NETNET_PERP_FEE_ROUTER = 0x8d8A68884134b49EC8549f6F5D7b43b8Ca327814;
+    address internal constant NETNET_FEE_SINK = 0x82d04c79424FA36BD252Aa0D031de512f5F7aeFa;
+    /// @dev Wrapped staked NET (Loopback collateral). Listed on Official Channels
+    ///      under the futures desk; also used by the Lombard Credit Facility.
+    address internal constant WSNET = 0x63C12667638f2Ae6fC6ae09B43D98Ec84a8586eA;
+    address internal constant NETNET_WSNET = WSNET;
+    address internal constant NETNET_ZAP = 0xA1ee052EC32532304a7522bd9A4b594eC28fF1b1;
+
+    /* ------------------------- CASHCAT market (2026-07-21) -------------------- */
+
+    address internal constant NETNET_CASHCAT_CLEARINGHOUSE = 0xD1604dcAdB949A28C7cfA8Cd044641b8C520Ef3f;
+    address internal constant NETNET_CASHCAT_UNDERWRITING_VAULT = 0x38f620aeC20B116ad19629e8F91842d0D4Ed8c39;
+    address internal constant NETNET_CASHCAT_PERP_ORACLE = 0x23237bBE20beCACEcA5C853840d0984e4bDea759;
+    address internal constant NETNET_CASHCAT_V3_TWAP_AGGREGATOR = 0x2E1d4033A3b98b74135Ba4FbeE245eF0d97a71F4;
+    address internal constant NETNET_CASHCAT_PERP_FEE_ROUTER = 0x8FB5A00413063C220785D556BFdf891f3f30f14e;
+    address internal constant NETNET_CASHCAT_FEE_SINK = 0x3ef6878bDA20925C2B8f4cF2341696B2d2ad82E1;
+
+    /* -------------------- Real World Bonds / Loopback / WinNET ---------------- */
+
+    /// @dev Equity bond desk (invest). Deployed 2026-07-24.
+    address internal constant NETNET_RWA_DESK = 0x99B6eE6eDe47d9a8a9bfd03F728a99B789df1961;
+    /// @dev Team-custodied RWA Sleeve (outside RFV/NAV). RwaDesk.sleeve() / CoinFlipDesk.sleeve() 2026-08-28.
+    address internal constant NETNET_RWA_SLEEVE = 0x498752D5fa0600CBd613074C151Abe15B3FeC7CB;
+    /// @dev Lombard Credit Facility (Loopback) Morpho oracle. Deployed 2026-07-22.
+    address internal constant NETNET_LOOPBACK_ORACLE = 0xCDE9599059f8Ae6D6B9F33A0aF7877827ec75F16;
+    /// @dev Loopback leveraged-accumulation router. Not the TURBO knock-out desk.
+    address internal constant NETNET_LOOPBACK_TURBO_ROUTER = 0x4638617808e3f1Cf237c0d33Ae818126D5C77E17;
+    /// @dev Morpho Blue market id (wsNET collateral / USDG loan). TurboRouter.marketId() 2026-08-28.
+    bytes32 internal constant NETNET_LOOPBACK_MARKET_ID =
+        0xaa586d26a6fe62d9c0f0948fede6e2130500ac7a655587447e2d4a37e6330589;
+    /// @dev 62.5% LLTV. TurboRouter.lltv() 2026-08-28. Same AdaptiveCurveIRM as `MORPHO_ADAPTIVE_CURVE_IRM`.
+    uint256 internal constant NETNET_LOOPBACK_LLTV = 0.625e18;
+    address internal constant NETNET_LOOPBACK_IRM = 0x2BD3d5965B26B51814AC95127B2b80dD6CcC0fa1;
+    address internal constant NETNET_LOOPBACK_MORPHO = 0x9D53d5E3bd5E8d4Cbfa6DB1ca238AEA02E651010;
+
+    address internal constant NETNET_PRIZE_VAULT = 0x7332B329860986e596B2fd71e9c53786c0242ce5;
+    address internal constant NETNET_BONUS_BOOK = 0x823b016b546178C4C47a830B92333aD44E655d06;
+    address internal constant NETNET_DRAW_CONTROLLER = 0xcC4A7C03A2d4D248B8dA0E35C178944799feac70;
+
+    /* --------------------- Superstore / CLIMB / arcade desks ------------------ */
+
+    /// @dev Superstore pack desk. Deployed 2026-07-30.
+    address internal constant NETNET_PACK_DESK = 0x7cf28D61D42352Eb2FD68167e9B08f73CBbF21eB;
+    /// @dev Shared drand signature registry (Superstore, COINflip, INVADERS, Flight Sim).
+    address internal constant NETNET_DRAND_SIG_REGISTRY = 0xd4D34ecfbc9c0000a7915A5F48bb0dEf484ff802;
+
+    /// @dev CLIMB, INC. Deployed 2026-08-05.
+    address internal constant NETNET_CLIMB_DESK = 0x21089CFCDbf47902A2F3950200cE9ea66bF79ee4;
+    address internal constant NETNET_JACKPOT_POOL = 0xF125Ad8ABdE2591609a982e0b6a51309fdF7Db37;
+
+    /// @dev COINflip desk. Deployed 2026-08-10.
+    address internal constant NETNET_COINFLIP_DESK = 0xA99D15dACe9aeDE816600A31C3e4158926000f3c;
+    /// @dev SPACEX INVADERS desk. Deployed 2026-08-11.
+    address internal constant NETNET_SPACEX_INVADERS_DESK = 0x75EdFE49d9ec8c23A9931C5EF32eC56b2444A141;
+    /// @dev MSFT FLIGHT SIMULATOR desk. Deployed 2026-08-15.
+    address internal constant NETNET_FLIGHT_SIM_DESK = 0xF56e517652bb18E519871ABb13A382D205f6e375;
+
+    /// @dev Long-Dated Desk (TURBO) ERC-1155 knock-out notes. Deployed 2026-08-19.
+    address internal constant NETNET_TURBO_DESK = 0x757122439420900ca44A80c390d586011FD72C8a;
+    address internal constant NETNET_TURBO_FEED_ADAPTER = 0x115E5779Ce2f7BC265EAAbcAcaf7b06f01d5D471;
+    /// @dev TURBO BLACKJACK. Deployed 2026-08-20. Chips are TURBO cards from TurboDesk.
+    address internal constant NETNET_BLACKJACK_DESK = 0x712F52Fd42D7b89fd444e0cc4430020fAA9cfb26;
+    address internal constant NETNET_BLACKJACK_LOGIC = 0xf2D7268D753BB48d784c93D944Ce1279957d8510;
+
+    /* -------------------------------------------------------------------------- */
     /*                              Morpho (docs.morpho.org)                      */
     /* -------------------------------------------------------------------------- */
     // Source: https://docs.morpho.org/developers/contracts/addresses/ (2026-07-27)
@@ -416,6 +535,8 @@ library ROBINHOOD_MAIN {
     address internal constant MORPHO_VAULT_V1_ADAPTER_FACTORY = 0x7a91222F3f7B927bB8fb624593Ca86e111C2F85e;
     address internal constant MORPHO_MARKET_V1_ADAPTER_V2_FACTORY = 0x79370Ed003CE325C088E530d5e8655c99c2993e1;
     address internal constant MORPHO_REGISTRY = 0xe785a2eFD384BA7B95BaEd3851BC76aeD67C676f;
+    /// @dev Steakhouse USDG (Robinhood Earn). Same address as `NETNET_STEAK_USDG`.
+    address internal constant STEAK_USDG = NETNET_STEAK_USDG;
 
     /* --------------------------------- Bundlers ------------------------------- */
 

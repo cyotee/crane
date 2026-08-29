@@ -44,6 +44,7 @@ Honest maturity labels for public consumers. **Core factories, access, tokens, a
 | Reliquary | **experimental** | |
 | Pendle / Frax / Liquity / Sky | **vendored** / **WIP** | Large trees; use status carefully |
 | Reactive Network demos | **experimental** | Messaging demos |
+| NetNet Capital (`protocols/pol/net`) | **experimental** | P0 port + TestBases; no DFPkg |
 
 ## CI vs full monorepo
 
