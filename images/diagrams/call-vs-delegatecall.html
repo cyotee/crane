@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CALL vs DELEGATECALL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --card: #141a22;
+      --card-2: #1b2330;
+      --ink: #e8eef7;
+      --muted: #93a0b4;
+      --line: #2a3545;
+      --call: #3b82f6;
+      --call-dim: rgba(59, 130, 246, 0.16);
+      --del: #f59e0b;
+      --del-dim: rgba(245, 158, 11, 0.16);
+      --code: #a78bfa;
+      --code-dim: rgba(167, 139, 250, 0.16);
+      --store: #2dd4bf;
+      --store-dim: rgba(45, 212, 191, 0.14);
+      --user: #94a3b8;
+      --write: #fb7185;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+    }
+
+    .canvas {
+      width: 1600px;
+      height: 1000px;
+      padding: 40px 44px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    header h1 {
+      font-size: 36px;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+    }
+
+    header h1 span {
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    header p {
+      font-size: 18px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .panels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 22px 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .badge {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      padding: 8px 14px;
+      border-radius: 999px;
+    }
+
+    .call .badge {
+      background: var(--call-dim);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+    }
+
+    .del .badge {
+      background: var(--del-dim);
+      color: #fcd34d;
+      border: 1px solid rgba(245, 158, 11, 0.45);
+    }
+
+    .tagline {
+      font-size: 15px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .flow {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 8px 2px;
+    }
+
+    .user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #1e2633;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .user .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--user);
+    }
+
+    .arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--muted);
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .arrow .shaft {
+      width: 2px;
+      height: 18px;
+      background: currentColor;
+    }
+
+    .arrow .head {
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 8px solid currentColor;
+    }
+
+    .call .arrow.call-op { color: #60a5fa; }
+    .del .arrow.call-op { color: #60a5fa; }
+    .del .arrow.del-op { color: #fbbf24; }
+
+    .contract {
+      width: 100%;
+      max-width: 620px;
+      background: var(--card-2);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px 16px 14px;
+      position: relative;
+    }
+
+    .contract.active-call {
+      border-color: rgba(59, 130, 246, 0.7);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12), inset 0 0 40px rgba(59, 130, 246, 0.06);
+    }
+
+    .contract.active-del {
+      border-color: rgba(245, 158, 11, 0.75);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.12), inset 0 0 40px rgba(245, 158, 11, 0.06);
+    }
+
+    .contract.dim {
+      opacity: 0.72;
+    }
+
+    .contract-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .cname {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .ribbon {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 5px 9px;
+      border-radius: 8px;
+      text-transform: uppercase;
+    }
+
+    .ribbon.exec-call {
+      background: var(--call-dim);
+      color: #93c5fd;
+    }
+
+    .ribbon.exec-del {
+      background: var(--del-dim);
+      color: #fcd34d;
+    }
+
+    .ribbon.code-only {
+      background: var(--code-dim);
+      color: #c4b5fd;
+    }
+
+    .slots {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .slot {
+      border-radius: 12px;
+      padding: 10px 12px;
+      min-height: 64px;
+    }
+
+    .slot.code {
+      background: var(--code-dim);
+      border: 1px solid rgba(167, 139, 250, 0.35);
+    }
+
+    .slot.store {
+      background: var(--store-dim);
+      border: 1px solid rgba(45, 212, 191, 0.32);
+    }
+
+    .slot.unused {
+      opacity: 0.38;
+      filter: grayscale(0.4);
+    }
+
+    .slot .k {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .slot.code .k { color: var(--code); }
+    .slot.store .k { color: var(--store); }
+
+    .slot .v {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .ctx {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .chip {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 8px;
+      border-radius: 8px;
+      background: #0f141c;
+      border: 1px solid #2a3545;
+      color: #c9d4e5;
+    }
+
+    .chip.write {
+      border-color: rgba(251, 113, 133, 0.5);
+      color: #fda4af;
+      background: rgba(251, 113, 133, 0.1);
+    }
+
+    .chip.keep {
+      border-color: rgba(45, 212, 191, 0.4);
+      color: #5eead4;
+    }
+
+    footer.legend {
+      display: grid;
+      grid-template-columns: 1.1fr 1.4fr 1.4fr 1.4fr 1.6fr;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      font-size: 15px;
+    }
+
+    .legend div {
+      padding: 14px 18px;
+      border-right: 1px solid var(--line);
+    }
+
+    .legend div:last-child { border-right: 0; }
+
+    .legend .h {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .legend .b { font-weight: 600; }
+
+    .legend .row-label .b {
+      font-size: 16px;
+    }
+
+    .same { color: #c4b5fd; }
+    .diff-a { color: #5eead4; }
+    .diff-b { color: #fda4af; }
+  </style>
+</head>
+<body>
+  <div class="canvas">
+    <header>
+      <h1>CALL <span>vs</span> DELEGATECALL</h1>
+      <p>Same bytecode. Different execution context.</p>
+    </header>
+
+    <div class="panels">
+      <section class="panel call">
+        <div class="panel-head">
+          <div class="badge">CALL</div>
+          <div class="tagline">Jump into B and run as B</div>
+        </div>
+        <div class="flow">
+          <div class="user"><span class="dot"></span>User (EOA)</div>
+
+          <div class="arrow call-op">
+            <span>CALL</span>
+            <span class="shaft"></span>
+            <span class="head"></span>
+          </div>
+
+          <div class="contract">
+            <div class="contract-top">
+              <div class="cname">Contract A</div>
+            </div>
+            <div class="slots">
+              <div class="slot code"><div class="k">Code</div><div class="v">A's bytecode</div></div>
+              <div class="slot store"><div class="k">Storage</div><div class="v">A's slots</div></div>
+            </div>
+            <div class="ctx">
+              <span class="chip">msg.sender = User</span>
+              <span class="chip">address(this) = A</span>
+            </div>
+          </div>
+
+          <div class="arrow call-op">
+            <span>CALL · sender becomes A</span>
+            <span class="shaft"></span>
+            <span class="head"></span>
+          </div>
+
+          <div class="contract active-call">
+            <div class="contract-top">
+              <div class="cname">Contract B</div>
+              <div class="ribbon exec-call">Executes here</div>
+            </div>
+            <div class="slots">
+              <div class="slot code"><div class="k">Code used</div><div class="v">B's bytecode</div></div>
+              <div class="slot store"><div class="k">Storage used</div><div class="v">B's slots</div></div>
+            </div>
+            <div class="ctx">
+              <span class="chip">msg.sender = A</span>
+              <span class="chip">address(this) = B</span>
+              <span class="chip write">SSTORE writes B</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel del">
+        <div class="panel-head">
+          <div class="badge">DELEGATECALL</div>
+          <div class="tagline">Borrow B's code, stay as A</div>
+        </div>
+        <div class="flow">
+          <div class="user"><span class="dot"></span>User (EOA)</div>
+
+          <div class="arrow call-op">
+            <span>CALL</span>
+            <span class="shaft"></span>
+            <span class="head"></span>
+          </div>
+
+          <div class="contract active-del">
+            <div class="contract-top">
+              <div class="cname">Contract A</div>
+              <div class="ribbon exec-del">Executes here</div>
+            </div>
+            <div class="slots">
+              <div class="slot code unused"><div class="k">Caller code</div><div class="v">A's bytecode</div></div>
+              <div class="slot store"><div class="k">Storage used</div><div class="v">A's slots</div></div>
+            </div>
+            <div class="ctx">
+              <span class="chip keep">msg.sender stays User</span>
+              <span class="chip keep">address(this) = A</span>
+              <span class="chip write">SSTORE writes A</span>
+            </div>
+          </div>
+
+          <div class="arrow del-op">
+            <span>DELEGATECALL · B's code runs in A</span>
+            <span class="shaft"></span>
+            <span class="head"></span>
+          </div>
+
+          <div class="contract dim">
+            <div class="contract-top">
+              <div class="cname">Contract B</div>
+              <div class="ribbon code-only">Code library only</div>
+            </div>
+            <div class="slots">
+              <div class="slot code"><div class="k">Code used</div><div class="v">B's bytecode</div></div>
+              <div class="slot store unused"><div class="k">Storage unused</div><div class="v">B's slots ignored</div></div>
+            </div>
+            <div class="ctx">
+              <span class="chip">B does not become msg.sender</span>
+              <span class="chip">B's storage is not written</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="legend">
+      <div class="row-label">
+        <div class="h">Context</div>
+        <div class="b">What changes</div>
+      </div>
+      <div>
+        <div class="h">Bytecode</div>
+        <div class="b same">B in both cases</div>
+      </div>
+      <div>
+        <div class="h">address(this)</div>
+        <div class="b"><span class="diff-b">CALL → B</span> · <span class="diff-a">DELEGATECALL → A</span></div>
+      </div>
+      <div>
+        <div class="h">msg.sender</div>
+        <div class="b"><span class="diff-b">CALL → A</span> · <span class="diff-a">DELEGATECALL → User</span></div>
+      </div>
+      <div>
+        <div class="h">SSTORE target</div>
+        <div class="b"><span class="diff-b">CALL → B</span> · <span class="diff-a">DELEGATECALL → A</span></div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

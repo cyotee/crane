@@ -1,68 +1,109 @@
 @startuml DiamondPackageCallBackFactory
-actor User
+' Sequence of DiamondPackageCallBackFactory.deploy(pkg, pkgArgs).
+' Group title "DELEGATECALL X" means the callee's bytecode runs with
+' address(this) / storage = X. Solid arrows are CALL or CREATE2.
+' Messages marked <<DELEGATECALL>> are DELEGATECALL.
 
-!pragma teoz true
-boundary DiamondPackageCallBackFactory
-User -> DiamondPackageCallBackFactory: deploy(pkg, pkgArgs)
-activate DiamondPackageCallBackFactory #lightgreen
-group "DELEGATECALL DiamondPackageCallBackFactory"
-    DiamondPackageCallBackFactory --\\ DiamondFactoryPackage: pkg.calcSalt(pkgArgs)
-    activate DiamondFactoryPackage #lightblue
-    DiamondPackageCallBackFactory //-- DiamondFactoryPackage: salt
-    deactivate DiamondFactoryPackage
-end
-DiamondPackageCallBackFactory --> DiamondPackageCallBackFactory: _create2AddressFromOf\n(PROXY_INIT_HASH, keccak256(abi.encode(pkg, salt)))
-alt address codesize > 0
-    DiamondPackageCallBackFactory --> User: proxy address
-else address codesize == 0
-    group "DELEGATECALL DiamondPackageCallBackFactory"
-        DiamondPackageCallBackFactory --\\ DiamondFactoryPackage: pkg._processArgs(pkgArgs)
-        activate DiamondFactoryPackage #lightblue
-        DiamondPackageCallBackFactory //-- DiamondFactoryPackage: pkgArgs
-        deactivate DiamondFactoryPackage
-    end
-end
-DiamondPackageCallBackFactory -> DiamondFactoryPackage: updatePkg
+title DiamondPackageCallBackFactory.deploy(pkg, pkgArgs)
+
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 280
+skinparam wrapWidth 240
+skinparam noteFontSize 12
+skinparam ParticipantPadding 24
+skinparam BoxPadding 8
+skinparam sequenceMessageAlign center
+
+actor User
+boundary Factory as "DiamondPackageCallBackFactory"
+participant Pkg as "DiamondFactoryPackage"
 boundary Proxy
-DiamondPackageCallBackFactory -> Proxy: CREATE2(PROXY_INIT_HASH, salt)
-activate Proxy #red
-group "DELEGATECALL Proxy"
-    DiamondPackageCallBackFactory //-- Proxy: initAccount()
-    DiamondPackageCallBackFactory -> DiamondFactoryPackage: diamondConfig()
-    activate DiamondFactoryPackage #lightblue
-    DiamondPackageCallBackFactory <- DiamondFactoryPackage: config
-    deactivate DiamondFactoryPackage
-    DiamondPackageCallBackFactory --\\ DiamondFactoryPackage: pkg._initAccount(args)
-    activate DiamondFactoryPackage #lightblue
-    deactivate DiamondFactoryPackage
-    DiamondPackageCallBackFactory --\\ Proxy: (initHash, salt)
+
+User -> Factory: deploy(pkg, pkgArgs)
+activate Factory #lightgreen
+
+group "DELEGATECALL Factory"
+    Factory -> Pkg: <<DELEGATECALL>> calcSalt(pkgArgs)
+    activate Pkg #lightblue
+    Pkg --> Factory: salt
+    deactivate Pkg
 end
-DiamondPackageCallBackFactory <- Proxy: proxy address
-deactivate Proxy
-DiamondPackageCallBackFactory -> DiamondFactoryPackage: postDeploy(proxy)
-activate DiamondFactoryPackage #lightblue
-opt Post Deploy Hook
-    DiamondFactoryPackage -> Proxy: postDeploy()
-    activate Proxy #red
-    group "DELEGATECALL Proxy"
-        DiamondFactoryPackage //-- Proxy: postDeploy(proxy)
-        DiamondFactoryPackage --\\ Proxy: success
+
+Factory -> Factory: salt = keccak256(abi.encode(pkg, salt))\nexpectedProxy = _create2AddressFromOf(PROXY_INIT_HASH, salt)
+
+alt expectedProxy already deployed (codesize > 0)
+    Factory --> User: expectedProxy
+else expectedProxy codesize == 0
+
+    group "DELEGATECALL Factory"
+        Factory -> Pkg: <<DELEGATECALL>> processArgs(pkgArgs)
+        activate Pkg #lightblue
+        Pkg --> Factory: processedPkgArgs
+        deactivate Pkg
     end
-    DiamondFactoryPackage <- Proxy: success
+
+    Factory -> Factory: pkgOfAccount[expectedProxy] = pkg\npkgArgsOfAccount[expectedProxy] = processedPkgArgs
+
+    Factory -> Pkg: updatePkg(expectedProxy, processedPkgArgs)
+    activate Pkg #lightblue
+    Pkg --> Factory: success
+    deactivate Pkg
+
+    Factory -> Proxy ** : CREATE2 MinimalDiamondCallBackProxy{salt}
+    activate Proxy #tomato
+    note over Proxy
+      constructor: msg.sender = Factory
+      DELEGATECALL Factory.initAccount()
+    end note
+
+    group "DELEGATECALL Proxy"
+        Proxy -> Factory: pkgConfig()
+        note right of Factory: msg.sender = Proxy\nreads pkgOfAccount / pkgArgsOfAccount
+        Factory --> Proxy: (pkg, processedPkgArgs)
+        Proxy -> Proxy: facetCuts() + registerInterfaces()\nERC165, Loupe, ERC8109, PostDeployHook
+        Proxy -> Pkg: diamondConfig()
+        activate Pkg #lightblue
+        Pkg --> Proxy: config
+        deactivate Pkg
+        Proxy -> Proxy: package facetCuts + registerInterfaces()
+        group "DELEGATECALL Proxy"
+            Proxy -> Pkg: <<DELEGATECALL>> initAccount(processedPkgArgs)
+            activate Pkg #lightblue
+            deactivate Pkg
+        end
+    end
+
+    Proxy --> Factory: proxy
     deactivate Proxy
-end
-DiamondPackageCallBackFactory <- DiamondFactoryPackage: success
-deactivate DiamondFactoryPackage
-DiamondPackageCallBackFactory -> Proxy: postDeploy()
-activate Proxy #red
+
+    Factory -> Factory: require(expectedProxy == proxy)\nelse DeploymentAddressMismatch
+
+    Factory -> Pkg: postDeploy(proxy)
+    activate Pkg #lightblue
+    Pkg --> Factory: success
+    deactivate Pkg
+
+    Factory -> Proxy: IPostDeployAccountHook.postDeploy()
+    activate Proxy #tomato
     group "DELEGATECALL Proxy"
-        DiamondPackageCallBackFactory //-- Proxy: postDeploy(proxy)
-        DiamondPackageCallBackFactory --> DiamondPackageCallBackFactory: postDeployFacetCuts()
-        DiamondPackageCallBackFactory --\\ Proxy: success
+        note over Proxy
+          fallback DELEGATECALLs PostDeployAccountHookFacet
+          facet DELEGATECALLs Factory.postDeploy(proxy)
+        end note
+        Proxy -> Proxy: postDeployFacetCuts()\nRemove POST_DEPLOY_HOOK_FACET
     end
-DiamondPackageCallBackFactory <- Proxy: success
-deactivate Proxy
-User <- DiamondPackageCallBackFactory: proxy address
-deactivate DiamondPackageCallBackFactory
+    Proxy --> Factory: success
+    deactivate Proxy
+
+    Factory --> User: proxy
+end
+
+deactivate Factory
+
+legend left
+  Solid arrow = CALL / CREATE2 (callee storage)
+  **DELEGATECALL X** group = callee bytecode, storage of X
+  Factory base facets during initAccount: ERC165, DiamondLoupe, ERC8109, PostDeployHook
+endlegend
 
 @enduml

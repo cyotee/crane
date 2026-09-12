@@ -1,6 +1,6 @@
 ---
 name: crane-adversarial-testing
-description: This skill should be used when the user asks to "write adversarial tests", "abuse tests", "attack catalog", "donation attack test", "reentrancy test vault", "security tests for diamond", "adversarial suite", "threat model tests", "IsLocked reentrancy", or needs guidance implementing production-first adversarial / abuse Foundry tests for Crane diamonds, vaults, ERC-4626-like products, or similar modular architectures.
+description: "Crane production-first adversarial tests for diamonds and vaults: donation, reentrancy and the abuse catalog."
 license: MIT
 ---
 

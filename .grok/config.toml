@@ -1,0 +1,15 @@
+# Project Grok MCP (OpenCode/Grok/Codex parity)
+
+[mcp_servers.voltaire]
+url = "https://voltaire.tevm.sh/mcp"
+enabled = false
+
+[mcp_servers.higgsfield]
+url = "https://mcp.higgsfield.ai/mcp"
+enabled = false
+
+[mcp_servers.meshy]
+command = "npx"
+args = ["-y", "@meshy-ai/meshy-mcp-server"]
+enabled = false
+

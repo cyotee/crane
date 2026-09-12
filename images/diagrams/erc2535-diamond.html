@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ERC-2535 Diamond</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --card: #141a22;
+      --card-2: #1b2330;
+      --ink: #e8eef7;
+      --muted: #93a0b4;
+      --line: #2a3545;
+      --call: #3b82f6;
+      --call-dim: rgba(59, 130, 246, 0.16);
+      --del: #f59e0b;
+      --del-dim: rgba(245, 158, 11, 0.16);
+      --code: #a78bfa;
+      --code-dim: rgba(167, 139, 250, 0.16);
+      --store: #2dd4bf;
+      --store-dim: rgba(45, 212, 191, 0.14);
+      --user: #94a3b8;
+      --write: #fb7185;
+      --map: #22d3ee;
+      --map-dim: rgba(34, 211, 238, 0.14);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+    }
+
+    .canvas {
+      width: 1600px;
+      height: 1000px;
+      padding: 40px 44px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    header h1 {
+      font-size: 36px;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+    }
+
+    header h1 span {
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    header p {
+      font-size: 18px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .panels {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 28px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 22px 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .badge {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      padding: 8px 14px;
+      border-radius: 999px;
+    }
+
+    .map .badge {
+      background: var(--map-dim);
+      color: #67e8f9;
+      border: 1px solid rgba(34, 211, 238, 0.4);
+    }
+
+    .exec .badge {
+      background: var(--del-dim);
+      color: #fcd34d;
+      border: 1px solid rgba(245, 158, 11, 0.45);
+    }
+
+    .tagline {
+      font-size: 15px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .diamond {
+      flex: 1;
+      background: var(--card-2);
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      box-shadow: inset 0 0 40px rgba(34, 211, 238, 0.05);
+      border-radius: 16px;
+      padding: 16px 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .diamond-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .cname {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .ribbon {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 5px 9px;
+      border-radius: 8px;
+      text-transform: uppercase;
+    }
+
+    .ribbon.store {
+      background: var(--store-dim);
+      color: #5eead4;
+    }
+
+    .ribbon.exec-del {
+      background: var(--del-dim);
+      color: #fcd34d;
+    }
+
+    .ribbon.code-only {
+      background: var(--code-dim);
+      color: #c4b5fd;
+    }
+
+    .slots {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .slot {
+      border-radius: 12px;
+      padding: 10px 12px;
+      min-height: 58px;
+    }
+
+    .slot.code {
+      background: var(--code-dim);
+      border: 1px solid rgba(167, 139, 250, 0.35);
+    }
+
+    .slot.store {
+      background: var(--store-dim);
+      border: 1px solid rgba(45, 212, 191, 0.32);
+    }
+
+    .slot.unused {
+      opacity: 0.38;
+      filter: grayscale(0.4);
+    }
+
+    .slot .k {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .slot.code .k { color: var(--code); }
+    .slot.store .k { color: var(--store); }
+
+    .slot .v {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .router {
+      background: #0f141c;
+      border: 1px solid rgba(34, 211, 238, 0.28);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .router caption,
+    .router-head {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--map);
+      padding: 10px 12px 8px;
+      border-bottom: 1px solid #2a3545;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: left;
+      padding: 8px 12px 6px;
+      font-weight: 700;
+    }
+
+    td {
+      padding: 9px 12px;
+      border-top: 1px solid #243041;
+      font-weight: 600;
+    }
+
+    td.mono {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 13px;
+      color: #c9d4e5;
+      font-weight: 600;
+    }
+
+    tr.hit td {
+      background: rgba(245, 158, 11, 0.12);
+    }
+
+    tr.hit td.fn { color: #fcd34d; }
+    tr.hit td.facet { color: #fcd34d; }
+
+    .cut-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .cut {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid #2a3545;
+      background: #0f141c;
+      color: #c9d4e5;
+    }
+
+    .cut.add { color: #5eead4; border-color: rgba(45, 212, 191, 0.35); }
+    .cut.replace { color: #fcd34d; border-color: rgba(245, 158, 11, 0.35); }
+    .cut.remove { color: #fda4af; border-color: rgba(251, 113, 133, 0.35); }
+
+    .fallback {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: #67e8f9;
+      background: var(--map-dim);
+      border: 1px solid rgba(34, 211, 238, 0.28);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    .flow {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 8px 2px;
+    }
+
+    .user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #1e2633;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .user .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--user);
+    }
+
+    .arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--muted);
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .arrow .shaft {
+      width: 2px;
+      height: 16px;
+      background: currentColor;
+    }
+
+    .arrow .head {
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 8px solid currentColor;
+    }
+
+    .exec .arrow.call-op { color: #60a5fa; }
+    .exec .arrow.del-op { color: #fbbf24; }
+
+    .contract {
+      width: 100%;
+      max-width: 620px;
+      background: var(--card-2);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px 16px 14px;
+    }
+
+    .contract.active-del {
+      border-color: rgba(245, 158, 11, 0.75);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.12), inset 0 0 40px rgba(245, 158, 11, 0.06);
+    }
+
+    .contract.dim { opacity: 0.78; }
+
+    .contract-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .ctx {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .chip {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 8px;
+      border-radius: 8px;
+      background: #0f141c;
+      border: 1px solid #2a3545;
+      color: #c9d4e5;
+    }
+
+    .chip.write {
+      border-color: rgba(251, 113, 133, 0.5);
+      color: #fda4af;
+      background: rgba(251, 113, 133, 0.1);
+    }
+
+    .chip.keep {
+      border-color: rgba(45, 212, 191, 0.4);
+      color: #5eead4;
+    }
+
+    .chip.lookup {
+      border-color: rgba(34, 211, 238, 0.4);
+      color: #67e8f9;
+    }
+
+    footer.legend {
+      display: grid;
+      grid-template-columns: 1.1fr 1.35fr 1.45fr 1.35fr 1.7fr;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      font-size: 15px;
+    }
+
+    .legend div {
+      padding: 14px 18px;
+      border-right: 1px solid var(--line);
+    }
+
+    .legend div:last-child { border-right: 0; }
+
+    .legend .h {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .legend .b { font-weight: 600; }
+    .legend .row-label .b { font-size: 16px; }
+    .same { color: #c4b5fd; }
+    .diff-a { color: #5eead4; }
+    .mapc { color: #67e8f9; }
+  </style>
+</head>
+<body>
+  <div class="canvas">
+    <header>
+      <h1>ERC-2535 <span>Diamond</span></h1>
+      <p>One address. A selector table. Facets as code.</p>
+    </header>
+
+    <div class="panels">
+      <section class="panel map">
+        <div class="panel-head">
+          <div class="badge">SELECTOR → FACET</div>
+          <div class="tagline">diamondCut writes this table into Diamond storage</div>
+        </div>
+
+        <div class="diamond">
+          <div class="diamond-top">
+            <div class="cname">Diamond</div>
+            <div class="ribbon store">Shared storage</div>
+          </div>
+
+          <div class="slots">
+            <div class="slot code">
+              <div class="k">Own code</div>
+              <div class="v">fallback router</div>
+            </div>
+            <div class="slot store">
+              <div class="k">Storage</div>
+              <div class="v">selector map + app state</div>
+            </div>
+          </div>
+
+          <div class="router">
+            <div class="router-head">facetAddress[selector]</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Function</th>
+                  <th>Selector</th>
+                  <th>Facet</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="hit">
+                  <td class="fn">transfer(address,uint256)</td>
+                  <td class="mono">0xa9059cbb</td>
+                  <td class="facet">ERC20Facet</td>
+                </tr>
+                <tr>
+                  <td>diamondCut(...)</td>
+                  <td class="mono">0x1f931c1c</td>
+                  <td>DiamondCutFacet</td>
+                </tr>
+                <tr>
+                  <td>facets()</td>
+                  <td class="mono">0x7a0ed627</td>
+                  <td>DiamondLoupeFacet</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="fallback">fallback: target = facetAddress[msg.sig]</div>
+
+          <div class="cut-row">
+            <span class="cut add">Add</span>
+            <span class="cut replace">Replace</span>
+            <span class="cut remove">Remove</span>
+            <span class="cut">FacetCutAction</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel exec">
+        <div class="panel-head">
+          <div class="badge">A CALL</div>
+          <div class="tagline">Borrow the mapped facet, stay as Diamond</div>
+        </div>
+        <div class="flow">
+          <div class="user"><span class="dot"></span>User (EOA)</div>
+
+          <div class="arrow call-op">
+            <span>CALL transfer(to, amount)</span>
+            <span class="shaft"></span>
+            <span class="head"></span>
+          </div>
+
+          <div class="contract active-del">
+            <div class="contract-top">
+              <div class="cname">Diamond</div>
+              <div class="ribbon exec-del">Executes here</div>
+            </div>
+            <div class="slots">
+              <div class="slot code"><div class="k">Lookup</div><div class="v">0xa9059cbb → ERC20Facet</div></div>
+              <div class="slot store"><div class="k">Storage used</div><div class="v">Diamond slots</div></div>
+            </div>
+            <div class="ctx">
+              <span class="chip lookup">msg.sig routes the facet</span>
+              <span class="chip keep">msg.sender stays User</span>
+              <span class="chip keep">address(this) = Diamond</span>
+              <span class="chip write">SSTORE writes Diamond</span>
+            </div>
+          </div>
+
+          <div class="arrow del-op">
+            <span>DELEGATECALL · facet code runs in Diamond</span>
+            <span class="shaft"></span>
+            <span class="head"></span>
+          </div>
+
+          <div class="contract dim">
+            <div class="contract-top">
+              <div class="cname">ERC20Facet</div>
+              <div class="ribbon code-only">Code library only</div>
+            </div>
+            <div class="slots">
+              <div class="slot code"><div class="k">Code used</div><div class="v">transfer() bytecode</div></div>
+              <div class="slot store unused"><div class="k">Storage unused</div><div class="v">Facet slots ignored</div></div>
+            </div>
+            <div class="ctx">
+              <span class="chip">Facet is not msg.sender</span>
+              <span class="chip">Facet storage is not written</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="legend">
+      <div class="row-label">
+        <div class="h">Context</div>
+        <div class="b">A Diamond call</div>
+      </div>
+      <div>
+        <div class="h">Bytecode</div>
+        <div class="b same">The mapped Facet</div>
+      </div>
+      <div>
+        <div class="h">address(this)</div>
+        <div class="b diff-a">Diamond</div>
+      </div>
+      <div>
+        <div class="h">msg.sender / SSTORE</div>
+        <div class="b diff-a">User · Diamond</div>
+      </div>
+      <div>
+        <div class="h">Router</div>
+        <div class="b mapc">fallback → facetAddress[msg.sig]</div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

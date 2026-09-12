@@ -1,169 +1,98 @@
 ---
 name: skill-authoring
-description: This skill should be used when the user asks to "write a skill", "author SKILL.md", "skill best practices", "progressive disclosure", "skill structure", "skill description triggers", "compartment skills", "references folder for skills", "how to write effective agent skills", or needs guidance on structuring skills for efficient on-demand reading.
+description: "Author or revise SKILL.md files, concise discovery metadata, topic routers and references within catalog budgets."
 license: MIT
 ---
 
-# Skill Authoring Best Practices
+# Skill authoring
 
-How to write agent skills that **discover reliably**, **load only what is needed**, and **stay accurate**. Grounded in Anthropic’s progressive-disclosure model and Crane/OpenCode conventions. Use with `docs-to-skills` when generating skills from documentation sites.
+Write skills that are easy to discover and load only the guidance the task needs. Use `docs-to-skills` for documentation-site inventories and source coverage.
 
-## Progressive disclosure (the core design)
+## Budget the catalog first
 
-Skills load in tiers so context stays lean:
+| Layer | Loaded when | Guidance |
+| --- | --- | --- |
+| Name, description and source path | Skill discovery | Measure their aggregate cost across the installed catalog. |
+| SKILL.md body | The skill is selected | Prefer fewer than 200 lines; split before 500. |
+| Topic files, references, examples and scripts | A relevant procedure needs them | Link directly and read selectively. |
 
-| Tier | What loads | When | Budget guidance |
-|------|------------|------|-----------------|
-| **1 — Metadata** | `name` + `description` from every installed skill | Session start (always) | ~100 tokens per skill |
-| **2 — Body** | Full `SKILL.md` | When description matches the task | Prefer **&lt;200 lines**; hard target **&lt;500 lines** |
-| **3 — References** | Files under `references/`, scripts, examples | Only when the body points agent to them | No cost until read |
+Shortening a body does not reduce the discovery catalog. For a large collection, use a small family router with a task-to-topic table. Keep specialized guidance in linked files instead of discovering every topic separately. Preserve existing detailed files and relative-reference bases when consolidating.
 
-**Implication:** `SKILL.md` is a **table of contents + procedures**, not an encyclopedia. Detail lives one level deep in `references/*.md`.
+Keep separate discovery entries when they represent distinct workflows the agent needs to find directly, especially repository deployment, testing and product rules. A router must give clear topic choices without requiring all children to be read.
 
-## Directory layout (compartmentalized)
+IndexedEx's policy is recorded in `scripts/codex-skill-catalog.json`: at most **50 entries**, **160 characters per description**, and **14,000 characters** for the rendered repository catalog including paths. Aim for **80–140 character descriptions**. These are repository budgets, not a claimed limit of any client. Global/plugin skills and client formatting add their own overhead.
+
+## Frontmatter
+
+```yaml
+---
+name: skill-name
+description: "Uniswap V4 swaps, flash accounting and hooks. Use when implementing PoolManager swap and settlement flows."
+license: MIT
+---
+```
+
+- Use a lowercase, hyphenated name matching the directory, up to 64 characters.
+- Front-load the concrete domain and task. Include distinctive API names when they improve discovery.
+- Use one concise line for a discoverable description. Avoid repeated “This skill should be used when” introductions and long lists of synonymous prompts.
+- Keep both purpose and selection cues in the description; do not hide all selection cues in the body.
+- A brief exclusion helps when two workflows are easily confused. Put longer distinctions in the body.
+- Preserve existing license, version, tools, policy and UI metadata when changing descriptions.
+
+A description such as “Helps with Uniswap” is too vague. Review representative task prompts to check whether the domain and workflow are recognizable. Do not fix missed selection by indiscriminately adding keywords or narrowing invocation policy without the owner's request.
+
+## Body and references
+
+Start with purpose, the smallest useful procedure, and a navigation table. Keep essential constraints beside that procedure. Move conditional examples, API tables and long explanations into named topic files or `references/`.
 
 ```text
 skill-name/
-├── SKILL.md                 # Required: frontmatter + lean body + nav to references
-├── references/              # Optional: domain slices loaded on demand
-│   ├── overview.md
-│   ├── api-surface.md
-│   ├── workflows.md
-│   └── gotchas.md
-├── scripts/                 # Optional: deterministic helpers (run, don’t paste)
-└── assets/                  # Optional: templates, diagrams
+  SKILL.md             # Purpose, procedure, essential constraints, navigation
+  references/          # Optional topic detail
+  scripts/             # Optional deterministic helpers
+  assets/              # Optional templates or diagrams
 ```
 
-### Multi-skill families (preferred for large docs)
+- Link directly to the needed topic; avoid chains of intermediate indexes.
+- Give reference files over 100 lines a contents list.
+- Use descriptive filenames, forward slashes and consistent terminology.
+- Resolve each linked file's own references relative to that file, especially when retaining an existing SKILL.md as a topic.
+- Prefer concrete input/output examples and real signatures to general programming lessons.
+- Record source URLs and distinguish source facts from inference. Verify code paths and selectors when code is available.
+- Avoid unexplained constants, undated time-sensitive advice, five tools without a default, and full documentation dumps.
 
-Split by **task domain**, not by dumping one mega-skill:
+## Procedures and constraints
 
-```text
-foo-architecture/     # "how Foo works"
-foo-operations/       # "how to swap/supply/claim"
-foo-deployment/       # "how to deploy/configure"
-foo-security/         # "threats, params, limits"
+Use heuristics when multiple approaches are valid, parameterized templates for preferred patterns, and precise sequences for fragile operations. Match detail to risk without inventing new approval requirements.
+
+Give multistep workflows a short checklist and a validation/fix loop. Preserve security, deployment and product constraints during compression. Cite the owning rule rather than duplicating it across every family. A skill's availability never expands the user's task scope.
+
+## Crane and IndexedEx sources
+
+- Maintain shared Crane guidance under `lib/crane/.claude/skills/` in the consumer checkout; use `.claude/skills/` when working at Crane's own root.
+- Author IndexedEx guidance and its discovery routers under `.claude/skills/`.
+- Codex's `.agents/skills/` contains links, not separate editable copies. The catalog records existing source exceptions; do not replace unique source content with a stale mirror.
+- Keep Solidity examples on `@crane/` imports and real `contracts/` / `test/` paths.
+- Keep production-first testing rules in `crane-testing`; consumer requirements stay in `indexedex-testing` and the repository router.
+- For protocol documentation, preserve complete topic coverage while exposing one router or a few independently useful workflows.
+
+In IndexedEx, register each installed topic in `scripts/codex-skill-catalog.json`, either directly or in a family. Add its link to the family's SKILL.md. Then run:
+
+```bash
+python3 scripts/sync-codex-skills.py --stats
+python3 scripts/sync-codex-skills.py
+python3 scripts/sync-codex-skills.py --check
 ```
 
-Each skill has its own description triggers so only the relevant compartment activates.
+`--stats` and `--check` are read-only. Discovery synchronization changes managed symlinks only. It refuses unknown entries, duplicate discovery and budget overruns. Source content and existing reference files remain in place.
 
-## Frontmatter rules
+## Review
 
-```yaml
----
-name: skill-name          # lowercase, hyphens, max 64 chars; match directory name
-description: >-           # max 1024 chars; third person; WHAT + WHEN + key terms
-  ...
-license: MIT              # optional
----
-```
+- Does the description identify the intended task without boilerplate?
+- Can a relevant prompt find its topic through one clear router choice?
+- Are essential constraints and source metadata preserved?
+- Are the body and references concise, complete and correctly linked?
+- Do aggregate budget, topic coverage, duplicate and link checks pass?
+- For tooling changes, do meaningful fixture tests cover failure and preservation behavior?
 
-### Description formula (critical for discovery)
-
-**[What it does] + [When to use it, with trigger phrases] + [Key terms / file types / protocol names]**
-
-- Write in **third person** (“Extracts…”, “Guides…”) — not “I can help” or “You can use”.
-- Prefer under-trigger fixes: Claude often **under-triggers**; put all “when to use” in `description`, not only in the body.
-- Include **quoted-style natural phrases** users type: `"deploy Foo"`, `"swap on Bar"`, `"VaultSwapParams"`.
-- Include **DO NOT** exclusions when another skill owns the domain (optional but reduces fights).
-
-**Good:**
-
-```yaml
-description: Guides Uniswap V4 swap execution (exactInput, flash accounting, hooks). Use when the user asks about "V4 swap", "SwapParams", "beforeSwap", or building swap flows on PoolManager.
-```
-
-**Bad:**
-
-```yaml
-description: Helps with Uniswap
-```
-
-## SKILL.md body structure
-
-Recommended sections (keep lean):
-
-1. **One-line purpose**
-2. **When / when not** (brief; full triggers live in description)
-3. **Quick start** (smallest useful procedure or example)
-4. **Navigation table** → `references/*` (one level deep only)
-5. **Constraints / gotchas** (bullets)
-6. **Key files** (real repo paths when applicable)
-7. **See also** (`skill:other-name`, related agents)
-
-### Reference files (compartment rules)
-
-| Rule | Why |
-|------|-----|
-| Link **only one level deep** from `SKILL.md` | Nested refs (A→B→C) cause partial reads |
-| `references/` files **&gt;100 lines** start with a **Contents** TOC | Agents previewing with `head` still see the map |
-| One concern per file | e.g. `liquidation.md` separate from `interest-rates.md` |
-| Descriptive names | `swap-exact-input.md`, not `doc2.md` |
-| Forward slashes only | `references/foo.md`, never Windows `\` |
-| Consistent terminology | One term for each concept across the family |
-
-## Content guidelines
-
-### Concise is key
-
-- Context is shared with system prompt, history, and other skills.
-- Assume the model is smart: **do not** re-teach general programming/Solidity basics.
-- Challenge every paragraph: “Does this justify its tokens?”
-
-### Degrees of freedom
-
-| Freedom | When | Form |
-|---------|------|------|
-| **High** | Many valid approaches | Heuristics, checklists |
-| **Medium** | Preferred pattern exists | Templates with parameters |
-| **Low** | Fragile / security / deploy | Exact commands, fixed sequences |
-
-Match freedom to risk: migrations and fund-moving steps → **low freedom**.
-
-### Workflows and feedback loops
-
-For multi-step work, give a **copyable checklist** and explicit **validate → fix → re-validate** loops. Critical ops need a verification step before “done.”
-
-### Examples over abstract prose
-
-Prefer input/output pairs, tables, and real signatures over long narrative.
-
-### Avoid
-
-- Time-sensitive “before date X” without a dated “legacy” section
-- Offering five libraries with no default
-- Windows paths
-- Magic constants without justification
-- Mega-skills that force full-doc load for a one-function question
-- Putting “when to use” only in the body (missed discovery)
-
-## Crane-specific conventions
-
-When authoring skills for this monorepo family (Crane / IndexedEx):
-
-- Prefer install path: `.claude/skills/<name>/SKILL.md` (also mirrored for `.agents/` / `.grok/` when present).
-- Use **`@crane/`** import paths in Solidity examples.
-- Anchor to **real files** under `contracts/` and `test/`.
-- Cross-link `skill:crane-*` and protocol skills.
-- After porting a protocol, ship a **skill family** (architecture + operations), not one 2k-line file — see `writing-skills` and exemplar Aave/Uniswap skill sets.
-- Production-first testing guidance belongs in `crane-testing`, not duplicated in every protocol skill.
-
-## Quality checklist (before shipping a skill)
-
-- [ ] `name` matches directory; description is third-person, WHAT+WHEN, &lt;1024 chars
-- [ ] Description includes concrete trigger terms; not vague (“helps with X”)
-- [ ] `SKILL.md` body ideally &lt;200 lines, always &lt;500
-- [ ] Heavy detail in `references/` with TOC if long
-- [ ] All reference links are one level deep from `SKILL.md`
-- [ ] Consistent terminology; default tool/library chosen
-- [ ] Gotchas and constraints explicit
-- [ ] See also / related skills listed
-- [ ] For protocol skills: paths and selectors verified against code when code exists
-- [ ] Smoke-test: does a fresh agent load this skill on three representative prompts?
-
-## See also
-
-- `skill:docs-to-skills` — scrape full documentation sites and emit skill families
-- `skill:writing-skills` — OpenCode/Crane-oriented skill writing (legacy companion)
-- Anthropic: [Skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)
-- Agent: `docs-skill-scribe`
+See also: `docs-to-skills`, the repository's `docs/agent/SKILL_CATALOG.md`, and the `docs-skill-scribe` role when documentation work calls for it. A role reference does not require delegation.

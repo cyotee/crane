@@ -14,6 +14,7 @@ contract FacetRegistryTarget is OperableModifiers, IFacetRegistry {
 
     function deployCanonicalFacetOverride(bytes calldata initCode, bytes32 salt, bytes4 interfaceId)
         external
+        onlyOwnerOrOperator
         returns (IFacet facet)
     {
         facet = FacetRegistryService._deployFacet(initCode, salt);
@@ -34,7 +35,7 @@ contract FacetRegistryTarget is OperableModifiers, IFacetRegistry {
         bytes calldata initArgs,
         bytes32 salt,
         bytes4 interfaceId
-    ) external returns (IFacet facet) {
+    ) external onlyOwnerOrOperator returns (IFacet facet) {
         facet = FacetRegistryService._deployFacet(initCode, initArgs, salt);
         FacetRegistryRepo._setCanonicalFacet(interfaceId, facet);
         return facet;

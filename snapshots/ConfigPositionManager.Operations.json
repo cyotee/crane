@@ -1,13 +1,13 @@
 {
-  "renounceCanUpdateUserDynamicConfigPermission": "28220",
-  "renounceCanUpdateUserRiskPremiumPermission": "28462",
-  "renounceCanUpdateUsingAsCollateralPermission": "28066",
-  "renounceGlobalPermission": "28017",
-  "setCanSetUsingAsCollateralPermission": "50313",
-  "setCanUpdateUserDynamicConfigPermission": "50709",
-  "setCanUpdateUserRiskPremiumPermission": "50511",
-  "setGlobalPermission": "50810",
-  "setUsingAsCollateralOnBehalfOf": "79809",
-  "updateUserDynamicConfigOnBehalfOf": "53509",
-  "updateUserRiskPremiumOnBehalfOf": "146395"
+  "renounceCanUpdateUserDynamicConfigPermission": "28208",
+  "renounceCanUpdateUserRiskPremiumPermission": "28450",
+  "renounceCanUpdateUsingAsCollateralPermission": "28054",
+  "renounceGlobalPermission": "28005",
+  "setCanSetUsingAsCollateralPermission": "50301",
+  "setCanUpdateUserDynamicConfigPermission": "50697",
+  "setCanUpdateUserRiskPremiumPermission": "50499",
+  "setGlobalPermission": "50798",
+  "setUsingAsCollateralOnBehalfOf": "79797",
+  "updateUserDynamicConfigOnBehalfOf": "53497",
+  "updateUserRiskPremiumOnBehalfOf": "146383"
 }

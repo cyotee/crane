@@ -1,6 +1,6 @@
 ---
 name: crane-code-style
-description: This skill should be used when the user asks about "code style", "naming convention", "imports", "section headers", "slot naming", "viaIR", "stack too deep", "formatting", or needs guidance on Crane's code conventions and style requirements.
+description: "Crane Solidity conventions for naming, imports, storage slots, formatting and stack-depth fixes without viaIR."
 license: MIT
 ---
 

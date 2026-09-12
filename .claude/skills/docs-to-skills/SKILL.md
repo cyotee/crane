@@ -1,6 +1,6 @@
 ---
 name: docs-to-skills
-description: This skill should be used when the user asks to "scrape documentation", "docs to skills", "turn docs into skills", "generate skills from docs", "crawl docs site", "write skills from documentation", "documentation skill family", "convert GitBook/docs to SKILL.md", or needs a full pipeline that inventories every doc page and emits compartmentalized agent skills.
+description: "Turn documentation sites or trees into complete, source-linked skills with topic routing and on-demand references."
 license: MIT
 ---
 

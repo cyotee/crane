@@ -6,7 +6,9 @@ pragma solidity ^0.8.24;
 ///
 /// Sources (cores verified 2026-07-27 via public RPC + official docs;
 ///          RHJ Stock Tokens refreshed 2026-08-15 from /rhj/assets;
-///          NetNet pins 2026-08-28 from Official Channels):
+///          NetNet pins 2026-08-28 from Official Channels;
+///          IndexedEx architecture harvested 2026-09-03 from 4663
+///          `anvil_robinhood_main` Phase/Stage broadcast + platform.json):
 /// - https://docs.robinhood.com/chain/connecting/
 /// - https://docs.robinhood.com/chain/protocol-contracts/
 /// - https://docs.robinhood.com/chain/contracts/
@@ -24,6 +26,9 @@ pragma solidity ^0.8.24;
 /// - NetNet Capital Management ($NET) is live; pin from Official Channels (not RH_NET / Cloudflare).
 /// - Official RHJ Stock Tokens: 194 ACTIVE ERC-20s on 4663 (`RH_*`, `RH_STOCK_TOKEN_COUNT`).
 ///   Source: GET https://api.robinhood.com/rhj/assets (2026-08-15). Do not invent addresses.
+/// - IndexedEx architecture (CREATE3 / DFPkgs / manager) is live from the 4663 Phase/Stage
+///   public deploy. Hook buffer DFPkgs, family DETF DFPkgs, and DETF instances are **not**
+///   pinned here; replace those from the current launch scripts.
 library ROBINHOOD_MAIN {
     uint256 internal constant CHAIN_ID = 4663;
 
@@ -53,6 +58,11 @@ library ROBINHOOD_MAIN {
 
     /// @dev Global Dollar (Paxos) — primary USD stable on this chain; 6 decimals.
     address internal constant USDG = 0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168;
+
+    // tag::DTF[]
+    /// @dev DTF token used by IndexedEx on Robinhood mainnet.
+    address internal constant DTF = 0xeE5576Fa1Bcaa380e591D01245f406f3f384eb01;
+    // end::DTF[]
 
     /// @dev NetNet Capital Management reserve token. 9 decimals, 5% FoT on mapped AMM pairs.
     ///      Canonical: https://docs.netnet.capital/official-channels
@@ -542,4 +552,128 @@ library ROBINHOOD_MAIN {
 
     address internal constant MORPHO_BUNDLER3 = 0x6478e9393d4C5bB4d53ee881d1DE78786A0344a6;
     address internal constant MORPHO_GENERAL_ADAPTER_1 = 0xc5E188541D107e8B79e43478bDE365F1406665D6;
+
+    /* -------------------------------------------------------------------------- */
+    /*              IndexedEx architecture (4663 public Phase/Stage)              */
+    /* -------------------------------------------------------------------------- */
+    // Harvested 2026-09-03 from `scripts/foundry/anvil_robinhood_main` broadcast
+    // (`broadcast/Phase_*_Stage_*/4663`) and `deployments/anvil_robinhood_main/platform.json`.
+    // Deployer EOA: `INDEXEDEX_DEPLOYER`. CREATE3 root: `PRIMARY_CREATE3_FACTORY`.
+    // Verified `eth_getCode` on https://rpc.mainnet.chain.robinhood.com.
+    // Not pinned: CP / Weighted / Curve Quad buffer hook DFPkgs, family DETF DFPkgs,
+    // or DETF / SE vault instances (replace from the current launch scripts).
+
+    /// @dev Public 4663 deployer / owner for the architecture tree.
+    address internal constant INDEXEDEX_DEPLOYER = 0x72BeA6Fa3E68EF18c87D045Aac7C4Aa5249d933B;
+    address internal constant INDEXEDEX_OWNER = INDEXEDEX_DEPLOYER;
+
+    /* ----------------------------- Factories ---------------------------------- */
+
+    /// @dev Live CREATE3 factory for this tree (Phase 02 Stage 01). Bind this, not a new root.
+    address internal constant PRIMARY_CREATE3_FACTORY = 0xD7786b10BC8Bc97dc7651CAb7B97086c8b227882;
+    address internal constant CREATE3_FACTORY = PRIMARY_CREATE3_FACTORY;
+
+    address internal constant DIAMOND_PACKAGE_CALLBACK_FACTORY = 0x976949aB55830fA4794bF40C88ea7D7567931003;
+    address internal constant DIAMOND_PACKAGE_FACTORY = DIAMOND_PACKAGE_CALLBACK_FACTORY;
+    address internal constant CREATE3_FACTORY_DFPKG = 0x6Da3688d6C4f34DA6e1aa2504C6F83409189BF3c;
+    address internal constant CALL_TARGET_REGISTRY_DFPKG = 0x19260dB17773f4d73e6f4cA2D2a60b99a2515a7f;
+    address internal constant BOUNTY_BOARD_DFPKG = 0xF05DC0371B682d86368368f62B12624eefca8b6B;
+
+    /// @dev Uni V4 Hook Diamond Package Factory (infrastructure). Not a buffer-hook DFPkg.
+    address internal constant HOOK_FACTORY = 0x8BB5FCC67e8CCa44DC41dd08A5e2b2B392C22945;
+    address internal constant UNISWAP_V4_HOOK_DIAMOND_PACKAGE_FACTORY = HOOK_FACTORY;
+    address internal constant HOOK_FLAGS_FACET = 0x6c9649Fb1A80916684F691E0796bD8e8b5e3B905;
+
+    /* ------------------------ Canonical CREATE3 facets ------------------------ */
+
+    address internal constant ERC165_FACET = 0x69A470758A14176C86927Ee080f9419D30c49480;
+    address internal constant DIAMOND_LOUPE_FACET = 0x343590eD92498739225e351C27133BC2c11B91B9;
+    address internal constant ERC8109_INTROSPECTION_FACET = 0xe3d915C0211A87077b14DFE995009741Dac2F5DA;
+    address internal constant POST_DEPLOY_ACCOUNT_HOOK_FACET = 0xc08a6221F2A93b965A5A12ec0F645E9Eba717703;
+    address internal constant DIAMOND_CUT_FACET = 0xa8fb4aa08F910026d33579BD680fc133a399C447;
+    address internal constant MULTI_STEP_OWNABLE_FACET = 0xF03FAD914Ec73b6A7D41cEce447656aE97b8B16F;
+    address internal constant OPERABLE_FACET = 0xC6367d76D4b04eBA5dEAeBDeea379dC9ea70447E;
+    address internal constant CREATE3_FACTORY_FACET = 0x4e6509e792D7Aa5D714Ff3dD3A4299269c9B3411;
+    address internal constant FACET_REGISTRY_FACET = 0x5186d17216b2B5F809b318e8af4Fabd649bb5b1b;
+    address internal constant DIAMOND_FACTORY_PACKAGE_REGISTRY_FACET = 0x195d9Af10c8d1766Ce341BD80123d83b472e4dFe;
+    address internal constant CALL_TARGET_REGISTRY_QUERY_FACET = 0xbD33463Cb05a8d1dd74a0F1f323D4FE2c70233C0;
+    address internal constant CALL_TARGET_REGISTRY_MANAGEMENT_FACET = 0xC19eDc48b9f7d290546D7eb6BD6970e23f545099;
+    address internal constant BOUNTY_COMMON_FACET = 0x141418F09ed11176453C782939c5c71774E7111b;
+    address internal constant SINGLE_FINAL_BOUNTY_FACET = 0x40fB9Dc4D3db6C83B1c4EDAa1D7d7Bb5d1a5470c;
+    address internal constant MILESTONE_BOUNTY_FACET = 0xa14a4be39980dCcC87ab073D8960A2BFD1ab93B1;
+    address internal constant CONTEST_BOUNTY_FACET = 0xE3cDa6F203d2C1627cB8fF77F2B495Ba390C83Cb;
+    address internal constant CONTINUOUS_BOUNTY_FACET = 0xb4103DD20D189E63DfdF1595ea640c09cC24c406;
+
+    /* ----------------------------- Common facets ------------------------------ */
+
+    address internal constant ERC20_FACET = 0x1d17acA0e0717d90cea916372070a1BE4652223F;
+    address internal constant ERC2612_FACET = 0x7061709368d038Dc88fE553C649dbBa30F50Fb49;
+    address internal constant ERC5267_FACET = 0xe3Cd0F9F643180D5C0483De0c43813D4282F4524;
+    address internal constant ERC4626_FACET = 0x9Bf8De693CE8741EC2001a9e8138D62e5ecC6FD4;
+    address internal constant ERC4626_BASIC_VAULT_FACET = 0x2c88bD365D7c6dCc6BbbDb74a8E1FDd2b4AF572E;
+    address internal constant ERC4626_STANDARD_VAULT_FACET = 0x44CbE64D43c244f104D1fE2eC4f7EB85a0c250af;
+    address internal constant MULTI_ASSET_BASIC_VAULT_FACET = 0xABbf6CCa435AEd22fB8b7F055D83fF33F35143C9;
+    address internal constant MULTI_ASSET_STANDARD_VAULT_FACET = 0x67ed019eC3f8b77Bc51ED1e6403Fc90E0aBb15bE;
+
+    /* ---------------------- FeeCollector / IndexedexManager ------------------- */
+
+    address internal constant FEE_COLLECTOR_MANAGER_FACET = 0xF7A99a0aeD1A4252C71c99FDD2a5B3250a41f669;
+    address internal constant FEE_COLLECTOR_SINGLE_TOKEN_PUSH_FACET = 0x694FE17168D3CBE407833832e7F1224b70120491;
+    address internal constant FEE_COLLECTOR_DFPKG = 0x9732C6DF8Ce896D8e7843ae7d1798D640d800072;
+    address internal constant FEE_COLLECTOR = 0x20af9A1e21a59a411cd3b0C40E70AF9084770b2E;
+
+    address internal constant VAULT_FEE_ORACLE_QUERY_FACET = 0x2877FDb3510ca459de2A13d55D7B35101506B915;
+    address internal constant VAULT_FEE_ORACLE_MANAGER_FACET = 0xCCc45bE0bBDd1117ffB0731Cd91163f5487149dd;
+    address internal constant VAULT_REGISTRY_DEPLOYMENT_FACET = 0xA36792A3C9bC0F96501b1C8791dF00a282a9B616;
+    address internal constant VAULT_REGISTRY_VAULT_MANAGER_FACET = 0x6e05d424b484C95fA3e9B707247283f89C611CDB;
+    address internal constant VAULT_REGISTRY_VAULT_PACKAGE_MANAGER_FACET = 0x6569B4Ad730dC1d0391C838FE55042Fed11703D9;
+    address internal constant VAULT_REGISTRY_VAULT_PACKAGE_QUERY_FACET = 0x3daA2843d5fe3484094CD3598091Fcd6043bB21B;
+    address internal constant VAULT_REGISTRY_VAULT_QUERY_FACET = 0x918f2de88ec3D9138fFb34c6fcB5958C67B007CC;
+    address internal constant VAULT_REGISTRY_DISABLE_QUERY_FACET = 0x10E1211a99126304d4daDaeC39146c2ac45F7F91;
+    address internal constant VAULT_REGISTRY_DISABLE_MANAGER_FACET = 0xD1fd586d785E9D150A86306Bdca9DeAA0C202CEe;
+    address internal constant INDEXEDEX_MANAGER_DFPKG = 0x3489A4418ef4583A1Cf0A21E3F54A879938541cf;
+    /// @dev Manager diamond. Same address is the vault registry and vault fee oracle.
+    address internal constant INDEXEDEX_MANAGER = 0x09682b00D873D913ada0bB69B4D4c9631810d0bc;
+    address internal constant VAULT_REGISTRY = INDEXEDEX_MANAGER;
+    address internal constant VAULT_FEE_ORACLE = INDEXEDEX_MANAGER;
+
+    /* -------------------- Rate provider / TWAP / SE packages ------------------ */
+
+    address internal constant SE_RATE_PROVIDER_FACET = 0xd8448753512c95A7E7b0f42AAC6bBeBE052B7521;
+    address internal constant RATE_PROVIDER_PKG = 0x7A81715230CbD46550B90fd4D3FB3f13C8Ee327b;
+    address internal constant SE_RATE_PROVIDER_DFPKG = RATE_PROVIDER_PKG;
+
+    address internal constant UNISWAP_V4_TWAP_ORACLE_FACET = 0xdfa0eE163Cbca760A90682EC5C8a72b8d206ED61;
+    address internal constant UNISWAP_V4_TWAP_ORACLE_PKG = 0x41e873c6432189B6363dE94DE68bbEB5e6451Caa;
+    address internal constant UNISWAP_V4_TWAP_ADAPTER_FACTORY = 0x90916b9EB39C4B7070aFC3065F3BfD492fa6dBac;
+    address internal constant UNISWAP_V4_TWAP_ORACLE = 0xe473a78C654EDb7564B8f6393745d2bc6ABd8FA7;
+
+    address internal constant UNISWAP_V4_SE_IN_EXECUTION_DELEGATE = 0x6f59D7F54617b2C3413c091E5cA430614b1a6F21;
+    address internal constant UNISWAP_V4_SE_IN_FACET = 0x461D94f18AfeF2C82bBffBDb63270e37c322da07;
+    address internal constant UNISWAP_V4_SE_IN_QUERY_FACET = 0xc5E66CE2104Dd28b9fE8a0393b2c819f9ccCC926;
+    address internal constant UNISWAP_V4_SE_POSITION_IMPORT_FACET = 0x2d9D9B020EeB34AA1331f81766cf0F8439150369;
+    address internal constant UNISWAP_V4_SE_OUT_EXECUTION_DELEGATE = 0xe2E776FC3381F7B2Fb6dD5f492b4Ba7b2aC04951;
+    address internal constant UNISWAP_V4_SE_OUT_FACET = 0xcaBef5E91e1B4aaBd945210c37509c83eeA412b3;
+    address internal constant UNISWAP_V4_SE_OUT_QUERY_FACET = 0xDd3e1478dB744Da7DBeB74a80A431F10CCCE793F;
+    address internal constant UNISWAP_V4_SE_LIQUID_RESERVE_FACET = 0xD41866681aF69C21390d9105D7d1bE97Dc85991C;
+    address internal constant UNISWAP_V4_SE_IN_MULTI_FACET = 0x3925Ae7786D54a09D59F71a277f354de393061C9;
+    address internal constant UNISWAP_V4_SE_IN_MULTI_QUERY_FACET = 0x080DCfDa47CBeF0E13a2084c619F2097b0Ef46a4;
+    address internal constant UNISWAP_V4_SE_OUT_MULTI_FACET = 0x4ECBf06F7fC00ccF727bf28C198acc140458E46B;
+    address internal constant UNISWAP_V4_SE_OUT_MULTI_QUERY_FACET = 0x329073B8D3A976859A184a857cD2b588E4F57Bf3;
+    address internal constant UNISWAP_V4_STANDARD_EXCHANGE_PKG = 0x72b0243E3806eab5E30412cc93682f98f0d20eaE;
+
+    address internal constant MORPHO_BLUE_ERC4626_FACET = 0x2bf36388e0a22fb2f78B26DcD029a01cAB2A1429;
+    address internal constant MORPHO_BLUE_SE_IN_FACET = 0xB3791566dD9b314A97d9FD064E5339bBCd36ED92;
+    address internal constant MORPHO_BLUE_SE_OUT_FACET = 0xA752E26D8Ae12D3dD909C5Dd7521Bb94fCB94D2F;
+    address internal constant MORPHO_BLUE_SE_MARKER_FACET = 0xC85c909e4126123613c37AB3009744C136aD0Fe3;
+    address internal constant MORPHO_BLUE_STANDARD_EXCHANGE_PKG = 0x829B9130237A7a8BebE944AB558E23e966d2732E;
+
+    /* ------------------------ Bond NFT / rebasing claim ----------------------- */
+
+    address internal constant DETF_NFT_VAULT_FACET = 0x3AB85813785b43B864F9C171F7ac97d6B76c459b;
+    address internal constant ERC721_FACET = 0xde5a691CEFE1830e8Ff2b65F6657738b0d9B9279;
+    address internal constant BOND_NFT_VAULT_PKG = 0xe4866b5CA0f41F0a8545D39282Bbf03050182f94;
+
+    address internal constant REBASING_CLAIM_TOKEN_FACET = 0x25E611FB63Eb904776678286EF5cbe2a931B4f9A;
+    address internal constant REBASING_CLAIM_TOKEN_PKG = 0x55434439F14383B2576A71820719d9533529080D;
 }

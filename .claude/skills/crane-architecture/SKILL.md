@@ -1,6 +1,6 @@
 ---
 name: crane-architecture
-description: This skill should be used when the user asks about "facet", "target", "repo", "diamond pattern", "storage slot", "guard function", "DFPkg", "AwareRepo", "Service pattern", "Modifiers", "ERC2535", or needs guidance on Crane's core architectural patterns for building modular, upgradeable smart contracts.
+description: "Crane diamond architecture: facets, targets, storage repos, ERC-2535, DFPkgs, guards and service patterns."
 license: MIT
 ---
 

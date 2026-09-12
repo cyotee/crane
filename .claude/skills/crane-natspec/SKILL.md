@@ -1,6 +1,6 @@
 ---
 name: crane-natspec
-description: This skill should be used when the user asks about "natspec", "documentation", "include-tag", "selector", "cast", "@custom:signature", "@custom:selector", "@custom:topiczero", "@custom:interfaceid", "AsciiDoc", or needs guidance on documenting Crane contracts with NatSpec and AsciiDoc include-tags.
+description: "Crane NatSpec and AsciiDoc documentation; compute and verify selectors, event topics and interface IDs."
 license: MIT
 ---
 

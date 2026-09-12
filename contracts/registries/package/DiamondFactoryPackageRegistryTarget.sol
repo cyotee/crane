@@ -60,7 +60,11 @@ contract DiamondFactoryPackageRegistryTarget is OperableModifiers, IDiamondFacto
         return true;
     }
 
-    function setCanonicalPackage(bytes4 interfaceId, IDiamondFactoryPackage package) external returns (bool) {
+    function setCanonicalPackage(bytes4 interfaceId, IDiamondFactoryPackage package)
+        external
+        onlyOwnerOrOperator
+        returns (bool)
+    {
         DiamondFactoryPackageRegistryRepo._setCanonicalPackage(interfaceId, package);
         return true;
     }

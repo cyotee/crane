@@ -8,7 +8,9 @@ import {PoolId, PoolIdLibrary} from "../types/PoolId.sol";
 import {SwapMath} from "../libraries/SwapMath.sol";
 import {TickMath} from "../libraries/TickMath.sol";
 import {BitMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/BitMath.sol";
+import {ProtocolFeeLibrary} from "../libraries/ProtocolFeeLibrary.sol";
 import {LiquidityMath} from "../libraries/LiquidityMath.sol";
+import {FullMath} from "@crane/contracts/protocols/dexes/uniswap/libraries/FullMath.sol";
 
 /// @title UniswapV4Quoter
 /// @notice View-based Uniswap V4 swap quoting that can cross initialized ticks. IMPORTANT: For pools
@@ -41,6 +43,12 @@ library UniswapV4Quoter {
         uint32 maxSteps; // 0 == unlimited
     }
 
+    struct LiquidityChange {
+        int24 tickLower;
+        int24 tickUpper;
+        int128 liquidityDelta;
+    }
+
     struct SwapQuoteResult {
         uint256 amountIn;
         uint256 amountOut;
@@ -50,6 +58,12 @@ library UniswapV4Quoter {
         uint128 liquidityAfter;
         bool fullyFilled;
         uint32 steps;
+    }
+
+    struct PoolState {
+        uint160 sqrtPriceX96;
+        int24 tick;
+        uint128 liquidity;
     }
 
     /// @dev Internal state for quote loop - includes context to reduce stack depth
@@ -62,6 +76,9 @@ library UniswapV4Quoter {
         uint24 lpFee;
         bool exactInput;
         uint32 maxSteps;
+        LiquidityChange change;
+        uint16 protocolFee;
+        bool trackInsideFees;
     }
 
     struct _SwapState {
@@ -72,6 +89,7 @@ library UniswapV4Quoter {
         uint128 liquidity;
         uint256 feeAmountTotal;
         uint32 steps;
+        uint256 feeGrowthInsideX128;
     }
 
     /* -------------------------------------------------------------------------- */
@@ -85,7 +103,7 @@ library UniswapV4Quoter {
     /// @param p Swap quote parameters
     /// @return r Swap quote result
     function quoteExactInput(SwapQuoteParams memory p) internal view returns (SwapQuoteResult memory r) {
-        return _quote(p, true);
+        return _quote(p, true, LiquidityChange(0, 0, 0));
     }
 
     /// @notice Quote an exact output swap. For dynamic fee pools (fee & 0x800000 != 0), treat results
@@ -95,53 +113,61 @@ library UniswapV4Quoter {
     /// @param p Swap quote parameters
     /// @return r Swap quote result
     function quoteExactOutput(SwapQuoteParams memory p) internal view returns (SwapQuoteResult memory r) {
-        return _quote(p, false);
+        return _quote(p, false, LiquidityChange(0, 0, 0));
     }
 
     /* -------------------------------------------------------------------------- */
     /*                              Core Quote Logic                              */
     /* -------------------------------------------------------------------------- */
 
-    function _quote(SwapQuoteParams memory p, bool exactInput) private view returns (SwapQuoteResult memory r) {
-        PoolId poolId = p.key.toId();
+    function quoteExactInputAfterLiquidityChange(SwapQuoteParams memory p, LiquidityChange memory change)
+        internal view returns (SwapQuoteResult memory r)
+    {
+        return _quote(p, true, change);
+    }
 
-        if (p.amount == 0) {
-            r.fullyFilled = true;
-            (r.sqrtPriceAfterX96, r.tickAfter,,) = p.manager.getSlot0(poolId);
-            r.liquidityAfter = p.manager.getLiquidity(poolId);
-            return r;
-        }
+    function quoteExactOutputAfterLiquidityChange(SwapQuoteParams memory p, LiquidityChange memory change)
+        internal view returns (SwapQuoteResult memory r)
+    {
+        return _quote(p, false, change);
+    }
 
-        // Get initial pool state
+    function _quote(SwapQuoteParams memory p, bool exactInput, LiquidityChange memory change)
+        private view returns (SwapQuoteResult memory r)
+    {
+        (r,) = quoteFromState(p, exactInput, change, PoolState(0, 0, 0), false);
+    }
+
+    /// @dev Starting liquidity already includes the projected position change.
+    /// The change overlay updates tick storage relative to the onchain book.
+    function quoteFromState(
+        SwapQuoteParams memory p, bool exactInput, LiquidityChange memory change,
+        PoolState memory starting, bool trackInsideFees
+    ) internal view returns (SwapQuoteResult memory r, uint256 feeGrowthInsideX128) {
+        require(p.amount <= uint256(type(int256).max), "UNIV4:AMOUNT");
         _QuoteContext memory ctx;
         _SwapState memory state;
-        {
-            (uint160 sqrtPriceX96, int24 tick,, uint24 lpFee) = p.manager.getSlot0(poolId);
-            require(sqrtPriceX96 != 0, "UNIV4:UNINIT");
-
-            _requireValidSqrtPriceLimit(p.zeroForOne, p.sqrtPriceLimitX96, sqrtPriceX96);
-
-            ctx = _QuoteContext({
-                manager: p.manager,
-                poolId: poolId,
-                zeroForOne: p.zeroForOne,
-                sqrtPriceLimitX96: p.sqrtPriceLimitX96,
-                tickSpacing: p.key.tickSpacing,
-                lpFee: lpFee,
-                exactInput: exactInput,
-                maxSteps: p.maxSteps
-            });
-
-            state = _SwapState({
-                amountSpecifiedRemaining: exactInput ? -int256(p.amount) : int256(p.amount),
-                amountCalculated: 0,
-                sqrtPriceX96: sqrtPriceX96,
-                tick: tick,
-                liquidity: p.manager.getLiquidity(poolId),
-                feeAmountTotal: 0,
-                steps: 0
-            });
+        _loadQuotePool(p, ctx, state);
+        ctx.exactInput = exactInput;
+        ctx.change = change;
+        ctx.trackInsideFees = trackInsideFees;
+        if (starting.sqrtPriceX96 != 0) {
+            state.sqrtPriceX96 = starting.sqrtPriceX96;
+            state.tick = starting.tick;
+            state.liquidity = starting.liquidity;
+        } else {
+            state.liquidity = _changedLiquidity(state.liquidity, state.tick, change);
         }
+        if (p.amount == 0) {
+            r.fullyFilled = true;
+            r.sqrtPriceAfterX96 = state.sqrtPriceX96;
+            r.tickAfter = state.tick;
+            r.liquidityAfter = state.liquidity;
+            return (r, 0);
+        }
+        require(state.sqrtPriceX96 != 0, "UNIV4:UNINIT");
+        _requireValidSqrtPriceLimit(p.zeroForOne, p.sqrtPriceLimitX96, state.sqrtPriceX96);
+        state.amountSpecifiedRemaining = exactInput ? -int256(p.amount) : int256(p.amount);
 
         // Main quote loop
         while (state.amountSpecifiedRemaining != 0 && state.sqrtPriceX96 != ctx.sqrtPriceLimitX96) {
@@ -156,6 +182,7 @@ library UniswapV4Quoter {
         r.tickAfter = state.tick;
         r.liquidityAfter = state.liquidity;
         r.fullyFilled = state.amountSpecifiedRemaining == 0;
+        feeGrowthInsideX128 = state.feeGrowthInsideX128;
 
         if (exactInput) {
             r.amountIn = uint256(-(-int256(p.amount) - state.amountSpecifiedRemaining));
@@ -166,16 +193,49 @@ library UniswapV4Quoter {
         }
     }
 
+    function _loadQuotePool(SwapQuoteParams memory p, _QuoteContext memory ctx, _SwapState memory state)
+        private view
+    {
+        ctx.manager = p.manager;
+        ctx.poolId = p.key.toId();
+        ctx.zeroForOne = p.zeroForOne;
+        ctx.sqrtPriceLimitX96 = p.sqrtPriceLimitX96;
+        ctx.tickSpacing = p.key.tickSpacing;
+        ctx.maxSteps = p.maxSteps;
+        uint24 protocolFees;
+        uint24 lpFee;
+        (state.sqrtPriceX96, state.tick, protocolFees, lpFee) = p.manager.getSlot0(ctx.poolId);
+        state.liquidity = p.manager.getLiquidity(ctx.poolId);
+        ctx.protocolFee = p.zeroForOne
+            ? ProtocolFeeLibrary.getZeroForOneFee(protocolFees) : ProtocolFeeLibrary.getOneForZeroFee(protocolFees);
+        ctx.lpFee = ProtocolFeeLibrary.calculateSwapFee(ctx.protocolFee, lpFee);
+    }
+
+    function _creditInsideFees(_QuoteContext memory ctx, _SwapState memory state, uint256 amountIn, uint256 feeAmount)
+        private pure
+    {
+        if (!ctx.trackInsideFees || state.liquidity == 0
+            || state.tick < ctx.change.tickLower || state.tick >= ctx.change.tickUpper) return;
+        if (ctx.protocolFee != 0) {
+            feeAmount -= ctx.lpFee == ctx.protocolFee ? feeAmount
+                : FullMath.mulDiv(amountIn + feeAmount, ctx.protocolFee, 1_000_000);
+        }
+        unchecked {
+            state.feeGrowthInsideX128 += FullMath.mulDiv(feeAmount, uint256(1) << 128, state.liquidity);
+        }
+    }
+
     /// @dev Process a single step of the quote loop
     function _processStep(_QuoteContext memory ctx, _SwapState memory state) private view {
         state.steps++;
+        uint160 sqrtPriceStartX96 = state.sqrtPriceX96;
 
         // Find next tick
         int24 tickNext;
         bool initialized;
         {
             (tickNext, initialized) = _nextInitializedTickWithinOneWordView(
-                ctx.manager, ctx.poolId, state.tick, ctx.tickSpacing, ctx.zeroForOne
+                ctx.manager, ctx.poolId, state.tick, ctx.tickSpacing, ctx.zeroForOne, ctx.change
             );
 
             if (tickNext < TickMath.MIN_TICK) {
@@ -202,6 +262,7 @@ library UniswapV4Quoter {
         }
 
         state.feeAmountTotal += feeAmount;
+        _creditInsideFees(ctx, state, amountIn, feeAmount);
 
         if (ctx.exactInput) {
             unchecked {
@@ -219,11 +280,13 @@ library UniswapV4Quoter {
         if (state.sqrtPriceX96 == sqrtPriceNextX96) {
             if (initialized) {
                 (, int128 liquidityNet,,) = ctx.manager.getTickInfo(ctx.poolId, tickNext);
+                if (tickNext == ctx.change.tickLower) liquidityNet += ctx.change.liquidityDelta;
+                if (tickNext == ctx.change.tickUpper) liquidityNet -= ctx.change.liquidityDelta;
                 if (ctx.zeroForOne) liquidityNet = -liquidityNet;
                 state.liquidity = LiquidityMath.addDelta(state.liquidity, liquidityNet);
             }
             state.tick = ctx.zeroForOne ? tickNext - 1 : tickNext;
-        } else if (state.sqrtPriceX96 != sqrtPriceTargetX96) {
+        } else if (state.sqrtPriceX96 != sqrtPriceStartX96) {
             state.tick = TickMath.getTickAtSqrtPrice(state.sqrtPriceX96);
         }
     }
@@ -251,14 +314,15 @@ library UniswapV4Quoter {
         PoolId poolId,
         int24 tick,
         int24 tickSpacing,
-        bool lte
+        bool lte,
+        LiquidityChange memory change
     ) private view returns (int24 next, bool initialized) {
         int24 compressed = tick / tickSpacing;
         if (tick < 0 && tick % tickSpacing != 0) compressed--;
 
         if (lte) {
             (int16 wordPos, uint8 bitPos) = _position(compressed);
-            uint256 word = manager.getTickBitmap(poolId, wordPos);
+            uint256 word = _changedBitmap(manager, poolId, wordPos, tickSpacing, change);
             uint256 mask = (1 << bitPos) - 1 + (1 << bitPos);
             uint256 masked = word & mask;
 
@@ -268,7 +332,7 @@ library UniswapV4Quoter {
                 : (compressed - int24(uint24(bitPos))) * tickSpacing;
         } else {
             (int16 wordPos, uint8 bitPos) = _position(compressed + 1);
-            uint256 word = manager.getTickBitmap(poolId, wordPos);
+            uint256 word = _changedBitmap(manager, poolId, wordPos, tickSpacing, change);
             uint256 mask = ~((1 << bitPos) - 1);
             uint256 masked = word & mask;
 
@@ -276,6 +340,26 @@ library UniswapV4Quoter {
             next = initialized
                 ? (compressed + 1 + int24(uint24(BitMath.leastSignificantBit(masked) - bitPos))) * tickSpacing
                 : (compressed + 1 + int24(uint24(type(uint8).max - bitPos))) * tickSpacing;
+        }
+    }
+
+    function _changedLiquidity(uint128 liquidity, int24 tick, LiquidityChange memory change) private pure returns (uint128) {
+        if (tick >= change.tickLower && tick < change.tickUpper) return LiquidityMath.addDelta(liquidity, change.liquidityDelta);
+        return liquidity;
+    }
+
+    function _changedBitmap(IPoolManager manager, PoolId poolId, int16 wordPos, int24 spacing, LiquidityChange memory change)
+        private view returns (uint256 word)
+    {
+        word = manager.getTickBitmap(poolId, wordPos);
+        if (change.liquidityDelta == 0) return word;
+        for (uint256 i; i < 2; ++i) {
+            int24 tick = i == 0 ? change.tickLower : change.tickUpper;
+            (int16 changedWord, uint8 bit) = _position(tick / spacing);
+            if (changedWord != wordPos) continue;
+            (uint128 gross,,,) = manager.getTickInfo(poolId, tick);
+            uint128 nextGross = LiquidityMath.addDelta(gross, change.liquidityDelta);
+            if ((gross == 0) != (nextGross == 0)) word ^= uint256(1) << bit;
         }
     }
 

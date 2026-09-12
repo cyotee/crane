@@ -69,31 +69,6 @@ import {
 } from "@crane/contracts/registries/package/DiamondFactoryPackageRegistryFacet.sol";
 import {ICREATE3DFPkg, Create3FactoryDFPkg} from "@crane/contracts/factories/create3/Create3FactoryDFPkg.sol";
 
-// import {CodeLib_ERC165Facet} from "@crane/contracts/introspection/ERC165/CodeLib_ERC165Facet.sol";
-// import {CodeLib_DiamondLoupeFacet} from "@crane/contracts/introspection/ERC2535/CodeLib_DiamondLoupeFacet.sol";
-// import {CodeLib_ERC8109IntrospectionFacet} from "@crane/contracts/introspection/ERC8109/CodeLib_ERC8109IntrospectionFacet.sol";
-// import {CodeLib_PostDeployAccountHookFacet} from "@crane/contracts/factories/diamondPkg/CodeLib_PostDeployAccountHookFacet.sol";
-
-/* ------------------------------------ ! -----------------------------------
-╭-----------------------------------------------------------------------+-----------------+---------+---------+---------+---------╮
-| test/foundry/DevEnvSmokeTest.t.sol:InitDevServiceGasReporter Contract |                 |         |         |         |         |
-+=================================================================================================================================+
-| Deployment Cost                                                       | Deployment Size |         |         |         |         |
-|-----------------------------------------------------------------------+-----------------+---------+---------+---------+---------|
-| 7324411                                                               | 33790           |         |         |         |         |
-|-----------------------------------------------------------------------+-----------------+---------+---------+---------+---------|
-|                                                                       |                 |         |         |         |         |
-|-----------------------------------------------------------------------+-----------------+---------+---------+---------+---------|
-| Function Name                                                         | Min             | Avg     | Median  | Max     | # Calls |
-|-----------------------------------------------------------------------+-----------------+---------+---------+---------+---------|
-| initDiamondFactory                                                    | 5849955         | 5849955 | 5849955 | 5849955 | 1       |
-|-----------------------------------------------------------------------+-----------------+---------+---------+---------+---------|
-| initFactory                                                           | 2374652         | 2374652 | 2374652 | 2374652 | 1       |
-╰-----------------------------------------------------------------------+-----------------+---------+---------+---------+---------╯
-
-[FAIL: CREATE3 Factory exceeds init code size limit.: 67833 > 49152] testSizes() (gas: 25160
------------------------------------- ! ----------------------------------- */
-
 import {DiamondPackageFactoryAwareRepo} from "@crane/contracts/factories/diamondPkg/DiamondPackageFactoryAwareRepo.sol";
 import {FacetRegistryRepo} from "@crane/contracts/registries/facet/FacetRegistryRepo.sol";
 import {
@@ -107,7 +82,6 @@ import {
 } from "@crane/contracts/registries/package/DiamondFactoryPackageRegistryTarget.sol";
 
 import {ICreate3FactoryBootstrap} from "@crane/contracts/factories/create3/ICreate3FactoryBootstrap.sol";
-// import {Create3FactoryBootstrapFacet} from "@crane/contracts/factories/create3/Create3FactoryBootstrapFacet.sol";
 
 import {IDiamond} from "@crane/contracts/interfaces/IDiamond.sol";
 import {ERC2535Repo} from "@crane/contracts/introspection/ERC2535/ERC2535Repo.sol";

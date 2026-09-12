@@ -1,6 +1,6 @@
 ---
 name: crane-testing
-description: This skill should be used when the user asks about "testbase", "behavior library", "invariant test", "handler", "fuzz test", "test pattern", "Behavior_", "TestBase_", "mock", "vm.mockCall", "unit test", "write a test", "CraneTest", or needs guidance on Crane's testing infrastructure for writing comprehensive smart contract tests. Prefer production code over mocks.
+description: "Write Crane production-first tests with CraneTest, TestBases, Behavior libraries, handlers, fuzzing and invariants."
 license: MIT
 ---
 
