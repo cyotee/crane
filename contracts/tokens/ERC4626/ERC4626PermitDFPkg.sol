@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
+import {IERC4626PermitDFPkg} from "@crane/contracts/tokens/ERC4626/IERC4626PermitDFPkg.sol";
+
 /* -------------------------------------------------------------------------- */
 /*                                    Crane                                   */
 /* -------------------------------------------------------------------------- */
@@ -25,27 +27,7 @@ import {ERC4626Repo} from "@crane/contracts/tokens/ERC4626/ERC4626Repo.sol";
 import {ERC4626Service} from "@crane/contracts/tokens/ERC4626/ERC4626Service.sol";
 import {ReentrancyLockRepo} from "@crane/contracts/access/reentrancy/ReentrancyLockRepo.sol";
 
-interface IERC4626PermitDFPkg {
-    struct PkgInit {
-        IFacet erc20Facet;
-        IFacet erc5267Facet;
-        IFacet erc2612Facet;
-        IFacet erc4626Facet;
-    }
 
-    struct PkgArgs {
-        IERC20Metadata reserveAsset;
-        uint8 optionalDecimalOffset;
-        bytes32 optionalSalt;
-        uint256 optionalInitialDeposit;
-        address depositor;
-        address recipient;
-    }
-
-    error NoReserveAsset();
-    error NoDepositor();
-    error NoRecipient();
-}
 
 contract ERC4626PermitDFPkg is IERC4626PermitDFPkg, IDiamondFactoryPackage {
     using BetterEfficientHashLib for bytes;
