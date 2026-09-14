@@ -18,7 +18,7 @@ library APE_CHAIN_MAIN {
 
     bytes32 constant CAMELOT_PAIR_CODE_HASH = 0xba70494e4abe6721f3f96552635a28b70921f79b39c6b06ab9cb14618a78df9f;
 
-    address constant CAMELOT_ROUTER_V2 = 0x18E621B64d7808c3C47bccbbD7485d23F257D26f;
+    address constant CAMELOT_ROUTER_V2 = 0x18E621B64d7808c3C47bccbbD7485d23F257D26f; 
 
     /* ---------------------------------------------------------------------- */
     /*                              APE EXPRESS                              */
