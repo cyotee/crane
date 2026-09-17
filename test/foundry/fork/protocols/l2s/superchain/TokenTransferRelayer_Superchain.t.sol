@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.24;
 
+import {BetterEfficientHashLib} from "@crane/contracts/utils/BetterEfficientHashLib.sol";
+
 import "forge-std/Test.sol";
 
 import {IERC20} from "@crane/contracts/interfaces/IERC20.sol";
@@ -144,6 +146,7 @@ contract TestL1VaultSender is SuperchainSenderNonceTarget {
 }
 
 abstract contract SuperchainPackageTestBase is Test {
+    using BetterEfficientHashLib for bytes;
     uint32 internal constant _BRIDGE_MIN_GAS_LIMIT = 250_000;
     uint32 internal constant _PROCESSOR_MIN_GAS_LIMIT = 500_000;
 
@@ -240,7 +243,7 @@ abstract contract SuperchainPackageTestBase is Test {
                 _l1Create3Factory.deployPackageWithArgs(
                     type(ERC20PermitDFPkg).creationCode,
                     abi.encode(pkgInit),
-                    keccak256(abi.encode(type(ERC20PermitDFPkg).name, pkgInit))
+                    abi.encode(type(ERC20PermitDFPkg).name)._hash()
                 )
             )
         );

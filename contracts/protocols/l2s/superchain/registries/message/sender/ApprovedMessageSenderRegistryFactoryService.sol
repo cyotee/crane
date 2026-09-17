@@ -51,7 +51,7 @@ library ApprovedMessageSenderRegistryFactoryService {
                 factory.deployPackageWithArgs(
                     type(ApprovedMessageSenderRegistryDFPkg).creationCode,
                     abi.encode(pkgInitArgs),
-                    abi.encode(type(ApprovedMessageSenderRegistryDFPkg).name, pkgInitArgs)._hash()
+                    abi.encode(type(ApprovedMessageSenderRegistryDFPkg).name)._hash()
                 )
             )
         );

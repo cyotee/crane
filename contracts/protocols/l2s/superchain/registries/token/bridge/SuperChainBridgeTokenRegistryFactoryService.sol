@@ -51,7 +51,7 @@ library SuperChainBridgeTokenRegistryFactoryService {
                 factory.deployPackageWithArgs(
                     type(SuperChainBridgeTokenRegistryDFPkg).creationCode,
                     abi.encode(pkgInitArgs),
-                    abi.encode(type(SuperChainBridgeTokenRegistryDFPkg).name, pkgInitArgs)._hash()
+                    abi.encode(type(SuperChainBridgeTokenRegistryDFPkg).name)._hash()
                 )
             )
         );

@@ -47,7 +47,7 @@ library TokenTransferRelayerFactoryService {
                 factory.deployPackageWithArgs(
                     type(TokenTransferRelayerDFPkg).creationCode,
                     abi.encode(pkgInitArgs),
-                    abi.encode(type(TokenTransferRelayerDFPkg).name, pkgInitArgs)._hash()
+                    abi.encode(type(TokenTransferRelayerDFPkg).name)._hash()
                 )
             )
         );
