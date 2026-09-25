@@ -53,7 +53,7 @@ interface IStandardExchangeIn is IStandardExchangeErrors {
      * @param tokenOut The token the caller wishes to receive in exchange for `tokenIn`.
      * @param minAmountOut The minimum amount of `tokenOut` the caller is willing to accept.
      * @param recipient The address to receive the `tokenOut` tokens.
-     * @param pretransferred Whether the `tokenIn` tokens have already been transferred to the vault.
+     * @param pretransferred Integrating-contract flag only. The caller must transfer and consume atomically; staged use is at integrator risk with no ownership or timing guarantee. Callers with no bytecode revert `EOAPretransferNotAllowed()`. Unrecorded balance across transactions may be consumed by the next contract caller. Booked holder backing is never pretransfer credit. Exact-input processes exactly `amountIn` when unbooked available is at least that amount, leaves excess uncredited to this operation, and refunds nothing.
      * @return amountOut The amount of `tokenOut` the caller has received in exchange for `amountIn` of `tokenIn`.
      * @custom:selector 0x05562cc8
      */
