@@ -18,9 +18,13 @@ pragma solidity ^0.8.24;
 /// - https://developers.uniswap.org/docs/protocols/v3/deployments/v3-robinhood-chain-deployments
 /// - https://developers.uniswap.org/docs/protocols/v4/deployments (Robinhood Chain: 4663)
 /// - https://docs.netnet.capital/official-channels
+/// - https://raw.githubusercontent.com/pendle-finance/pendle-core-v2-public/3bb1bc056296aad10544502e5c663c0874ce13e9/deployments/4663-core.json
 ///
 /// Inventory notes:
 /// - Uniswap v2/v3/v4 + Universal Router + Permit2 are live.
+/// - Pendle V2 factory/router anchors are published addresses from the pinned
+///   chain-4663 manifest above (accessed 2026-09-27), not independently verified
+///   deployed bytecode. Do not pin a NetNet market, PT, YT or SY here: markets expire.
 /// - Balancer V3 is **not** deployed at the common Vault address (0xbA13…); deploy yourself if needed.
 /// - Canonical stable is USDG (Global Dollar, 6 decimals), not USDC.
 /// - NetNet Capital Management ($NET) is live; pin from Official Channels (not RH_NET / Cloudflare).
@@ -175,6 +179,26 @@ library ROBINHOOD_MAIN {
 
     /// @dev Default UR on this chain is 2.1.1-class; no UR 2.0 deployment (Uniswap trading docs).
     address internal constant UNISWAP_UNIVERSAL_ROUTER = 0x8876789976dEcBfCbBbe364623C63652db8C0904;
+
+    /* -------------------------------------------------------------------------- */
+    /*                    Pendle V2 (Robinhood Chain 4663)                        */
+    /* -------------------------------------------------------------------------- */
+    // Published deployment manifest, not independently verified deployed bytecode.
+    // Revision accessed 2026-09-27:
+    // pendle-core-v2-public@3bb1bc056296aad10544502e5c663c0874ce13e9
+    // deployments/4663-core.json
+    // Preserve the published V6 labels. Generic documentation discussing V7 does
+    // not establish these addresses. Enumerate markets separately, then validate
+    // candidates against PENDLE_MARKET_FACTORY_V6. Do not add a perpetual market pin.
+
+    /// @dev `marketFactoryV6`: discovery and provenance anchor for current markets.
+    address internal constant PENDLE_MARKET_FACTORY_V6 = 0x544BF81c855AE84c1e8b65d5E38770898D01EeE2;
+    /// @dev `yieldContractFactoryV6`: PT/YT integration identity. Not a market enumerator.
+    address internal constant PENDLE_YIELD_CONTRACT_FACTORY_V6 = 0xa543BF1ac6441822E95eD408076bB53090a0a9d7;
+    /// @dev Execution `router`. Quotation fee identity remains the router that executes.
+    address internal constant PENDLE_ROUTER = 0x888888888889758F76e7103c6CbF23ABbF58F946;
+    /// @dev `routerStatic` quotation helper. Not equivalent to PENDLE_ROUTER.
+    address internal constant PENDLE_ROUTER_STATIC = 0x6813d43782395A1F2AAb42f39aeEDE03ac655e09;
 
     /* -------------------------------------------------------------------------- */
     /*                         Balancer V3 (not deployed)                         */
@@ -394,8 +418,12 @@ library ROBINHOOD_MAIN {
     /* -------------------------------------------------------------------------- */
     /*                         ponsFamily launchpad (active)                      */
     /* -------------------------------------------------------------------------- */
-    // Source: https://docs.ponsfamily.com/ · https://github.com/ponsdotdev/ponsfamily
+    // Source: https://docs.ponsfamily.com/ · https://docs.ponsfamily.com/v2
     // V1 verified 2026-07-28; V2 addresses from live factory getters + README (2026-08).
+    // Current-stack meme hook reconfirmed 2026-09-27: factory.memeHook() and
+    // https://docs.ponsfamily.com/v2 both name the singleton below. A prior
+    // launchpad stack can keep a different hook; resolve historical tokens
+    // from the factory that launched them.
 
     /// @dev Active V1 PonsLaunchFactory (frontend / production). Start block 8991118.
     address internal constant PONS_LAUNCH_FACTORY_ACTIVE = 0xA5aAb3F0c6EeadF30Ef1D3Eb997108E976351feB;
@@ -408,7 +436,8 @@ library ROBINHOOD_MAIN {
     address internal constant PONS_V2_LAUNCH_FACTORY = 0x7eD598BcEf8bd9Edd8C97A195C6d13f40801EC7e;
     /// @dev V2 fee escrow (factory.feeEscrow(); source not published — interface only in tree).
     address internal constant PONS_V2_FEE_ESCROW = 0xd3AFEB2a57f70eF218Aa82451c51B2fb0416Ac9e;
-    /// @dev V2 meme hook (factory.memeHook()).
+    /// @dev Current-stack singleton V2 meme hook (factory.memeHook(); docs.ponsfamily.com/v2).
+    /// Shared by graduated pools of this factory, not deployed per pool.
     address internal constant PONS_V2_MEME_HOOK = 0xE5e702641Ea86F4ae6cC3cDaeD2B886f976Be044;
     /// @dev V2 launch locker (factory.locker()).
     address internal constant PONS_V2_LAUNCH_LOCKER = 0x267444D099b10fB5Ed7c3Cc7B7c767AdcA574952;
