@@ -11,14 +11,14 @@ library SpokeBytecodeLinker {
 
     Vm private constant VM = Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
 
-    /// @dev solc placeholder for LiquidationLogic (matches SpokeInstance artifact).
-    string internal constant LIQUIDATION_LOGIC_PLACEHOLDER = "__$329ad157ba4e68d2f4f45d82720084bf07$__";
+    /// @dev solc placeholder from the Crane-root SpokeInstance artifact after the V4 filename rename.
+    string internal constant LIQUIDATION_LOGIC_PLACEHOLDER = "__$60b3568e970035b952ae46dd913d373523$__";
 
     bytes32 internal constant LIQUIDATION_LOGIC_SALT = bytes32(0);
 
     string internal constant SPOKE_ARTIFACT = "out/SpokeInstance.sol/SpokeInstance.json";
     string internal constant LIB_ARTIFACT_PATH =
-        "contracts/protocols/lending/aave/v4/spoke/libraries/LiquidationLogic.sol:LiquidationLogic";
+        "contracts/protocols/lending/aave/v4/spoke/libraries/LiquidationLogicAaveV4.sol:LiquidationLogic";
 
     /// @notice Deploy LiquidationLogic via CREATE2 (idempotent) and return linked Spoke creation code.
     function deployLiquidationLogicAndLinkSpoke()
@@ -34,7 +34,7 @@ library SpokeBytecodeLinker {
     /// @notice FOUNDRY_LIBRARIES env line (Crane path) for operator recompile.
     function foundryLibrariesEnv(address liquidationLogic) internal view returns (string memory) {
         return string.concat(
-            "FOUNDRY_LIBRARIES=contracts/protocols/lending/aave/v4/spoke/libraries/LiquidationLogic.sol:LiquidationLogic:",
+            "FOUNDRY_LIBRARIES=contracts/protocols/lending/aave/v4/spoke/libraries/LiquidationLogicAaveV4.sol:LiquidationLogic:",
             VM.toString(liquidationLogic)
         );
     }

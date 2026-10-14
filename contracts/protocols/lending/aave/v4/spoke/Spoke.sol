@@ -18,7 +18,7 @@ import {WadRayMath} from "@crane/contracts/protocols/lending/aave/v4/libraries/m
 import {SpokeUtils} from "@crane/contracts/protocols/lending/aave/v4/spoke/libraries/SpokeUtils.sol";
 import {EIP712Hash} from "@crane/contracts/protocols/lending/aave/v4/spoke/libraries/EIP712Hash.sol";
 import {KeyValueList} from "@crane/contracts/protocols/lending/aave/v4/spoke/libraries/KeyValueList.sol";
-import {LiquidationLogic} from "@crane/contracts/protocols/lending/aave/v4/spoke/libraries/LiquidationLogic.sol";
+import {LiquidationLogic} from "@crane/contracts/protocols/lending/aave/v4/spoke/libraries/LiquidationLogicAaveV4.sol";
 import {PositionStatusMap} from "@crane/contracts/protocols/lending/aave/v4/spoke/libraries/PositionStatusMap.sol";
 import {
     ReserveFlags,

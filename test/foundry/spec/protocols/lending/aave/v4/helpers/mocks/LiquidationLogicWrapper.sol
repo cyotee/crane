@@ -7,7 +7,7 @@ import {IERC20} from "@crane/contracts/external/openzeppelin-contracts/token/ERC
 import {IHub, IHubBase} from "@crane/contracts/protocols/lending/aave/v4/hub/interfaces/IHub.sol";
 import {ISpoke} from "@crane/contracts/protocols/lending/aave/v4/spoke/interfaces/ISpoke.sol";
 import {PositionStatusMap} from "@crane/contracts/protocols/lending/aave/v4/spoke/libraries/PositionStatusMap.sol";
-import {LiquidationLogic} from "@crane/contracts/protocols/lending/aave/v4/spoke/libraries/LiquidationLogic.sol";
+import {LiquidationLogic} from "@crane/contracts/protocols/lending/aave/v4/spoke/libraries/LiquidationLogicAaveV4.sol";
 import {
     ReserveFlags,
     ReserveFlagsMap

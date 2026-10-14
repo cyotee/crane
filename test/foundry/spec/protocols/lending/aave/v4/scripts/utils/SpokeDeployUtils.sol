@@ -19,7 +19,7 @@ library SpokeDeployUtils {
     /// @return The deployed library address.
     function deployLiquidationLogic(bytes32 salt) internal returns (address) {
         bytes memory bytecode =
-            vm.getCode("contracts/protocols/lending/aave/v4/spoke/libraries/LiquidationLogic.sol:LiquidationLogic");
+            vm.getCode("contracts/protocols/lending/aave/v4/spoke/libraries/LiquidationLogicAaveV4.sol:LiquidationLogic");
         return Create2Utils.create2Deploy(salt, bytecode);
     }
 
@@ -27,7 +27,8 @@ library SpokeDeployUtils {
     function getLibraryString(address liquidationLogic) internal pure returns (string memory) {
         return string(
             abi.encodePacked(
-                "src/spoke/libraries/LiquidationLogic.sol:LiquidationLogic:", vm.toString(liquidationLogic)
+                "contracts/protocols/lending/aave/v4/spoke/libraries/LiquidationLogicAaveV4.sol:LiquidationLogic:",
+                vm.toString(liquidationLogic)
             )
         );
     }
@@ -76,7 +77,8 @@ library SpokeDeployUtils {
     /// @notice Reads the LiquidationLogic address from FOUNDRY_LIBRARIES in .env.
     /// @return The address, or address(0) if not found.
     function _getLiquidationLogicAddress() internal returns (address) {
-        string memory getLibraryAddress = "sed -nr 's/.*LiquidationLogic:([^,]*).*/\\1/p' .env";
+        string memory getLibraryAddress =
+            "sed -nr 's/.*LiquidationLogicAaveV4\\.sol:LiquidationLogic:([^,]*).*/\\1/p' .env";
         string[] memory getAddressCommand = new string[](3);
 
         getAddressCommand[0] = "bash";

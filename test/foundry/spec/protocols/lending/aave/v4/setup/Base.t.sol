@@ -82,7 +82,7 @@ import {
     ReserveFlags,
     ReserveFlagsMap
 } from "@crane/contracts/protocols/lending/aave/v4/spoke/libraries/ReserveFlagsMap.sol";
-import {LiquidationLogic} from "@crane/contracts/protocols/lending/aave/v4/spoke/libraries/LiquidationLogic.sol";
+import {LiquidationLogic} from "@crane/contracts/protocols/lending/aave/v4/spoke/libraries/LiquidationLogicAaveV4.sol";
 import {KeyValueList} from "@crane/contracts/protocols/lending/aave/v4/spoke/libraries/KeyValueList.sol";
 
 // tokenization spoke
