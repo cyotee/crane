@@ -83,3 +83,7 @@ These remain bundled inside `aave/v4/dependencies/`. **Important note from a pri
 
 Additionally:
 - `contracts/external/erc4626-tests/` may overlap with other Crane test helpers — review during dedup.
+
+## Filename deviation (2026-10-12)
+
+`src/spoke/libraries/LiquidationLogic.sol` is vendored as `contracts/protocols/lending/aave/v4/spoke/libraries/LiquidationLogicAaveV4.sol`. The library declaration remains `LiquidationLogic`. The rename exists only so Foundry does not share an artifact basename with Aave v3.6. Library bodies were not edited.
