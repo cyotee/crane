@@ -10,7 +10,7 @@ import {
 import {FlashLoanLogic} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/logic/FlashLoanLogic.sol";
 import {
     LiquidationLogic
-} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/logic/LiquidationLogic.sol";
+} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/logic/LiquidationLogicAaveV3.sol";
 import {PoolLogic} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/logic/PoolLogic.sol";
 import {SupplyLogic} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/logic/SupplyLogic.sol";
 

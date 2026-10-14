@@ -10,7 +10,7 @@ import {ReserveLogic} from "../libraries/logic/ReserveLogic.sol";
 import {SupplyLogic} from "../libraries/logic/SupplyLogic.sol";
 import {FlashLoanLogic} from "../libraries/logic/FlashLoanLogic.sol";
 import {BorrowLogic} from "../libraries/logic/BorrowLogic.sol";
-import {LiquidationLogic} from "../libraries/logic/LiquidationLogic.sol";
+import {LiquidationLogic} from "../libraries/logic/LiquidationLogicAaveV3.sol";
 import {DataTypes} from "../libraries/types/DataTypes.sol";
 import {IERC20WithPermit} from "../../interfaces/IERC20WithPermit.sol";
 import {IPoolAddressesProvider} from "../../interfaces/IPoolAddressesProvider.sol";

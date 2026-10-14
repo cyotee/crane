@@ -29,7 +29,7 @@ import {
 } from "@crane/contracts/protocols/lending/aave/v3.6/utils/mocks/oracle/CLAggregators/MockAggregator.sol";
 import {
     LiquidationLogic
-} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/logic/LiquidationLogic.sol";
+} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/logic/LiquidationLogicAaveV3.sol";
 import {DataTypes} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/types/DataTypes.sol";
 import {PercentageMath} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/math/PercentageMath.sol";
 import {WadRayMath} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/math/WadRayMath.sol";

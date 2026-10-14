@@ -9,7 +9,7 @@ import {IPriceOracleSentinel} from "../interfaces/IPriceOracleSentinel.sol";
 import {IPriceOracleGetter} from "../interfaces/IPriceOracleGetter.sol";
 
 import {ValidationLogic} from "../protocol/libraries/logic/ValidationLogic.sol";
-import {LiquidationLogic} from "../protocol/libraries/logic/LiquidationLogic.sol";
+import {LiquidationLogic} from "../protocol/libraries/logic/LiquidationLogicAaveV3.sol";
 import {ReserveConfiguration} from "../protocol/libraries/configuration/ReserveConfiguration.sol";
 import {UserConfiguration} from "../protocol/libraries/configuration/UserConfiguration.sol";
 import {EModeConfiguration} from "../protocol/libraries/configuration/EModeConfiguration.sol";

@@ -5,7 +5,7 @@ import {IPool} from "@crane/contracts/protocols/lending/aave/v3.6/interfaces/IPo
 import {IAaveOracle} from "@crane/contracts/protocols/lending/aave/v3.6/interfaces/IAaveOracle.sol";
 import {
     LiquidationLogic
-} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/logic/LiquidationLogic.sol";
+} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/logic/LiquidationLogicAaveV3.sol";
 import {
     ReserveConfiguration
 } from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/configuration/ReserveConfiguration.sol";

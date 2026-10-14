@@ -13,7 +13,7 @@ import {BorrowLogic} from "@crane/contracts/protocols/lending/aave/v3.6/protocol
 import {SupplyLogic} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/logic/SupplyLogic.sol";
 import {
     LiquidationLogic
-} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/logic/LiquidationLogic.sol";
+} from "@crane/contracts/protocols/lending/aave/v3.6/protocol/libraries/logic/LiquidationLogicAaveV3.sol";
 import {TestnetERC20} from "@crane/contracts/protocols/lending/aave/v3.6/utils/mocks/testnet-helpers/TestnetERC20.sol";
 import {TestnetProcedures} from "../../utils/TestnetProcedures.sol";
 import {PoolTests, DataTypes, Errors, IERC20, IPool} from "./Pool.t.sol";
