@@ -139,10 +139,10 @@ SpokeInstance links **external** `LiquidationLogic`. Foundry must recompile with
 3. Writes library link for **Crane path** (not upstream `src/…`):
 
 ```text
-FOUNDRY_LIBRARIES=contracts/protocols/lending/aave/v4/spoke/libraries/LiquidationLogic.sol:LiquidationLogic:0x<addr>
+FOUNDRY_LIBRARIES=contracts/protocols/lending/aave/v4/spoke/libraries/LiquidationLogicAaveV4.sol:LiquidationLogic:0x<addr>
 ```
 
-**Note:** Vendored `SpokeDeployUtils.getLibraryString` still emits `src/spoke/libraries/...` — **fix for Crane remapping** in the BC script (hardcoded correct path).
+**Note:** `SpokeDeployUtils.getLibraryString` emits the Crane-root V4 filename above. Do not use upstream `src/spoke/libraries/...`.
 
 **Operator commands (once scripts exist):**
 
@@ -161,8 +161,8 @@ forge script scripts/foundry/bc/Script_BC_Phase3b_AaveV4_LibraryPreCompile.s.sol
   --ffi
 
 # B2 — force recompile with FOUNDRY_LIBRARIES (set in env or .env by script)
-export FOUNDRY_LIBRARIES="contracts/protocols/lending/aave/v4/spoke/libraries/LiquidationLogic.sol:LiquidationLogic:0x..."
-forge build --force
+export FOUNDRY_LIBRARIES="contracts/protocols/lending/aave/v4/spoke/libraries/LiquidationLogicAaveV4.sol:LiquidationLogic:0x..."
+forge build
 ```
 
 Idempotent: if library already has code, skip deploy.
