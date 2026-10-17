@@ -358,8 +358,11 @@ library ERC20Repo {
      * @custom:emits IERC20Events.Transfer (to zero)
      */
     function _burn(Storage storage layoutStruct, address account, uint256 amount) internal {
-        // _decreaseBalanceOf(layoutStruct, account, amount);
-        layoutStruct.balanceOf[account] -= amount;
+        uint256 currentBalance = layoutStruct.balanceOf[account];
+        if (currentBalance < amount) {
+            revert IERC20Errors.ERC20InsufficientBalance(account, currentBalance, amount);
+        }
+        layoutStruct.balanceOf[account] = currentBalance - amount;
         layoutStruct.totalSupply -= amount;
         emit IERC20Events.Transfer(account, address(0), amount);
     }
