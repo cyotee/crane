@@ -6,6 +6,8 @@ license: MIT
 
 # Crane Testing Patterns
 
+Compile and test with Solar: `forge build --use solar` then `forge test --use solar`. Do not enable `via_ir`. Do not fall back to solc. IndexedEx agent law § Compiler is the full rule.
+
 Crane uses structured testing patterns with TestBase contracts, Behavior libraries, and Handler contracts for comprehensive coverage. All patterns must comply with LR-7 (see PRD) and LR-1 (NatSpec on test code).
 
 ## Production-first testing (read this first)

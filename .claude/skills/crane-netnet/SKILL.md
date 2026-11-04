@@ -60,11 +60,11 @@ Constants: tax 500 bps, team start 400 bps, vest 2 days, epoch 8 hours, `TARGET_
 ## Commands
 
 ```bash
-forge test --match-path 'test/foundry/spec/protocols/pol/net/**'
-FOUNDRY_PROFILE=fork forge test --match-path 'test/foundry/spec/protocols/pol/net/fork/**'
+forge test --use solar --match-path 'test/foundry/spec/protocols/pol/net/**'
+FOUNDRY_PROFILE=fork forge test --use solar --match-path 'test/foundry/spec/protocols/pol/net/fork/**'
 ```
 
-Default `forge test` skips `**/fork/**` (no RPC). Do not add `[profile.netnet_port]` or `NETNET_FORK_BLOCK`. `viaIR` stays false.
+Default `forge test --use solar` skips `**/fork/**` (no RPC). Do not add `[profile.netnet_port]` or `NETNET_FORK_BLOCK`. `viaIR` stays false.
 
 ## Production-first
 

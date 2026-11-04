@@ -127,9 +127,9 @@ Keep these values mutable via owner/operator-governed setter functions guarded b
 Run focused tests with:
 
 ```bash
-forge test --match-path test/foundry/spec/protocols/oracles/...
-forge test --match-test test_VRF_*
-forge test -vvv --match-test test_VRF_Fulfillment*
+forge test --use solar --match-path test/foundry/spec/protocols/oracles/...
+forge test --use solar --match-test test_VRF_*
+forge test --use solar -vvv --match-test test_VRF_Fulfillment*
 ```
 
 ## Dependency and Remapping Notes

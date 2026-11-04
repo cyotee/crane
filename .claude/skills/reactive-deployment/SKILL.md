@@ -27,7 +27,7 @@ Legacy table also lists Lasna RPC `https://lasna-rpc.rnk.dev/` — prefer **omni
 ## Foundry deploy + verify
 
 ```bash
-forge create \
+forge create --use solar \
   --rpc-url $REACTIVE_RPC_URL \
   --private-key $REACTIVE_PRIVATE_KEY \
   --chain-id $REACTIVE_CHAIN_ID \
@@ -44,7 +44,7 @@ Post-deploy verify:
 forge verify-contract --verifier sourcify --chain-id $CHAIN_ID $CONTRACT_ADDR $CONTRACT_NAME
 ```
 
-If Foundry errors on `--broadcast` for `forge create`, drop that flag (docs note version variance).
+If Foundry errors on `--broadcast` for `forge create --use solar`, drop that flag (docs note version variance).
 
 ## Testnet faucet (lREACT)
 

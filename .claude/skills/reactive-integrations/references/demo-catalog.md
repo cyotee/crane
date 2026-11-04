@@ -61,7 +61,7 @@ README summary fetched 2026-07-22.
 
 ## Shared tooling
 
-- Foundry: `forge install`, `forge compile`, `forge test -vv`
+- Foundry: `forge install`, `forge compile --use solar`, `forge test --use solar -vv`
 - Env: `ORIGIN_*`, `DESTINATION_*`, `REACTIVE_*`, `SYSTEM_CONTRACT_ADDR`, `CALLBACK_PROXY_ADDR` (see repo README)
 
 Always open the demo’s own README before deploying — constructor args and chain wiring differ.

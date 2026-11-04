@@ -33,7 +33,7 @@ sizes = true
 optimizer = true
 # optimizer_runs = 1 keeps many protocol ports under EIP-170 when size is tight
 optimizer_runs = 1
-# viaIR disabled - use structs to avoid "stack too deep" errors
+# viaIR disabled. Compile with `forge … --use solar`. Structs only if Solar itself reports stack too deep.
 viaIR = false
 # Allow vm.expectRevert() for internal/library function calls (Foundry v1.0+ changed depth requirements)
 allow_internal_expect_revert = true
