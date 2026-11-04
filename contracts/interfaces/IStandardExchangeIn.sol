@@ -8,7 +8,7 @@ import {IStandardExchangeErrors} from "./IStandardExchangeErrors.sol";
  * @title IStandardExchangeIn - Interface for exchanging tokens in a standard exchange.
  * @author cyotee doge <doge.cyotee>
  * @notice This interface is used to exchange tokens in a standard exchange.
- * @custom:interfaceid 0x8c8035da
+ * @dev ERC-165 identification uses type(IStandardExchangeIn).interfaceId.
  */
 interface IStandardExchangeIn is IStandardExchangeErrors {
     struct InArgs {
@@ -40,12 +40,13 @@ interface IStandardExchangeIn is IStandardExchangeErrors {
      * @param amountIn The amount of `tokenIn` the users wishes to exchange for `tokenOut`.
      * @param tokenOut The token the caller wishes to receive in exchange for `tokenIn`.
      * @return amountOut The amount of `tokenOut` the caller will receive in exchange for `amountIn` of `tokenIn`.
+     * @return amountRefunded The amount of `tokenIn` returned to the caller.
      * @custom:selector 0x89d61912
      */
-    function previewExchangeIn(IERC20 tokenIn, uint256 amountIn, IERC20 tokenOut)
+function previewExchangeIn(IERC20 tokenIn, uint256 amountIn, IERC20 tokenOut)
         external
         view
-        returns (uint256 amountOut);
+        returns (uint256 amountOut, uint256 amountRefunded);
 
     /**
      * @param tokenIn The token provided to the vault for an exchange.
@@ -55,9 +56,10 @@ interface IStandardExchangeIn is IStandardExchangeErrors {
      * @param recipient The address to receive the `tokenOut` tokens.
      * @param pretransferred Integrating-contract flag only. The caller must transfer and consume atomically; staged use is at integrator risk with no ownership or timing guarantee. Callers with no bytecode revert `EOAPretransferNotAllowed()`. Unrecorded balance across transactions may be consumed by the next contract caller. Booked holder backing is never pretransfer credit. The declared input is processed only when present unbooked input covers it. Tokens above the declaration are not refunded. A difference between the declaration and the whole surplus does not by itself revert. Booked inventory does not fill a shortfall.
      * @return amountOut The amount of `tokenOut` the caller has received in exchange for `amountIn` of `tokenIn`.
+     * @return amountRefunded The amount of `tokenIn` returned to the caller.
      * @custom:selector 0x05562cc8
      */
-    function exchangeIn(
+function exchangeIn(
         IERC20 tokenIn,
         uint256 amountIn,
         IERC20 tokenOut,
@@ -65,5 +67,5 @@ interface IStandardExchangeIn is IStandardExchangeErrors {
         address recipient,
         bool pretransferred,
         uint256 deadline
-    ) external returns (uint256 amountOut);
+    ) external returns (uint256 amountOut, uint256 amountRefunded);
 }
