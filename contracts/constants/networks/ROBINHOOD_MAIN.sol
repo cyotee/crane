@@ -49,8 +49,8 @@ library ROBINHOOD_MAIN {
     /// @dev Parent / settlement chain is Ethereum mainnet.
     uint256 internal constant SETTLEMENT_CHAIN_ID = 1;
 
-    /// @dev Pin near research time; bump when a known-good state is needed for hermetic forks.
-    uint256 internal constant DEFAULT_FORK_BLOCK = 20_714_383;
+    /// @dev Includes WeirVaults' direct deployment on 2026-09-30 (tx 0xa92ae44ce73b159a3aa3d6c8e2920b4c4771d784a253313a35d2fd9c4fad351a).
+    uint256 internal constant DEFAULT_FORK_BLOCK = 76_197_114;
 
     /* -------------------------------------------------------------------------- */
     /*                              Core L2 tokens                                */
